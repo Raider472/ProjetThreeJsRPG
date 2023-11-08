@@ -1,4 +1,9 @@
 import * as THREE from "three";
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { collisionDetection } from "./Collision/Collision";
+import * as Move from "./Mouvement";
+import { SpriteList } from "./SpriteDeclaration";
+import { MovementSpriteObj } from "./SpriteDeclaration";
 
 const scene = new THREE.Scene();
 
@@ -8,13 +13,10 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 gameWindow.appendChild( renderer.domElement );
 
-// Cube : (utilisé pour le prototype)
-
-const geometry = new THREE.BoxGeometry();
-const material = new THREE.MeshBasicMaterial({color: 0x00ff00});
-const cube = new THREE.Mesh(geometry, material);
-
-scene.add( cube );
+scene.add(SpriteList.playerSprite, SpriteList.tree, SpriteList.tree2, SpriteList.tree3);
+SpriteList.playerSprite.position.y = 2
+let animationInProgress = false;
+const clock = new THREE.Clock
 
 // Camera :
 
@@ -48,37 +50,72 @@ function onZoom(e) {
 
 // Player mouvement controls :
 
-const mouvementControlsWASD = ['w', 'a', 's', 'd'];
-const mouvementControlsZQSD = ['z', 'q', 's', 'd']; // Pour les clavier FR AZERTY
+//const mouvementControlsWASD = ['w', 'a', 's', 'd'];
+//const mouvementControlsZQSD = ['z', 'q', 's', 'd']; // Pour les clavier FR AZERTY
 
-function playerMouvementControls() {
-	// Trouver comment obtenir le layout du clavier afin de permettre au joueurs de se déplacer (pour l'instant que en QWERTY)
-	document.addEventListener('keydown', (e) => {
-		switch(e.key) {
-			case mouvementControlsWASD[0]:
-				cube.position.y += 0.3
-				//camera.position.y += 0.3 déplace la caméra avec le joueur : besoin d'un arrière plan pour l'utiliser
+const keys = Move.keys
+
+Move.PlayerMovementControlsDown(keys)
+
+window.addEventListener("keyup", (event)=>{
+	animationInProgress = false;
+	switch(event.code) {
+		case "KeyA":
+			keys.a.pressed = false
 			break;
-			case mouvementControlsWASD[1]:
-				cube.position.x -= 0.3
-				//camera.position.x -= 0.3
+		case "KeyD":
+			keys.d.pressed = false
 			break;
-			case mouvementControlsWASD[2]:
-				cube.position.y -= 0.3
-				//camera.position.y -= 0.3
+		case "KeyW":
+			keys.w.pressed = false
 			break;
-			case mouvementControlsWASD[3]:
-				cube.position.x += 0.3
-				//camera.position.x += 0.3
+		case "KeyS":
+			keys.s.pressed = false
 			break;
-		}
-	})
-}
+	}
+})
+
+const obstacle = [SpriteList.tree, SpriteList.tree2, SpriteList.tree3]
 
 function animate() {
 	requestAnimationFrame( animate );
 	renderer.render( scene, camera );
+
+	let deltaTime = clock.getDelta()
+
+	SpriteList.playerSprite.velocity.y = 0
+	if(keys.w.pressed) {
+        SpriteList.playerSprite.velocity.y = 0.05
+        if(!animationInProgress) {
+            SpriteList.playerSprite.loop(MovementSpriteObj.arrayZ, 1.5)
+            animationInProgress = true
+        }
+    }
+    else if(keys.s.pressed) {
+        SpriteList.playerSprite.velocity.y = -0.05
+        if(!animationInProgress) {
+            SpriteList.playerSprite.loop(MovementSpriteObj.arrayS, 1.5)   
+            animationInProgress = true
+        }
+    }
+
+    SpriteList.playerSprite.velocity.x = 0
+    if(keys.d.pressed) {
+        SpriteList.playerSprite.velocity.x = 0.05
+        if(!animationInProgress) {
+            SpriteList.playerSprite.loop(MovementSpriteObj.arrayD, 1.5)
+            animationInProgress = true
+        }
+    }
+    else if(keys.a.pressed) {
+        SpriteList.playerSprite.velocity.x = -0.05
+        if(!animationInProgress) {
+            SpriteList.playerSprite.loop(MovementSpriteObj.arrayQ, 1.5)
+            animationInProgress = true
+        }
+    }
+	collisionDetection(obstacle, SpriteList.playerSprite)
+	SpriteList.playerSprite.update(deltaTime)	
 }
-animate();
-playerMouvementControls();
+animate()
 onZoom();
