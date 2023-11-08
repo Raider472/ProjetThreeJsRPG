@@ -13,8 +13,23 @@ export const keys = {
 	}
 }
 
-export function PlayerMovementControlsDown(key) {
-
+export function PlayerMovementControlsDown(keys) {
+	window.addEventListener("keydown", (event)=>{
+		switch(event.code) {
+			case "KeyA":
+				keys.a.pressed = true
+				break;
+			case "KeyD":
+				keys.d.pressed = true
+				break;
+			case "KeyW":
+				keys.w.pressed = true
+				break;
+			case "KeyS":
+				keys.s.pressed = true
+				break;
+		}
+	})
 }
 
 export function PlayerMovementControlsUp(keys, animationInProgress) {

@@ -33,7 +33,7 @@ export class SpriteObject extends THREE.Sprite {
         z:0
     }
 
-    constructor(material, horiTile, vertiTile, map, scaleObj = {x: 1, y: 1, z: 1}) {
+    constructor(material, horiTile, vertiTile, map, position = {x: 0, y:0, z:0}, scaleObj = {x: 1, y: 1, z: 1}) {
         super(material)
         this.horiTile = horiTile
         this.vertiTile = vertiTile
@@ -43,6 +43,11 @@ export class SpriteObject extends THREE.Sprite {
         this.map.magFilter = THREE.NearestFilter
         this.scaleObj = scaleObj
         //let vector = new THREE.Vector3(this.scaleObj.x, this.scaleObj.y, this.scaleObj.z)
+
+        this.position.x = position.x
+        this.position.y = position.y
+        this.position.z = position.z
+
         this.scale.x = this.scaleObj.x
         this.scale.y = this.scaleObj.y
         this.scale.z = this.scaleObj.z
@@ -53,8 +58,6 @@ export class SpriteObject extends THREE.Sprite {
         this.bottom = this.position.y - this.scale.y/2
         this.front = this.position.z + this.scale.z/2
         this.back = this.position.z - this.scale.z/2
-
-        this.updateSides()
     }
 
     loop(spriteIndex, timeDuration) {

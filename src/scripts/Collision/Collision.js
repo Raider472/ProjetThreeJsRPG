@@ -47,3 +47,30 @@ export function collisionFromtop(obstacle, sprite, velocity) {
         return false
     }
 }
+
+export function collisionDetection(obstacle, sprite) {
+    obstacle.forEach((obstacles) => {
+		if(collision(obstacles, sprite, sprite.velocity)) {
+			if(collisionFromLeft(obstacles, sprite, sprite.velocity)) {
+                if(sprite.velocity.x > 0) {
+                    sprite.velocity.x = 0
+                }
+            }
+            if(collisionFromRight(obstacles, sprite, sprite.velocity)) {
+                if(sprite.velocity.x < 0) {
+                    sprite.velocity.x = 0
+                }
+            }
+            if(collisionFrombottom(obstacles, sprite, sprite.velocity)) {
+                if(sprite.velocity.y > 0) {
+                    sprite.velocity.y = 0
+                }
+            }
+            if(collisionFromtop(obstacles, sprite, sprite.velocity)) {
+                if (sprite.velocity.y < 0) {
+                    sprite.velocity.y = 0
+                }
+            }
+		}
+	})
+}

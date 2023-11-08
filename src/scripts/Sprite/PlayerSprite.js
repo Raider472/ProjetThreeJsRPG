@@ -9,8 +9,8 @@ export class PlayerSprite extends SpriteObject {
         z: 0
     }
 
-    constructor(material, horiTile, vertiTile, map, scaleObj = {x: 1, y: 1, z: 1}) {
-        super(material, horiTile, vertiTile, map, scaleObj)
+    constructor(material, horiTile, vertiTile, map, position = {x: 0, y:0, z:0}, scaleObj = {x: 1, y: 1, z: 1}) {
+        super(material, horiTile, vertiTile, map, position, scaleObj)
 
         this.updateSides()
     }
