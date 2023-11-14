@@ -3,14 +3,14 @@ body {
 }
 
 .toolbar-row {
-    padding: 0.5em;
-    background-color: white;
+    background-color: blueviolet;
     display: flex;
     justify-content: baseline;
 }
 
 .toolbar-item {
     background-color: grey;
-    padding:0.5em;
+    border: 5px ridge black;
+    padding:0.25rem;
     margin: auto;
 }

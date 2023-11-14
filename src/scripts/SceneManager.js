@@ -31,9 +31,6 @@ const MIN_CAMERA_POSITION = 2;
 const DEFAULT_CAMERA_POSITION = camera.position.z = 5;
 const MAX_CAMERA_POSITION = 100;
 
-const toolbarRow = document.querySelector('.toolbar-row');
-const toolbarItem = document.querySelector('.toolbar-item');
-
 scene.add(camera);
 
 // Gestion du zoom avec la molette de la souris avec listener de la molette de la souris pour le zoom de la caméra.
