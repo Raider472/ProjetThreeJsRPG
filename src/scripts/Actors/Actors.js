@@ -12,6 +12,7 @@ export class Actors {
     def;
     defS;
     shield;
+    vit;
     passiveSkills = [];
     crystalAttacks = [];
 
@@ -33,6 +34,7 @@ export class Actors {
                 this.def = actor[0].def;
                 this.defS = actor[0].defS;
                 this.shield = actor[0].shield;
+                this.vit = actor[0].vit;
                 this.passiveSkills = actor[0].passiveSkills;
                 this.crystalAttacks = actor[0].crystalAttacks;
             })
