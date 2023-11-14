@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { PlayerSprite } from "./Sprite/PlayerSprite";
 import { SpriteObject } from "./Sprite/Sprite";
+import { teamHeroes, teamMonsterTest } from "./ActorDeclaration";
 export { SpriteList, MovementSpriteObj }
 
 //Test De Sprite
@@ -24,7 +25,7 @@ const pos3 = {
 const mapTree = new THREE.TextureLoader().load("/sprite/TreeTest.png");
 const materialTree = new THREE.SpriteMaterial({map: mapTree});
 
-const testSprite = new PlayerSprite(materialSprite, 8, 8, map);
+const testSprite = new PlayerSprite(materialSprite, 8, 8, map, teamHeroes);
 const arbre = new SpriteObject(materialTree, 1, 1, mapTree, pos);
 const arbre2 = new SpriteObject(materialTree, 1, 1, mapTree, pos2);
 const arbre3 = new SpriteObject(materialTree, 1, 1, mapTree, pos3);

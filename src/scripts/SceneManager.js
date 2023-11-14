@@ -4,6 +4,7 @@ import { collisionDetection } from "./Collision/Collision";
 import * as Move from "./Mouvement";
 import { SpriteList } from "./SpriteDeclaration";
 import { MovementSpriteObj } from "./SpriteDeclaration";
+import { Hero } from "./Actors/Hero";
 
 const scene = new THREE.Scene();
 
@@ -14,7 +15,7 @@ renderer.setSize( window.innerWidth, window.innerHeight );
 gameWindow.appendChild( renderer.domElement );
 
 scene.add(SpriteList.playerSprite, SpriteList.tree, SpriteList.tree2, SpriteList.tree3);
-SpriteList.playerSprite.position.y = 2
+SpriteList.playerSprite.position.y = 2;
 let animationInProgress = false;
 const clock = new THREE.Clock
 
@@ -53,7 +54,7 @@ function onZoom(e) {
 //const mouvementControlsWASD = ['w', 'a', 's', 'd'];
 //const mouvementControlsZQSD = ['z', 'q', 's', 'd']; // Pour les clavier FR AZERTY
 
-const keys = Move.keys
+const keys = Move.keys;
 
 Move.PlayerMovementControlsDown(keys)
 
@@ -61,61 +62,62 @@ window.addEventListener("keyup", (event)=>{
 	animationInProgress = false;
 	switch(event.code) {
 		case "KeyA":
-			keys.a.pressed = false
+			keys.a.pressed = false;
+            console.log(SpriteList.playerSprite.team)
 			break;
 		case "KeyD":
-			keys.d.pressed = false
+			keys.d.pressed = false;
 			break;
 		case "KeyW":
-			keys.w.pressed = false
+			keys.w.pressed = false;
 			break;
 		case "KeyS":
-			keys.s.pressed = false
+			keys.s.pressed = false;
 			break;
 	}
 })
 
-const obstacle = [SpriteList.tree, SpriteList.tree2, SpriteList.tree3]
+const obstacle = [SpriteList.tree, SpriteList.tree2, SpriteList.tree3];
 
 function animate() {
 	requestAnimationFrame( animate );
 	renderer.render( scene, camera );
 
-	let deltaTime = clock.getDelta()
+	let deltaTime = clock.getDelta();
 
-	SpriteList.playerSprite.velocity.y = 0
+	SpriteList.playerSprite.velocity.y = 0;
 	if(keys.w.pressed) {
-        SpriteList.playerSprite.velocity.y = 0.05
+        SpriteList.playerSprite.velocity.y = 0.05;
         if(!animationInProgress) {
-            SpriteList.playerSprite.loop(MovementSpriteObj.arrayZ, 1.5)
-            animationInProgress = true
+            SpriteList.playerSprite.loop(MovementSpriteObj.arrayZ, 1.5);
+            animationInProgress = true;
         }
     }
     else if(keys.s.pressed) {
-        SpriteList.playerSprite.velocity.y = -0.05
+        SpriteList.playerSprite.velocity.y = -0.05;
         if(!animationInProgress) {
-            SpriteList.playerSprite.loop(MovementSpriteObj.arrayS, 1.5)   
-            animationInProgress = true
+            SpriteList.playerSprite.loop(MovementSpriteObj.arrayS, 1.5);
+            animationInProgress = true;
         }
     }
 
-    SpriteList.playerSprite.velocity.x = 0
+    SpriteList.playerSprite.velocity.x = 0;
     if(keys.d.pressed) {
-        SpriteList.playerSprite.velocity.x = 0.05
+        SpriteList.playerSprite.velocity.x = 0.05;
         if(!animationInProgress) {
-            SpriteList.playerSprite.loop(MovementSpriteObj.arrayD, 1.5)
-            animationInProgress = true
+            SpriteList.playerSprite.loop(MovementSpriteObj.arrayD, 1.5);
+            animationInProgress = true;
         }
     }
     else if(keys.a.pressed) {
-        SpriteList.playerSprite.velocity.x = -0.05
+        SpriteList.playerSprite.velocity.x = -0.05;
         if(!animationInProgress) {
-            SpriteList.playerSprite.loop(MovementSpriteObj.arrayQ, 1.5)
-            animationInProgress = true
+            SpriteList.playerSprite.loop(MovementSpriteObj.arrayQ, 1.5);
+            animationInProgress = true;
         }
     }
-	collisionDetection(obstacle, SpriteList.playerSprite)
-	SpriteList.playerSprite.update(deltaTime)	
+	collisionDetection(obstacle, SpriteList.playerSprite);
+	SpriteList.playerSprite.update(deltaTime);
 }
-animate()
+animate();
 onZoom();
