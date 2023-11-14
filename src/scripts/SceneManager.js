@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { collisionDetection } from "./Collision/Collision";
 import * as Move from "./Mouvement";
 import { SpriteList } from "./SpriteDeclaration";
@@ -31,6 +30,9 @@ const camera = new THREE.PerspectiveCamera(FOV, SCREEN_ASPECT, NEAR, FAR);
 const MIN_CAMERA_POSITION = 2;
 const DEFAULT_CAMERA_POSITION = camera.position.z = 5;
 const MAX_CAMERA_POSITION = 100;
+
+const toolbarRow = document.querySelector('.toolbar-row');
+const toolbarItem = document.querySelector('.toolbar-item');
 
 scene.add(camera);
 
