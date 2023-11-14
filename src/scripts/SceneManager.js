@@ -74,6 +74,26 @@ window.addEventListener("keyup", (event)=>{
 	}
 })
 
+// Logique pour UI 
+
+function inventoryManagement() {
+    const toolbarItem = document.getElementById('toolbar-item');
+    const inventoryUi = document.getElementById('inventory-ui');
+    const closeInventory = document.getElementById('close-inventory');
+
+    inventoryUi.hidden = true;
+
+    toolbarItem.addEventListener('click', () => {
+        inventoryUi.hidden = false;
+        toolbarItem.hidden = true;
+    });
+
+    closeInventory.addEventListener('click', () => {
+        inventoryUi.hidden = true;
+        toolbarItem.hidden = false;
+    })
+}
+
 const obstacle = [SpriteList.tree, SpriteList.tree2, SpriteList.tree3]
 
 function animate() {
@@ -116,5 +136,6 @@ function animate() {
 	collisionDetection(obstacle, SpriteList.playerSprite)
 	SpriteList.playerSprite.update(deltaTime)	
 }
-animate()
+animate();
+inventoryManagement()
 onZoom();

@@ -2,15 +2,48 @@ body {
     margin: 0;
 }
 
-.toolbar-row {
-    background-color: blueviolet;
+#toolbar-row {
     display: flex;
-    justify-content: baseline;
+    flex-direction: column;
+    align-content: space-between;
 }
 
-.toolbar-item {
+#toolbar-item {
+    position: absolute;
     background-color: grey;
     border: 5px ridge black;
-    padding:0.25rem;
-    margin: auto;
+    padding: 0.25rem;
+    opacity: 0.5;
+}
+
+#toolbar-item:hover {
+    background-color: white;
+}
+
+#inventory-ui {
+    position: absolute;
+    background-color: grey;
+    opacity: 0.3;
+}
+
+.inventory {
+    font-size: 36px;
+}
+
+.inventory-column {
+    font-size: 24px;
+    text-align: center;
+    color: white;
+}
+
+.inventory-item {
+    background-color: black;
+    border-radius: 25%;
+    padding: 2.5rem;
+    margin: 5px 5px 5px 5px;
+}
+
+.inventory-row {
+    display: inline-flex;
+    align-items: center;
 }

@@ -7,17 +7,69 @@
     <title>RPG Three.js</title>
 </head>
 <body>
-    <div id="game-renderer">
-        <div id="front-ui">
-            <div class="front-toolbar">
-                <div class="toolbar-row">
-                    <div class="toolbar-item">
-                        <img src="assets/backpack-ui.png" alt="" width="150px" height="150px">
+    <div id="root-window">
+        <div id="game-renderer">
+            <div id="toolbar-row">
+                <button id="toolbar-item">
+                    <img src="assets/backpack-ui.png" alt="" width="150px" height="150px" onclick="inventoryManagement()">
+                </button>
+            </div>
+            <div id="inventory-ui">
+                <div class="inventory">
+                    Inventaire
+                    <div class="inventory-inner">
+                        <button id="close-inventory">Fermer l'inventaire</button>
+                        <div class="inventory-row">
+                            <div class="inventory-column">
+                                Head<div class="inventory-item"></div>
+                                Shoulders<div class="inventory-item"></div>
+                                Hands<div class="inventory-item"></div>
+                                Legs<div class="inventory-item"></div>
+                            </div>
+                            <div class="inventory-character-display"><img src="assets/character-placeholder.png" alt="" width="150px" height="250px"></div>
+                            <div class="inventory-column">
+                                Face<div class="inventory-item"></div>
+                                Arms<div class="inventory-item"></div>
+                                Jewelry<div class="inventory-item"></div>
+                                Boots<div class="inventory-item"></div>
+                            </div>
+                        </div>
+                        <div class="inventory-row">
+                            <div class="inventory-item"></div>
+                            <div class="inventory-item"></div>
+                            <div class="inventory-item"></div>
+                            <div class="inventory-item"></div>
+                            <div class="inventory-item"></div>
+                            <div class="inventory-item"></div>
+                            <div class="inventory-item"></div>
+                            <div class="inventory-item"></div>
+                        </div>
+                        <div class="inventory-row">
+                            <div class="inventory-item"></div>
+                            <div class="inventory-item"></div>
+                            <div class="inventory-item"></div>
+                            <div class="inventory-item"></div>
+                            <div class="inventory-item"></div>
+                            <div class="inventory-item"></div>
+                            <div class="inventory-item"></div>
+                            <div class="inventory-item"></div>
+                        </div>
+                        <div class="inventory-row">
+                            <div class="inventory-item"></div>
+                            <div class="inventory-item"></div>
+                            <div class="inventory-item"></div>
+                            <div class="inventory-item"></div>
+                            <div class="inventory-item"></div>
+                            <div class="inventory-item"></div>
+                            <div class="inventory-item"></div>
+                            <div class="inventory-item"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <script type="module" src="src/scripts/SceneManager.js"></script>
 </body>
 </html>
