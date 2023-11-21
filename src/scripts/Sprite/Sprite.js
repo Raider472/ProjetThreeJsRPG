@@ -33,7 +33,9 @@ export class SpriteObject extends THREE.Sprite {
         z:0
     }
 
-    constructor(material, horiTile, vertiTile, map, position = {x: 0, y:0, z:0}, scaleObj = {x: 1, y: 1, z: 1}) {
+    idle
+
+    constructor(material, horiTile, vertiTile, map, position = {x: 0, y:0, z:0}, scaleObj = {x: 1, y: 1, z: 1}, idle = []) {
         super(material);
         this.horiTile = horiTile;
         this.vertiTile = vertiTile;
@@ -57,6 +59,8 @@ export class SpriteObject extends THREE.Sprite {
         this.bottom = this.position.y - this.scale.y/2;
         this.front = this.position.z + this.scale.z/2;
         this.back = this.position.z - this.scale.z/2;
+
+        this.idle = idle
     }
 
     loop(spriteIndex, timeDuration) {

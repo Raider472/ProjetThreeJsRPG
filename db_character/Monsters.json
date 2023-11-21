@@ -59,6 +59,26 @@
 			"crystalAttacks": [
 
 			]
+        },
+		{
+            "id": 4,
+			"class": "Monster",
+			"name": "Zombie",
+			"rarity": 1,
+			"hp": 50,
+			"atk": 20,
+			"atkS": 0,
+			"crit": 0.15,
+			"def": 25,
+			"defS": 5,
+			"shield": 2,
+			"vit": 10,
+			"passiveSkills": [
+
+			],
+			"crystalAttacks": [
+
+			]
         }
 	]
 }

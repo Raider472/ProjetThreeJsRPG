@@ -12,9 +12,19 @@ export class PlayerSprite extends SpriteObject {
 
     team;
 
-    constructor(material, horiTile, vertiTile, map, team, position = {x: 0, y:0, z:0}, scaleObj = {x: 1, y: 1, z: 1}) {
-        super(material, horiTile, vertiTile, map, position, scaleObj);
+    leftSprite
+    rightSprite
+    upSprite
+    downSprite
+
+    constructor(material, horiTile, vertiTile, map, team, position = {x: 0, y:0, z:0}, scaleObj = {x: 1, y: 1, z: 1}, idle = [], left = [], right = [], up = [], down = []) {
+        super(material, horiTile, vertiTile, map, position, scaleObj, idle);
         this.team = new Team(team);
+        this.leftSprite = left
+        this.rightSprite = right
+        this.upSprite = up
+        this.downSprite = down
+        this.loop(this.idle, 1.5)
         this.updateSides();
     }
 

@@ -74,3 +74,9 @@ export function collisionDetection(obstacle, sprite) {
 		}
 	})
 }
+
+export function collisionMonsters(monsters, sprite) {
+    return monsters.some((monster) => {
+        return collision(monster, sprite, sprite.velocity);
+    });
+}

@@ -1,6 +1,16 @@
 import { Actors } from "./Actors";
 
 export class Hero extends Actors {
+
+    head
+    shoulders
+    hands
+    legs
+    face
+    arms
+    jewelry
+    boots
+
     constructor(id) {
         super(id);
     }

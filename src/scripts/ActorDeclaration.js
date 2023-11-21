@@ -3,10 +3,8 @@ import { Hero } from "./Actors/Hero";
 import { Team } from "./Actors/Team";
 
 let teamArray = []
-const goblin = new Monsters(1)
-const bandit = new Monsters(3);
-teamArray.push(bandit);
-teamArray.push(goblin);
+const zombie = new Monsters(4)
+teamArray.push(zombie);
 
 let teamHero = []
 const rookie = new Hero(1)
