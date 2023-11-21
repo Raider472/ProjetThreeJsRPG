@@ -4,7 +4,7 @@ body {
 
 #toolbar-row {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-content: space-between;
 }
 
@@ -26,8 +26,16 @@ body {
     opacity: 0.3;
 }
 
+#inventory-inner {
+    display: flex;
+    flex-direction: row;
+    align-content: space-around;
+}
+
 .inventory {
     font-size: 36px;
+    margin-right: 2rem;
+    margin-left: 2rem;
 }
 
 .inventory-column {
