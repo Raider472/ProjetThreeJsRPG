@@ -17,21 +17,20 @@ SpriteList.playerSprite.position.y = 2
 let animationInProgress = false;
 const clock = new THREE.Clock
 
-// Camera :
+// Caméra :
 
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
-const FOV = 75; 
+const FOV = 90; 
 const SCREEN_ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
 const NEAR = 1;
 const FAR = 1000;
+
 const camera = new THREE.PerspectiveCamera(FOV, SCREEN_ASPECT, NEAR, FAR);
 
 const MIN_CAMERA_POSITION = 2;
 const DEFAULT_CAMERA_POSITION = camera.position.z = 5;
 const MAX_CAMERA_POSITION = 100;
-
-scene.add(camera);
 
 // Gestion du zoom avec la molette de la souris avec listener de la molette de la souris pour le zoom de la caméra.
 
@@ -48,9 +47,6 @@ function onZoom(e) {
 // Fin camera
 
 // Player mouvement controls :
-
-//const mouvementControlsWASD = ['w', 'a', 's', 'd'];
-//const mouvementControlsZQSD = ['z', 'q', 's', 'd']; // Pour les clavier FR AZERTY
 
 const keys = Move.keys
 
@@ -74,7 +70,7 @@ window.addEventListener("keyup", (event)=>{
 	}
 })
 
-// Logique pour UI 
+// UI :
 
 function inventoryManagement() {
     const toolbarItem = document.getElementById('toolbar-item');
@@ -137,5 +133,5 @@ function animate() {
 	SpriteList.playerSprite.update(deltaTime)	
 }
 animate();
-inventoryManagement()
+inventoryManagement();
 onZoom();

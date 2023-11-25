@@ -30,12 +30,31 @@ body {
     display: flex;
     flex-direction: row;
     align-content: space-around;
+    height: auto;
+}
+
+#close-inventory {
+    font-size: 24px;
+    border: 5px solid blanchedalmond;
+    float: right;
+}
+
+#test-combat {
+    position: absolute;
+}
+
+#quit-combat {
+    position: absolute;
+}
+
+.button-switch {
+    float: right;
 }
 
 .inventory {
     font-size: 36px;
-    margin-right: 2rem;
-    margin-left: 2rem;
+    margin-right: 2vh;
+    margin-left: 2vh;
 }
 
 .inventory-column {
@@ -47,6 +66,7 @@ body {
 .inventory-item {
     background-color: black;
     border-radius: 25%;
+    border: 5px solid blanchedalmond;
     padding: 2.5rem;
     margin: 5px 5px 5px 5px;
 }
