@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { SpriteObject } from './Sprite';
 import { Team } from '../Actors/Team';
 
+//TODO extendre la classe de la classe monstre (+ renommer monstre en entité)
 export class PlayerSprite extends SpriteObject {
 
     velocity = {
