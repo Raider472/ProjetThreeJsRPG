@@ -1,0 +1,84 @@
+{
+	"entities": [
+		{
+			"id": 1,
+			"class": "Monster",
+			"name": "Goblin",
+			"rarity": 1,
+			"hp": 40,
+			"atk": 20,
+			"atkS": 0,
+			"crit": 0.1,
+			"def": 10,
+			"defS": 10,
+			"shield": 1,
+			"vit": 10,
+			"passiveSkills": [
+
+			],
+			"crystalAttacks": [
+
+			]
+		},
+        {
+            "id": 2,
+			"class": "Monster",
+			"name": "Troll",
+			"rarity": 1,
+			"hp": 75,
+			"atk": 30,
+			"atkS": 0,
+			"crit": 0.15,
+			"def": 30,
+			"defS": 20,
+			"shield": 5,
+			"vit": 10,
+			"passiveSkills": [
+
+			],
+			"crystalAttacks": [
+
+			]
+        },
+		{
+            "id": 3,
+			"class": "Monster",
+			"name": "Bandit",
+			"rarity": 1,
+			"hp": 50,
+			"atk": 20,
+			"atkS": 0,
+			"crit": 0.15,
+			"def": 25,
+			"defS": 5,
+			"shield": 2,
+			"vit": 10,
+			"passiveSkills": [
+
+			],
+			"crystalAttacks": [
+
+			]
+        },
+		{
+            "id": 4,
+			"class": "Monster",
+			"name": "Zombie",
+			"rarity": 1,
+			"hp": 50,
+			"atk": 20,
+			"atkS": 0,
+			"crit": 0.15,
+			"def": 25,
+			"defS": 5,
+			"shield": 2,
+			"vit": 10,
+			"passiveSkills": [
+
+			],
+			"crystalAttacks": [
+
+			]
+        }
+	]
+}

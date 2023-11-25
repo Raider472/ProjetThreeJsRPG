@@ -1,0 +1,91 @@
+{
+	"entities": [
+		{
+			"id": 1,
+			"class": "DPS",
+			"name": "Leon the Rookie Knight",
+			"rarity": 1,
+			"hp": 70,
+			"atk": 40,
+			"atkS": 0,
+			"crit": 0.15,
+			"def": 15,
+			"defS": 10,
+			"shield": 3,
+			"vit": 10,
+			"passiveSkills": [
+				{
+					"id": "01S",
+					"name": "Rookies never dies!",
+					"desc": "Once per fight, if this character HP's reach 0, he will ressucitate with 10% of his maximal HP",
+					"effect": [
+						
+					]
+				}
+			],
+			"crystalAttacks": [
+				{"id": "01C", "name": "Forward Slash" }
+			]
+		},
+		{
+			"id": 2,
+			"class": "Tank",
+			"nom": "Edvard",
+			"rarity": 1,
+			"hp": 130,
+			"atk": 15,
+			"atkS": 0,
+			"crit": 0.05,
+			"def": 35,
+			"defS": 20,
+			"shield": 15,
+			"vit": 10,
+			"passiveSkills": [
+				
+			],
+			"crystalAttacks": [
+				
+			]
+		},
+		{
+			"id": 3,
+			"class": "Healer",
+			"nom": "Average Herbalist",
+			"rarity": 1,
+			"hp": 60,
+			"atk": 40,
+			"atkS": 0,
+			"crit": 0,
+			"def": 20,
+			"defS": 20,
+			"shield": 0,
+			"vit": 10,
+			"passiveSkills": [
+				
+			],
+			"crystalAttacks": [
+				
+			]
+		},
+		{
+			"id": 4,
+			"class": "DPS",
+			"nom": "Archer",
+			"rarity": 1,
+			"hp": 60,
+			"atk": 45,
+			"atkS": 0,
+			"crit": 0.2,
+			"def": 25,
+			"defS": 10,
+			"shield": 0,
+			"vit": 10,
+			"passiveSkills": [
+				
+			],
+			"crystalAttacks": [
+				
+			]
+		}
+	]
+}
