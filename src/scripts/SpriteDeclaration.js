@@ -77,7 +77,7 @@ const arbre = new SpriteObject(materialTree, 1, 1, mapTree, pos);
 const arbre2 = new SpriteObject(materialTree, 1, 1, mapTree, pos2);
 const arbre3 = new SpriteObject(materialTree, 1, 1, mapTree, pos3);
 const skeletonSprite = new SpriteObject(materialSkeleton, 6, 1, mapSkeleton, pos);
-const goblinSprite = new SpriteObject(materialGoblin, 12, 1, mapGoblin, pos4);
+const goblinSprite = new SpriteObject(materialGoblin, 12, 1, mapGoblin, pos3);
 
 const SpriteList = {
     playerSprite: testSprite,
