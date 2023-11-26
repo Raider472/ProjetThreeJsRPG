@@ -34,6 +34,17 @@ DEFAULT_CAMERA_POSITION
 function animate() {
 	requestAnimationFrame( animate );
 	renderer.render( scene, camera );
+
+	let deltaTime = clock.getDelta();
+
+	SpriteList.playerSprite.velocity.y = 0;
+	if(keys.w.pressed) {
+        SpriteList.playerSprite.velocity.y = 0.05;
+        if(!animationInProgress) {
+            SpriteList.playerSprite.loop(SpriteList.playerSprite.upSprite, 1.5);
+            animationInProgress = true;
+        }
+    }
 }
 animate();
 inventoryManagement();

@@ -1,0 +1,61 @@
+{
+    "weapons": [
+        {
+            "id": 1,
+            "name": "Bronze Sword",
+            "desc": "Your first crappy sword, but it will kill the first monsters you encounter !",
+            "price": "1",
+            "costDesc": "You need 1 Crystal to buy this item !",
+            "usedBy": ["DPS"],
+            "maximumPerInventory": "1",
+            "atkBuff": "2",
+            "shieldPenetration": "0",
+            "critBuff": "0",
+            "vitBuff": "1",
+            "buffDesc": "Attack : + 2, Shield Penetration : + 0, Critical Chance Bonus : + 0, Speed : + 1"
+
+        },
+        {
+            "id": 2,
+            "name": "Silver Sword",
+            "desc": "This is better ! But a new and better item will suit you better.",
+            "price": "5",
+            "costDesc": "You need 5 Crystal to buy this item !",
+            "usedBy": ["DPS"],
+            "maximumPerInventory": "1",
+            "atkBuff": "5",
+            "shieldPenetration": "0.005",
+            "critBuff": "0.005",
+            "vitBuff": "2",
+            "buffDesc": "Attack : + 5, Shield Penetration : + 0.5%, Critical Chance Bonus : + 0.5%, Speed : + 2"
+        },
+        {
+            "id": 3,
+            "name": "Gold Sword",
+            "desc": "Fancy.",
+            "price": "20",
+            "costDesc": "You need 20 Crystal to buy this item !",
+            "usedBy": ["DPS"],
+            "maximumPerInventory": "1",
+            "atkBuff": "8",
+            "shieldPenetration": "0.05",
+            "critBuff": "0.05",
+            "vitBuff": "3",
+            "buffDesc": "Attack : + 8, Shield Penetration : + 5%, Critical Chance Bonus : + 5%, Speed : + 3"
+        },
+        {
+            "id": 4,
+            "name": "Ethernal Sword",
+            "desc": "Where did you get that ??",
+            "price": "100",
+            "costDesc": "You need 100 Crystal to buy this item !",
+            "usedBy": ["DPS"],
+            "maximumPerInventory": "1",
+            "atkBuff": "20",
+            "shieldPenetration": "0.15",
+            "critBuff": "0.2",
+            "vitBuff": "8",
+            "buffDesc": "Attack : + 20, Shield Penetration : + 15%, Critical Chance Bonus : + 20%, Speed : + 3"
+        }
+    ]
+}
