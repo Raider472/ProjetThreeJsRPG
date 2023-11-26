@@ -1,3 +1,77 @@
 body {
     margin: 0;
 }
+
+#toolbar-row {
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
+}
+
+#toolbar-item {
+    position: absolute;
+    background-color: grey;
+    border: 5px ridge black;
+    padding: 0.25rem;
+    opacity: 0.5;
+}
+
+#toolbar-item:hover {
+    background-color: white;
+}
+
+#inventory-ui {
+    position: absolute;
+    background-color: grey;
+    opacity: 0.3;
+}
+
+#inventory-inner {
+    display: flex;
+    flex-direction: row;
+    align-content: space-around;
+    height: auto;
+}
+
+#close-inventory {
+    font-size: 24px;
+    border: 5px solid blanchedalmond;
+    float: right;
+}
+
+#test-combat {
+    position: absolute;
+}
+
+#quit-combat {
+    position: absolute;
+}
+
+.button-switch {
+    float: right;
+}
+
+.inventory {
+    font-size: 36px;
+    margin-right: 2vh;
+    margin-left: 2vh;
+}
+
+.inventory-column {
+    font-size: 24px;
+    text-align: center;
+    color: white;
+}
+
+.inventory-item {
+    background-color: black;
+    border-radius: 25%;
+    border: 5px solid blanchedalmond;
+    padding: 2.5rem;
+    margin: 5px 5px 5px 5px;
+}
+
+.inventory-row {
+    display: inline-flex;
+    align-items: center;
+}

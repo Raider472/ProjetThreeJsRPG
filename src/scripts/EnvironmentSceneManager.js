@@ -18,14 +18,15 @@ SpriteList.playerSprite.position.y = 2;
 let animationInProgress = false;
 const clock = new THREE.Clock
 
-// Camera :
+// Caméra :
 
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
-const FOV = 75; 
+const FOV = 90; 
 const SCREEN_ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
 const NEAR = 1;
 const FAR = 1000;
+
 const camera = new THREE.PerspectiveCamera(FOV, SCREEN_ASPECT, NEAR, FAR);
 
 const MIN_CAMERA_POSITION = 2;
@@ -82,6 +83,26 @@ window.addEventListener("keyup", (event)=>{
 
 const obstacle = [SpriteList.tree, SpriteList.tree2, SpriteList.tree3];
 const monsters = [SpriteList.testMonster, SpriteList.testMonster2];
+// UI :
+
+function inventoryManagement() {
+    const toolbarItem = document.getElementById('toolbar-item');
+    const inventoryUi = document.getElementById('inventory-ui');
+    const closeInventory = document.getElementById('close-inventory');
+
+    inventoryUi.hidden = true;
+
+    toolbarItem.addEventListener('click', () => {
+        inventoryUi.hidden = false;
+        toolbarItem.hidden = true;
+    });
+
+    closeInventory.addEventListener('click', () => {
+        inventoryUi.hidden = true;
+        toolbarItem.hidden = false;
+    })
+}
+
 
 function animate() {
 	requestAnimationFrame( animate );
@@ -134,3 +155,5 @@ function animate() {
 
 }
 animate();
+inventoryManagement();
+onZoom();
