@@ -17,6 +17,7 @@ const arrayQ = [24, 25, 26, 27, 28, 29]
 //Test De Sprite
 const map = new THREE.TextureLoader().load("/sprite/TemplateChar.png");
 const materialSprite = new THREE.SpriteMaterial({map: map});
+
 const pos = {
     x: 2,
     y:0,
@@ -66,9 +67,17 @@ const testMonster = new MonsterSprite(materialZombie, 4, 4, mapZombie, teamMonst
 const testMonster2 = new MonsterSprite(materialZombie, 4, 4, mapZombie, teamMonsterTest, posMons2, scaleMonster, [0, 1, 2, 3]);
 const testSprite = new PlayerSprite(materialSprite, 8, 8, map, teamHeroes, posHero, scaleHero, [6, 7], arrayQ, arrayD, arrayZ, arrayS);
 
+const mapSkeleton = new THREE.TextureLoader().load("/sprite/Monsters/Skeleton/Attack3.png");
+const materialSkeleton = new THREE.SpriteMaterial({map: mapSkeleton});
+
+const mapGoblin = new THREE.TextureLoader().load("/sprite/Monsters/Goblin/Attack3.png");
+const materialGoblin = new THREE.SpriteMaterial({map: mapGoblin});
+
 const arbre = new SpriteObject(materialTree, 1, 1, mapTree, pos);
 const arbre2 = new SpriteObject(materialTree, 1, 1, mapTree, pos2);
 const arbre3 = new SpriteObject(materialTree, 1, 1, mapTree, pos3);
+const skeletonSprite = new SpriteObject(materialSkeleton, 6, 1, mapSkeleton, pos);
+const goblinSprite = new SpriteObject(materialGoblin, 12, 1, mapGoblin, pos3);
 
 const SpriteList = {
     playerSprite: testSprite,
@@ -76,7 +85,9 @@ const SpriteList = {
     testMonster2: testMonster2,
     tree: arbre,
     tree2: arbre2,
-    tree3: arbre3
+    tree3: arbre3,
+    skeleton: skeletonSprite,
+    goblin: goblinSprite
 }
 /*
 testSprite.upSprite = arrayZ

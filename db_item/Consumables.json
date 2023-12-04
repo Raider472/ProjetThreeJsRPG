@@ -1,0 +1,58 @@
+{
+    "consumables": [
+        {
+            "id": 1,
+            "name": "Health Potion",
+            "desc": "Need some HPs ? This potion will give you 30% of your total HP points !",
+            "price": "1",
+            "costDesc": "You need 1 Crystal to buy this item !",
+            "usedBy": ["DPS", "Tank", "Healer", "Archer", "Mage"],
+            "maximumPerInventory": "5"
+        },
+        {
+            "id": 2,
+            "name": "Attack Points Potion",
+            "desc": "You're exhausted aren't you ? Use this potion to regain 20% of your total attack points !",
+            "price": "1",
+            "costDesc": "You need 1 Crystal to buy this item !",
+            "usedBy": ["DPS", "Tank", "Healer", "Archer", "Mage"],
+            "maximumPerInventory": "4"
+        },
+        {
+            "id": 3,
+            "name": "Shield Potion",
+            "desc": "Your shield is gone ? Use this potion to regain 20% of your total shiled capacity !",
+            "price": "3",
+            "costDesc": "You need 3 Crystal to buy this item !",
+            "usedBy": ["DPS", "Tank", "Healer", "Archer", "Mage"],
+            "maximumPerInventory": "4"
+        },
+        {
+            "id": 4,
+            "name": "Critic Potion",
+            "desc": "Need to slash some monsters ? Use this potion to increase your chances to attack with critical damage enabled !",
+            "price": "6",
+            "costDesc": "You need 6 Crystal to buy this item !",
+            "usedBy": ["DPS", "Tank", "Healer", "Archer", "Mage"],
+            "maximumPerInventory": "2"
+        },
+        {
+            "id": 5,
+            "name": "XP Potion",
+            "desc": "Are you tired to slay so many monsters for not enough XP ? Try this potion that will give the character of your choice 2 level ups !",
+            "price": "10",
+            "costDesc": "You need 10 Crystal to buy this item !",
+            "usedBy": ["DPS", "Tank", "Healer", "Archer", "Mage"],
+            "maximumPerInventory": "4"
+        },
+        {
+            "id": 6,
+            "name": "Stamina Potion",
+            "desc": "Your shield is quite heavy mate ? Drink this to gain some speed back !",
+            "price": "5",
+            "costDesc": "You need 10 Crystal to buy this item !",
+            "usedBy": ["DPS", "Tank", "Healer", "Archer", "Mage"],
+            "maximumPerInventory": "5"
+        }
+    ]
+}
