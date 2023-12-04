@@ -4,11 +4,14 @@ import { Team } from "./Actors/Team";
 
 let teamArray = []
 const zombie = new Monsters(4)
-teamArray.push(zombie);
+const bandit = new Monsters(3);
+teamArray.push(zombie, bandit);
 
 let teamHero = []
-const rookie = new Hero(1)
-teamHero.push(rookie)
+const rookie = new Hero(1);
+const tank = new Hero(2);
+const healer = new Hero(3);
+teamHero.push(rookie, tank, healer);
 
 export const teamMonsterTest = new Team(teamArray)
 export const teamHeroes = new Team(teamHero)

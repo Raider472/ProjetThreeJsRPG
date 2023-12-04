@@ -9,6 +9,7 @@ export class Hero extends Actors {
 
     constructor(id) {
         super(id);
+        this.isAi = false;
     }
 
     async fetchJson(filterId) {

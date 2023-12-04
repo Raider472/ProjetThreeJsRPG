@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { PlayerSprite } from "./Sprite/PlayerSprite";
-import { MonsterSprite } from "./Sprite/MonsterSprite";
-import { SpriteObject } from "./Sprite/Sprite";
+import { EntitySprite } from "./Sprite/EntitySprite";
+import { SpriteObject } from "./Sprite/SpriteObject";
 import { teamHeroes, teamMonsterTest } from "./ActorDeclaration";
 export { SpriteList }
 
@@ -63,8 +63,8 @@ const mapZombie = new THREE.TextureLoader().load("/sprite/Zombie.png");
 const materialTree = new THREE.SpriteMaterial({map: mapTree});
 const materialZombie = new THREE.SpriteMaterial({map: mapZombie});
 
-const testMonster = new MonsterSprite(materialZombie, 4, 4, mapZombie, teamMonsterTest, posMons, scaleMonster, [0, 1, 2, 3]);
-const testMonster2 = new MonsterSprite(materialZombie, 4, 4, mapZombie, teamMonsterTest, posMons2, scaleMonster, [0, 1, 2, 3]);
+const testMonster = new EntitySprite(materialZombie, 4, 4, mapZombie, teamMonsterTest, posMons, scaleMonster, [0, 1, 2, 3]);
+const testMonster2 = new EntitySprite(materialZombie, 4, 4, mapZombie, teamMonsterTest, posMons2, scaleMonster, [0, 1, 2, 3]);
 const testSprite = new PlayerSprite(materialSprite, 8, 8, map, teamHeroes, posHero, scaleHero, [6, 7], arrayQ, arrayD, arrayZ, arrayS);
 
 const mapSkeleton = new THREE.TextureLoader().load("/sprite/Monsters/Skeleton/Attack3.png");
