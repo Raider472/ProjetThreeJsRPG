@@ -3,7 +3,7 @@
 		{
 			"id": 1,
 			"class": "DPS",
-			"name": "Leon the Rookie Knight",
+			"name": "Leon, the Rookie Knight",
 			"rarity": 1,
 			"hp": 70,
 			"atk": 40,
@@ -69,7 +69,7 @@
 		},
 		{
 			"id": 4,
-			"class": "DPS",
+			"class": "Archer",
 			"nom": "Archer",
 			"rarity": 1,
 			"hp": 60,
@@ -79,7 +79,27 @@
 			"def": 25,
 			"defS": 10,
 			"shield": 0,
-			"vit": 10,
+			"vit": 15,
+			"passiveSkills": [
+				
+			],
+			"crystalAttacks": [
+				
+			]
+		},
+		{
+			"id": 5,
+			"class": "Mage",
+			"nom": "Phyllis, the Sage Mage",
+			"rarity": 1,
+			"hp": 45,
+			"atk": 55,
+			"atkS": 0,
+			"crit": 0.05,
+			"def": 15,
+			"defS": 10,
+			"shield": 0,
+			"vit": 12,
 			"passiveSkills": [
 				
 			],

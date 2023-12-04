@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>RPG Three.js</title>
+</head>
+<body>
+    <div id="root-window">
+        <div id="game-renderer">
+            <div class="button-switch">
+                <button id="quit-combat"><a href="./index.html">Quitter le combat !</a></button>
+            </div>
+
+                 <div id="ui-combat" class="bottom-ui">
+                    <span id="nb-crystals">0<img src="/assets/crystals.png" alt="Image Crystals" height="100px" width="100px"></span>
+                    <div class="row-combat-ui">
+                        <div class="character-combat-ui">
+                            <p>Personnage actuel</p>
+                            <span class="main-attack"><button class="select-action">Attaque Principale</button></span>
+                            <br>
+                            <span class="secondary-attack"><button class="select-action">Attaque Secondaire</button></span>
+                            <br>
+                            <span class="defend-character"><button class="select-action">Se Défendre</button></span>
+                        </div>
+                        <div class="character-combat-ui">
+                            <p>Personnage 1</p>
+                            <span class="lifepoints">PV : "variable ici"</span></span>
+                            <br>
+                            <span class="attackpoints">PA : "variable ici"</span></span>
+                        </div>
+                        <div class="character-combat-ui">
+                            <p>Personnage 2</p>
+                            <span class="lifepoints">PV : "variable ici"</span></span>
+                            <br>
+                            <span class="attackpoints">PA : "variable ici"</span></span>
+                        </div>
+                        <div class="character-combat-ui">
+                            <p>Personnage 3</p>
+                            <span class="lifepoints">PV : "variable ici"</span></span>
+                            <br>
+                            <span class="attackpoints">PA : "variable ici"</span></span>
+                        </div>
+                        <div class="character-combat-ui">
+                            <p>Personnage 4</p>
+                            <span class="lifepoints">PV : "variable ici"</span></span>
+                            <br>
+                            <span class="attackpoints">PA : "variable ici"</span></span>
+                        </div>
+                    </div>
+                </div>  
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="src/scripts/CombatSceneManager.js"></script>
+</body>
+</html>

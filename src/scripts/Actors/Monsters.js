@@ -12,7 +12,7 @@ export class Monsters extends Actors {
             let heroJsonFiltered = await heroJson.entities.filter(f => f.id === filterId);
             return heroJsonFiltered;
         } catch (error) {
-            console.error("Error fetching JSON:", error);
+            console.error("Error fetching JSON :", error);
         }
     }
 }
