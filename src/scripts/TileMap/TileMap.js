@@ -1,6 +1,5 @@
 import * as THREE from 'three';
-import { PlayerSprite } from '../Sprite/PlayerSprite';
-import { AssetFactory } from './AssestFactory';
+import { AssetFactory } from './AssetFactory';
 
 export class TileMap {
     constructor(scene) {
@@ -39,33 +38,15 @@ export class TileMap {
     initMap() {
         for (let i = 0; i < this.mapData.length; i++) { // i représente les lignes
             for (let j = 0; j < this.mapData[i].length; j++) { // j représente les colonnes
+                const createAsset = new AssetFactory(); 
 
                 const tileType = this.mapData[i][j];
-                const sprite = this.createSprite(tileType);
-
-                sprite.position.set(j * this.tileSize, 0, i * this.tileSize);
-
-                this.scene.add(sprite);
+                const sprite = createAsset.createAssetInstance(tileType, this.mapData[i][j], this.mapData[j][i]);
 
                 this.storeTileReference(tileType, sprite);
             }
         }
     }
-
-    createSprite(tileType) {
-      const assetsFactory = new AssetFactory();
-      const spriteObject = assetsFactory.assets[tileType]();
-  
-      if (spriteObject) {
-          const sprite = new THREE.Sprite(spriteObject.material);
-          sprite.position.set(spriteObject.position.x, spriteObject.position.y, spriteObject.position.z);
-          sprite.scale.set(spriteObject.scale.x, spriteObject.scale.y, spriteObject.scale.z);
-          return sprite;
-      } else {
-          console.warn(`Le type de tile ${tileType} n'est pas reconnu dans la classe AssetFactory !`);
-          return undefined;
-      }
-  }
 
         /**  Les différentes propriétés de la map :
      * 0 - Terrain

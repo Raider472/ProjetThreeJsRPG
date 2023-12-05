@@ -4,6 +4,7 @@ import { collisionDetection, collisionMonsters } from "./Collision/Collision";
 import * as Move from "./Mouvement";
 import { SpriteList } from "./SpriteDeclaration";
 import { TileMap } from "./TileMap/TileMap";
+import { AssetFactory } from "./TileMap/AssetFactory";
 
 export const scene = new THREE.Scene();
 const gameWindow = document.getElementById('game-renderer');
@@ -55,40 +56,26 @@ audioPlay.onclick = () => {audioLoader.load( '/assets/sounds/rpg_background_musi
 	backgroundMusic.play();
 })}
 
-console.log(backgroundMusic.isPlaying);
-
 const tileMap = new TileMap(scene);
-
-let terrain = [];
 
 function initialize() {
     let map = [];
-    for (let x = 0; x < tileMap.mapData.length; x++) {
-      const column = [];
-      for (let y = 0; y < tileMap.mapData[x].length; y++) {
-        const ids = {
-            terrainId: '0',
-            wallsId: '1',
-            treesId: '2',
-            charactersId: '3',
-            monstersId: '4',
-            exitDoorId: '5'
-        }
-        for (let id in ids) {
-            if (tileMap.mapData[x][y] == ids[id]) {
-                const newSprite = tileMap.createSprite(ids[id]);
-                console.log(tileMap.mapData[x][y])
-                console.log(newSprite);
-                scene.add(newSprite);
-                column.push(newSprite);
-            }
+    const column = [];
+    for (let i = 0; i < tileMap.mapData.length; i++) {
+      for (let j = 0; j < tileMap.mapData[i].length; j++) {
+        const tileType = tileMap.mapData[i][j];
+        const createAsset = new AssetFactory();
+        const newSprite = createAsset.createAssetInstance(tileType, i, j); // Utilisez les coordonnées (x, y) correctement ici
+
+        if (tileType === newSprite.userData) {
+        scene.add(newSprite);
+        column.push(newSprite);
         }
       }
-      map.push(column);
-      map.push([...Array(tileMap.tileSize)]);
     }
-  }
-
+    map.push(column);
+    console.log(map)
+}
 // Gestion du zoom avec la molette de la souris avec listener de la molette de la souris pour le zoom de la caméra.
 
 document.addEventListener('wheel', onZoom);
