@@ -1,7 +1,7 @@
 export class Team {
-    team = [];
+    teamArray;
 
     constructor(team) {
-        this.team = team;
+        this.teamArray = team;
     }
 }

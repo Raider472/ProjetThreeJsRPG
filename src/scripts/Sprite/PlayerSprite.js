@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import { SpriteObject } from './Sprite';
+import { EntitySprite } from './EntitySprite';
 import { Team } from '../Actors/Team';
 
 //TODO extendre la classe de la classe monstre (+ renommer monstre en entité)
-export class PlayerSprite extends SpriteObject {
+export class PlayerSprite extends EntitySprite {
 
     velocity = {
         x: 0,
@@ -11,16 +11,13 @@ export class PlayerSprite extends SpriteObject {
         z: 0
     }
 
-    team;
-
     leftSprite
     rightSprite
     upSprite
     downSprite
 
-    constructor(material, horiTile, vertiTile, map, team, position = {x: 0, y:0, z:0}, scaleObj = {x: 1, y: 1, z: 1}, idle = [], left = [], right = [], up = [], down = []) {
-        super(material, horiTile, vertiTile, map, position, scaleObj, idle);
-        this.team = new Team(team);
+    constructor(path, horiTile, vertiTile, team, position = {x: 0, y:0, z:0}, scaleObj = {x: 1, y: 1, z: 1}, idle = [], left = [], right = [], up = [], down = []) {
+        super(path, horiTile, vertiTile, team, position, scaleObj, idle);
         this.leftSprite = left
         this.rightSprite = right
         this.upSprite = up

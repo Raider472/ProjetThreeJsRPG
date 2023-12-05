@@ -52,7 +52,7 @@
 			"def": 25,
 			"defS": 5,
 			"shield": 2,
-			"vit": 10,
+			"vit": 30,
 			"passiveSkills": [
 
 			],
@@ -72,7 +72,7 @@
 			"def": 25,
 			"defS": 5,
 			"shield": 2,
-			"vit": 10,
+			"vit": 15,
 			"passiveSkills": [
 
 			],

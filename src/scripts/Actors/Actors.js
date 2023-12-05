@@ -16,6 +16,8 @@ export class Actors {
     passiveSkills = [];
     crystalAttacks = [];
 
+    isAi = true;
+
     constructor(id) {
         if(this.constructor === Actors) {
             throw new Error('Abstract class "Actors" cannot be instantiated directly');
