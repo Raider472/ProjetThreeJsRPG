@@ -41,7 +41,7 @@ export class TileMap {
                 const createAsset = new AssetFactory(); 
 
                 const tileType = this.mapData[i][j];
-                const sprite = createAsset.createAssetInstance(tileType, this.mapData[i][j], this.mapData[j][i]);
+                const sprite = createAsset.createAssetInstance(tileType, i, j);
 
                 this.storeTileReference(tileType, sprite);
             }

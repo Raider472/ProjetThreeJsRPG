@@ -9,6 +9,7 @@ export class AssetFactory {
      */
     
     constructor() {
+        // TODO : La propriété 'y' ne se met pas à jour !
         this.assets = {
             // 0 - Terrain du jeu
             '0': (x, y, z = -0.5) => {
@@ -33,7 +34,7 @@ export class AssetFactory {
                 const scale = {x: 1, y: 1, z: 1}
                 const mapTrees = new THREE.TextureLoader().load("/assets/game_assets/timefantasy_characters/RPGMAKERMV/expansion/bonus_trees.png");
                 const materialTrees = new THREE.SpriteMaterial({map: mapTrees});
-                const treesDeclaration = new SpriteObject(materialTrees, 8, 8, mapTrees, {x, y, z}, scale);
+                const treesDeclaration = new SpriteObject(materialTrees, 16, 16, mapTrees, {x, y, z}, scale);
                 treesDeclaration.userData = '2';
                 return treesDeclaration;
             },
@@ -71,7 +72,7 @@ export class AssetFactory {
         if (assetId in this.assets) {
             return this.assets[assetId](x, y);
         } else {
-            console.warn(`Asset Id ${assetId} is not found.`);
+            console.warn(`l'id de l'asset : ${assetId} est introuvable !`);
             return undefined;
         }
     }

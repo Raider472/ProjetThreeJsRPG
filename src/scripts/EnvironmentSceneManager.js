@@ -58,12 +58,9 @@ audioPlay.onclick = () => {audioLoader.load( '/assets/sounds/rpg_background_musi
 
 const tileMap = new TileMap(scene);
 
-
-// TODO: Problème de boucle !!
 function initialize() {
     let map = [];
     let column = [];
-    let row = [];
     for (let i = 0; i < tileMap.mapData.length; i++) {
 
       for (let j = 0; j < tileMap.mapData[i].length; j++) {
@@ -74,10 +71,8 @@ function initialize() {
         if (tileType === newSprite.userData) {
         scene.add(newSprite);
         column.push(newSprite);
-        row.push(newSprite);
         }
       }
-      map.push(row);
     }
     map.push(column);
     console.log(map);
