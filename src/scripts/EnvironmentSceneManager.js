@@ -2,13 +2,13 @@ import * as THREE from "three";
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { collisionDetection, collisionMonsters } from "./Collision/Collision";
 import * as Move from "./Mouvement";
-import { SpriteList } from "./SpriteDeclaration";
+import { SpriteList } from "./Declarations/SpriteDeclaration";
 import { Combat } from "./Combat";
 
 //Variable importante
 let isInCombat = false;
-let lastPositionHero = null;
 let combat = null;
+let switchCamera1 = false;
 
 //Fin
 
@@ -85,17 +85,19 @@ window.addEventListener("keyup", (event)=>{
 			keys.s.pressed = false;
 			break;
         case "KeyK":
-            //debug Key
-            console.log(lastPositionHero);
+            //debug Key for console log
             if(combat != null) {
-                console.log(combat);
+                console.log(combat, "combat class information");
             }
             break;
         case "KeyL":
-            //debug Key
+            //debug Key to pass a turn
             if(combat != null) {
                 combat.turnOver()
             }
+            break;
+        case "KeyO":
+            switchCamera1 = !switchCamera1
             break;
 	}
 })
@@ -165,18 +167,28 @@ function animate() {
             animationInProgress = true;
         }
     }
+    if(switchCamera1 === true) {
+        renderer.render( scene, camera )
+        switchCamera1 = false;
+    }
 	collisionDetection(obstacle, SpriteList.playerSprite);
     //Colision for player/monster
     let resultColissionMonster = collisionMonsters(monsters, SpriteList.playerSprite);
-    if(resultColissionMonster.collision === true) {
+    if(resultColissionMonster.collision === true && isInCombat === false) {
         isInCombat = true;
-        lastPositionHero = SpriteList.playerSprite.position;
-        SpriteList.playerSprite.position.x = 45;
+        //Possibly have to remove that
         resultColissionMonster.monster.position.x = 55;
-        combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray);
+        //Possibly have to remove that
+        combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray, scene);
+    }
+    if(isInCombat === true) {
+        for(let i = 0; i < combat.actors.length; i++) {
+            combat.actors[i].update(deltaTime);
+        }
     }
 	SpriteList.playerSprite.update(deltaTime);
     SpriteList.testMonster.update(deltaTime);
+    SpriteList.testMonster2.update(deltaTime);
 
 }
 animate();

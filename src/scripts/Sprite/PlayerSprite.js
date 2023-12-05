@@ -16,8 +16,8 @@ export class PlayerSprite extends EntitySprite {
     upSprite
     downSprite
 
-    constructor(material, horiTile, vertiTile, map, team, position = {x: 0, y:0, z:0}, scaleObj = {x: 1, y: 1, z: 1}, idle = [], left = [], right = [], up = [], down = []) {
-        super(material, horiTile, vertiTile, map, team, position, scaleObj, idle);
+    constructor(path, horiTile, vertiTile, team, position = {x: 0, y:0, z:0}, scaleObj = {x: 1, y: 1, z: 1}, idle = [], left = [], right = [], up = [], down = []) {
+        super(path, horiTile, vertiTile, team, position, scaleObj, idle);
         this.leftSprite = left
         this.rightSprite = right
         this.upSprite = up

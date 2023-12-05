@@ -18,6 +18,7 @@ export class SpriteObject extends THREE.Sprite {
     horiTile;
     vertiTile;
 
+    material;
     map;
     offsetX;
     offsetY;
@@ -35,11 +36,18 @@ export class SpriteObject extends THREE.Sprite {
 
     idle
 
-    constructor(material, horiTile, vertiTile, map, position = {x: 0, y:0, z:0}, scaleObj = {x: 1, y: 1, z: 1}, idle = []) {
-        super(material);
+    constructor(path, horiTile, vertiTile, position = {x: 0, y:0, z:0}, scaleObj = {x: 1, y: 1, z: 1}, idle = []) {
+        console.log(path)
+        let material = new THREE.TextureLoader().load(path);
+        let mapBefore = new THREE.SpriteMaterial({map: material});
+        console.log(mapBefore)
+        super(mapBefore);
         this.horiTile = horiTile;
         this.vertiTile = vertiTile;
-        this.map = map;
+        this.material = mapBefore
+        this.map = material;
+
+        console.log(this.map)
 
         this.map.repeat.set(1/horiTile, 1/vertiTile);
         this.map.magFilter = THREE.NearestFilter;
@@ -61,6 +69,7 @@ export class SpriteObject extends THREE.Sprite {
         this.back = this.position.z - this.scale.z/2;
 
         this.idle = idle
+        this.loop(this.idle, 1.5)
     }
 
     loop(spriteIndex, timeDuration) {
