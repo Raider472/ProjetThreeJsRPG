@@ -64,7 +64,8 @@ audioPlay.onclick = () => {audioLoader.load( '/assets/sounds/rpg_background_musi
 
 console.log(backgroundMusic.isPlaying);
 
-const tileMap = new TileMap(scene);
+//Remove comm
+//const tileMap = new TileMap(scene);
 
 let terrain = [];
 
@@ -236,6 +237,7 @@ function animate() {
         //Possibly have to remove that
         combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray, scene);
     }
+    //debug
     if(isInCombat === true) {
         for(let i = 0; i < combat.actors.length; i++) {
             combat.actors[i].update(deltaTime);
