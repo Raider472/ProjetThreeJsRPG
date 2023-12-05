@@ -58,23 +58,29 @@ audioPlay.onclick = () => {audioLoader.load( '/assets/sounds/rpg_background_musi
 
 const tileMap = new TileMap(scene);
 
+
+// TODO: Problème de boucle !!
 function initialize() {
     let map = [];
-    const column = [];
+    let column = [];
+    let row = [];
     for (let i = 0; i < tileMap.mapData.length; i++) {
+
       for (let j = 0; j < tileMap.mapData[i].length; j++) {
         const tileType = tileMap.mapData[i][j];
         const createAsset = new AssetFactory();
-        const newSprite = createAsset.createAssetInstance(tileType, i, j); // Utilisez les coordonnées (x, y) correctement ici
+        const newSprite = createAsset.createAssetInstance(tileType, i, j); 
 
         if (tileType === newSprite.userData) {
         scene.add(newSprite);
         column.push(newSprite);
+        row.push(newSprite);
         }
       }
+      map.push(row);
     }
     map.push(column);
-    console.log(map)
+    console.log(map);
 }
 // Gestion du zoom avec la molette de la souris avec listener de la molette de la souris pour le zoom de la caméra.
 

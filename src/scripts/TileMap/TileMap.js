@@ -4,7 +4,7 @@ import { AssetFactory } from './AssetFactory';
 export class TileMap {
     constructor(scene) {
         this.scene = scene;
-        this.tileSize = 50; // taille d'une tuille en pixels;
+        this.tileSize = 1; // taille d'une tuille en pixels;
 
         // Variables qui stockent les éléments de la scène : 
 
