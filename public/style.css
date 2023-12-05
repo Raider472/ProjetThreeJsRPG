@@ -15,6 +15,12 @@ a:hover {
     height: 100%;
 }
 
+#play-audio {
+    position: fixed;
+    right: 0;
+    background-color: none;
+}
+
 /** UI pour l'inventaire de la scène environnement **/
 
 #toolbar-row {

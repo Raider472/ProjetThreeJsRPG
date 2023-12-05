@@ -13,7 +13,6 @@ let switchCamera1 = false;
 //Fin
 
 export const scene = new THREE.Scene();
-
 const gameWindow = document.getElementById('game-renderer');
 
 const renderer = new THREE.WebGLRenderer();
@@ -45,6 +44,57 @@ camera2.position.x = 50
 camera2.position.z = 5
 
 scene.add(camera, camera2);
+
+// Music de fond du jeu :
+
+const listener = new THREE.AudioListener();
+camera.add(listener);
+
+const audioLoader = new THREE.AudioLoader();
+
+const backgroundMusic = new THREE.Audio(listener);
+
+const audioPlay = document.getElementById('play-audio');
+audioPlay.onclick = () => {audioLoader.load( '/assets/sounds/rpg_background_music.mp3', function( buffer ) {
+	backgroundMusic.setBuffer( buffer );
+	backgroundMusic.setLoop( true );
+	backgroundMusic.setVolume( 0.3 );
+	backgroundMusic.play();
+})}
+
+console.log(backgroundMusic.isPlaying);
+
+const tileMap = new TileMap(scene);
+
+let terrain = [];
+
+function initialize() {
+    let map = [];
+    for (let x = 0; x < tileMap.mapData.length; x++) {
+      const column = [];
+      for (let y = 0; y < tileMap.mapData[x].length; y++) {
+        const ids = {
+            terrainId: '0',
+            wallsId: '1',
+            treesId: '2',
+            charactersId: '3',
+            monstersId: '4',
+            exitDoorId: '5'
+        }
+        for (let id in ids) {
+            if (tileMap.mapData[x][y] == ids[id]) {
+                const newSprite = tileMap.createSprite(ids[id]);
+                console.log(tileMap.mapData[x][y])
+                console.log(newSprite);
+                scene.add(newSprite);
+                column.push(newSprite);
+            }
+        }
+      }
+      map.push(column);
+      map.push([...Array(tileMap.tileSize)]);
+    }
+  }
 
 // Gestion du zoom avec la molette de la souris avec listener de la molette de la souris pour le zoom de la caméra.
 
@@ -137,8 +187,10 @@ function animate() {
 	let deltaTime = clock.getDelta();
 
 	SpriteList.playerSprite.velocity.y = 0;
+
 	if(keys.w.pressed && isInCombat === false) {
         SpriteList.playerSprite.velocity.y = 0.05;
+        //0.008
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.upSprite, 1.5);
             animationInProgress = true;
@@ -146,6 +198,7 @@ function animate() {
     }
     else if(keys.s.pressed && isInCombat === false) {
         SpriteList.playerSprite.velocity.y = -0.05;
+        //-0.008
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.downSprite, 1.5);
             animationInProgress = true;
@@ -155,6 +208,7 @@ function animate() {
     SpriteList.playerSprite.velocity.x = 0;
     if(keys.d.pressed && isInCombat === false) {
         SpriteList.playerSprite.velocity.x = 0.05;
+        //0.008
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.rightSprite, 1.5);
             animationInProgress = true;
@@ -162,6 +216,7 @@ function animate() {
     }
     else if(keys.a.pressed && isInCombat === false) {
         SpriteList.playerSprite.velocity.x = -0.05;
+        //-0.008
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.leftSprite, 1.5);
             animationInProgress = true;
@@ -193,4 +248,5 @@ function animate() {
 }
 animate();
 inventoryManagement();
+initialize();
 onZoom();
