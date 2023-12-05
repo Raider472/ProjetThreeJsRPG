@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { PlayerSprite } from '../Sprite/PlayerSprite';
-export {SpriteObject} from './SpriteObject';
+import { AssetFactory } from './AssestFactory';
 
 export class TileMap {
     constructor(scene) {
@@ -22,28 +22,23 @@ export class TileMap {
             '1', '1', '1', '1', '1', '1', '1', '1', '1', '1',
         ];
 
+        // Sauvegardes des éléments : 
+
         this.terrain = [];
         this.characters = [];
         this.monsters = [];
         this.walls = [];
-        this.tress = [];
+        this.trees = [];
         this.exitDoor = null;
 
-
-        // Création des différents éléments :
+        // Initialisation de la carte :
 
         this.initMap();
-        this.createTerrain();
-        this.createCharacters();
-        this.createMonsters();
-        this.createWalls();
-        this.createTrees();
-        this.createExitDoor();
     }
 
     initMap() {
         for (let i = 0; i < this.mapData.length; i++) { // i représente les lignes
-            for (let j = 0; j < this.mapSize; j++) { // j représente les colonnes
+            for (let j = 0; j < this.mapData[i].length; j++) { // j représente les colonnes
 
                 const tileType = this.mapData[i][j];
                 const sprite = this.createSprite(tileType);
@@ -57,13 +52,20 @@ export class TileMap {
         }
     }
 
-    createSprite() {
-      const geometry = new THREE.PlaneGeometry(this.tileSize, this.tileSize);
-      const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
-      const sprite = new THREE.Mesh(geometry, material);
+    createSprite(tileType) {
+      const assetsFactory = new AssetFactory();
+      const spriteObject = assetsFactory.assets[tileType]();
   
-      return sprite;
-    }
+      if (spriteObject) {
+          const sprite = new THREE.Sprite(spriteObject.material);
+          sprite.position.set(spriteObject.position.x, spriteObject.position.y, spriteObject.position.z);
+          sprite.scale.set(spriteObject.scale.x, spriteObject.scale.y, spriteObject.scale.z);
+          return sprite;
+      } else {
+          console.warn(`Le type de tile ${tileType} n'est pas reconnu dans la classe AssetFactory !`);
+          return undefined;
+      }
+  }
 
         /**  Les différentes propriétés de la map :
      * 0 - Terrain
@@ -95,72 +97,5 @@ export class TileMap {
             this.exitDoor = sprite;
             break;
         }
-    }
-
-      // Factory des éléments :
-
-      createTerrain() {
-        let terrain = {
-          'grass': {
-
-          }
-        }
-      }
-
-      createCharacters() {
-        let characters = {
-          'character-1': {
-            mapCharacter: new THREE.TextureLoader().load("/sprites/TemplateChar.png"),
-            materialCharacter: new THREE.SpriteMaterial({map: mapCharacter}),
-            characterDeclaration: new PlayerSprite(materialSprite, 8, 8, map, teamHeroes, posHero, scaleHero, [6, 7], arrayQ, arrayD, arrayZ, arrayS)
-          }
-        };
-
-        characters.forEach(character => {
-          this.scene.add(character);
-        });
-    }
-    
-      createMonsters() {
-        const monsters = {
-          'zombie-1': {
-            mapZombie: new THREE.TextureLoader().load("/sprite/Zombie.png"),
-            materialZombie: new THREE.SpriteMaterial({ map: mapZombie }),
-            zombieDeclaration: new MonsterSprite(materialZombie, 4, 4, mapZombie, teamMonsterTest, posMons, scaleMonster, [0, 1, 2, 3])
-          }
-        };
-        
-        monsters.forEach(monster => {
-          this.scene.add(monster[0]);
-        });
-    }
-    
-      createWalls() {
-        const walls = {
-          'wall-1': {
-
-          }
-        };
-
-        walls.forEach(wall => {
-          this.scene.add(wall);
-        });
-    }
-    
-      createTrees() {
-        const trees = {
-          'tree-1': {
-
-          }
-        };
-        
-        trees.forEach(tree => {
-          this.scene.add(tree);
-        });
-    }
-    
-      createExitDoor() {
-        const exitDoor = new 
-        this.scene.add(this.exitDoor);
     }
 }
