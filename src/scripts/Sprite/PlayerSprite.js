@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { EntitySprite } from './EntitySprite';
 import { Team } from '../Actors/Team';
 
-//TODO extendre la classe de la classe monstre (+ renommer monstre en entité)
+
 export class PlayerSprite extends EntitySprite {
 
     velocity = {
@@ -22,7 +22,7 @@ export class PlayerSprite extends EntitySprite {
         this.rightSprite = right
         this.upSprite = up
         this.downSprite = down
-        this.loop(this.idle, 1.5)
+        this.loop(this.idle, 1)
         this.updateSides();
     }
 
@@ -34,8 +34,8 @@ export class PlayerSprite extends EntitySprite {
             this.runningTileSprite = (this.runningTileSprite +1) % this.indexSprite.length;
             this.currentTile = this.indexSprite[this.runningTileSprite];
 
-            this.offsetX = (this.currentTile %  this.horiTile) / this.vertiTile;
-            this.offsetY = (this.vertiTile - Math.floor(this.currentTile/ this.horiTile)-1) / this.vertiTile;
+            this.offsetX = (this.currentTile % this.horiTile) / this.horiTile;
+            this.offsetY = (this.vertiTile - Math.floor(this.currentTile / this.horiTile)-1) / this.vertiTile;
             this.map.offset.x = this.offsetX;
             this.map.offset.y = this.offsetY;
         }

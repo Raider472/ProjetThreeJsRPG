@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 
+
 export class SpriteObject extends THREE.Sprite {
 
     scaleObj = {
@@ -65,7 +66,7 @@ export class SpriteObject extends THREE.Sprite {
         this.back = this.position.z - this.scale.z/2;
 
         this.idle = idle
-        this.loop(this.idle, 1.5)
+        this.loop(this.idle, 1)
     }
 
     loop(spriteIndex, timeDuration) {
@@ -83,8 +84,8 @@ export class SpriteObject extends THREE.Sprite {
             this.runningTileSprite = (this.runningTileSprite +1) % this.indexSprite.length;
             this.currentTile = this.indexSprite[this.runningTileSprite];
 
-            this.offsetX = (this.currentTile %  this.horiTile) / this.vertiTile;
-            this.offsetY = (this.vertiTile - Math.floor(this.currentTile/ this.horiTile)-1) / this.vertiTile;
+            this.offsetX = (this.currentTile % this.horiTile) / this.horiTile;
+            this.offsetY = (this.vertiTile - Math.floor(this.currentTile / this.horiTile)-1) / this.vertiTile;
             this.map.offset.x = this.offsetX;
             this.map.offset.y = this.offsetY;
         }

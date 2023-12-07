@@ -9,6 +9,7 @@ import { Combat } from "./Combat";
 let isInCombat = false;
 let combat = null;
 let switchCamera1 = false;
+export const loopSpeed = 1;
 
 //Fin
 
@@ -193,7 +194,7 @@ function animate() {
         SpriteList.playerSprite.velocity.y = 0.05;
         //0.008
         if(!animationInProgress) {
-            SpriteList.playerSprite.loop(SpriteList.playerSprite.upSprite, 1.5);
+            SpriteList.playerSprite.loop(SpriteList.playerSprite.upSprite, loopSpeed);
             animationInProgress = true;
         }
     }
@@ -201,7 +202,7 @@ function animate() {
         SpriteList.playerSprite.velocity.y = -0.05;
         //-0.008
         if(!animationInProgress) {
-            SpriteList.playerSprite.loop(SpriteList.playerSprite.downSprite, 1.5);
+            SpriteList.playerSprite.loop(SpriteList.playerSprite.downSprite, loopSpeed);
             animationInProgress = true;
         }
     }
@@ -211,7 +212,7 @@ function animate() {
         SpriteList.playerSprite.velocity.x = 0.05;
         //0.008
         if(!animationInProgress) {
-            SpriteList.playerSprite.loop(SpriteList.playerSprite.rightSprite, 1.5);
+            SpriteList.playerSprite.loop(SpriteList.playerSprite.rightSprite, loopSpeed);
             animationInProgress = true;
         }
     }
@@ -219,7 +220,7 @@ function animate() {
         SpriteList.playerSprite.velocity.x = -0.05;
         //-0.008
         if(!animationInProgress) {
-            SpriteList.playerSprite.loop(SpriteList.playerSprite.leftSprite, 1.5);
+            SpriteList.playerSprite.loop(SpriteList.playerSprite.leftSprite, loopSpeed);
             animationInProgress = true;
         }
     }
@@ -232,9 +233,6 @@ function animate() {
     let resultColissionMonster = collisionMonsters(monsters, SpriteList.playerSprite);
     if(resultColissionMonster.collision === true && isInCombat === false) {
         isInCombat = true;
-        //Possibly have to remove that
-        resultColissionMonster.monster.position.x = 55;
-        //Possibly have to remove that
         combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray, scene);
     }
     //debug

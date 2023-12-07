@@ -1,12 +1,14 @@
 import { SpriteObject } from "./Sprite/SpriteObject";
 import * as THREE from "three";
 import { mapsCrossReferenceHeroCombat } from "./Declarations/MapsDeclaration";
+import { mapsCrossReferenceMonsterCombat } from "./Declarations/MapsDeclaration";
 
 export class Combat {
 
     heroTeam;
     monsterTeam;
 
+    crystal = 0;
 
     turnActors = [];
     actors = []
@@ -35,18 +37,25 @@ export class Combat {
     }
 
     deployCharacter() {
+        let scale = {x: 1, y: 1, z: 1};
         //Add heroes to the scene
         for(let i = 0; i < this.heroTeam.length; i++) {
             let filteredEntities = mapsCrossReferenceHeroCombat.entities.filter(entity => entity.id === this.heroTeam[i].id);
 
             let position = {x: 45, y: 2.25 - i*2, z: 0};
-            let scale = {x: 1, y: 1, z: 1};
-            let hero = new SpriteObject(filteredEntities[0].path, 8, 8, position, scale, filteredEntities[0].idle);
+            let hero = new SpriteObject(filteredEntities[0].path, filteredEntities[0].horiTile, filteredEntities[0].vertiTile, position, scale, filteredEntities[0].idle);
             this.actors.push(hero);
             this.scene.add(hero);
         }
         //Add Monsters to the scene
-        
+        for(let i = 0; i < this.monsterTeam.length; i++) {
+            let filteredEntities = mapsCrossReferenceMonsterCombat.entities.filter(entity => entity.id === this.monsterTeam[i].id);
+
+            let position = {x: 55, y: 2.25 - i*2, z: 0};
+            let monster = new SpriteObject(filteredEntities[0].path, filteredEntities[0].horiTile, filteredEntities[0].vertiTile, position, scale, filteredEntities[0].idle);
+            this.actors.push(monster);
+            this.scene.add(monster);
+        }
     }
 
     createInitialTurn() {
