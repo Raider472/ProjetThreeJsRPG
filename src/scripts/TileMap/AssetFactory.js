@@ -21,7 +21,7 @@ export class AssetFactory {
                 return terrainDeclaration;
             },
             // 1 - Murs
-            '1': (x, y, z = 1) => {
+            '1': (x, y, z = -0.1) => {
                 const scale = {x: 1, y: 1, z: 1}
                 const mapWall = new THREE.TextureLoader().load("/assets/game_assets/timefantasy_characters/frames/chests/chest3/1.png");
                 const materialWall = new THREE.SpriteMaterial({map: mapWall});
@@ -30,7 +30,7 @@ export class AssetFactory {
                 return wallDeclaration;
             },
             // 2 - Arbres
-            '2': (x, y, z = 0) => {
+            '2': (x, y, z = -0.1) => {
                 const scale = {x: 1, y: 1, z: 1}
                 const mapTrees = new THREE.TextureLoader().load("/assets/game_assets/timefantasy_characters/RPGMAKERMV/expansion/bonus_trees.png");
                 const materialTrees = new THREE.SpriteMaterial({map: mapTrees});
@@ -57,7 +57,7 @@ export class AssetFactory {
                 return monstersDeclaration;
             },
             // 5 - Porte de sortie
-            '5': (x, y, z = 1) => {
+            '5': (x, y, z = -0.1) => {
                 const scale = {x: 1, y: 1, z: 1}
                 const mapDoor = new THREE.TextureLoader().load("/assets/game_assets/timefantasy_characters/RPGMAKERMV/characters/!doors.png");
                 const materialDoor = new THREE.SpriteMaterial({map: mapDoor});
