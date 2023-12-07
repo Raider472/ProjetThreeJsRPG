@@ -4,6 +4,7 @@ import { AssetFactory } from './AssetFactory';
 export class TileMap {
     constructor(scene) {
         this.scene = scene;
+        this.tileSize = 1; // taille d'une tuille en pixels;
 
         // Variables qui stockent les éléments de la scène : 
 
@@ -27,7 +28,24 @@ export class TileMap {
         this.monsters = [];
         this.walls = [];
         this.trees = [];
-        this.exitDoor = '';
+        this.exitDoor = null;
+
+        // Initialisation de la carte :
+
+        this.initMap();
+    }
+
+    initMap() {
+        for (let i = 0; i < this.mapData.length; i++) { // i représente les lignes
+            for (let j = 0; j < this.mapData[i].length; j++) { // j représente les colonnes
+                const createAsset = new AssetFactory(); 
+
+                const tileType = this.mapData[i][j];
+                const sprite = createAsset.createAssetInstance(tileType, i, j);
+
+                this.storeTileReference(tileType, sprite);
+            }
+        }
     }
 
         /**  Les différentes propriétés de la map :

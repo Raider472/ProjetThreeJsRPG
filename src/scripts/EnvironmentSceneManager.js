@@ -60,25 +60,23 @@ const tileMap = new TileMap(scene);
 
 function initialize() {
     let map = [];
+    let column = [];
     for (let i = 0; i < tileMap.mapData.length; i++) {
+
       for (let j = 0; j < tileMap.mapData[i].length; j++) {
-        console.log(tileMap.mapData[i][j].length)
-        console.log(j)
-        console.log(i)
         const tileType = tileMap.mapData[i][j];
         const createAsset = new AssetFactory();
         const newSprite = createAsset.createAssetInstance(tileType, i, j); 
 
         if (tileType === newSprite.userData) {
         scene.add(newSprite);
-        tileMap.storeTileReference(tileType, newSprite);
-        map.push(newSprite);
+        column.push(newSprite);
         }
       }
     }
+    map.push(column);
     console.log(map);
 }
-
 // Gestion du zoom avec la molette de la souris avec listener de la molette de la souris pour le zoom de la caméra.
 
 document.addEventListener('wheel', onZoom);
@@ -153,7 +151,6 @@ function animate() {
 	SpriteList.playerSprite.velocity.y = 0;
 	if(keys.w.pressed) {
         SpriteList.playerSprite.velocity.y = 0.008;
-        // camera.position.y += 0.008;
         //renderer.render( scene, camera );
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.upSprite, 1.5);
@@ -162,7 +159,6 @@ function animate() {
     }
     else if(keys.s.pressed) {
         SpriteList.playerSprite.velocity.y = -0.008;
-        // camera.position.y -= 0.008;
         //renderer.render( scene, camera2 );
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.downSprite, 1.5);
@@ -173,7 +169,6 @@ function animate() {
     SpriteList.playerSprite.velocity.x = 0;
     if(keys.d.pressed) {
         SpriteList.playerSprite.velocity.x = 0.008;
-        // camera.position.x += 0.008;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.rightSprite, 1.5);
             animationInProgress = true;
@@ -181,7 +176,6 @@ function animate() {
     }
     else if(keys.a.pressed) {
         SpriteList.playerSprite.velocity.x = -0.008;
-        // camera.position.x -= 0.008;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.leftSprite, 1.5);
             animationInProgress = true;
