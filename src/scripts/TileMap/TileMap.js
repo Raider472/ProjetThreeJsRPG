@@ -9,16 +9,10 @@ export class TileMap {
         // Variables qui stockent les éléments de la scène : 
 
         this.mapData = [
-            '1', '1', '1', '1', '1', '1', '1', '1', '5', '1',
-            '1', '0', '0', '0', '0', '0', '1', '0', '0', '1',
-            '1', '0', '0', '0', '0', '2', '1', '0', '0', '1',
-            '1', '0', '0', '0', '0', '0', '0', '0', '0', '1',
-            '1', '0', '0', '0', '0', '0', '0', '0', '0', '1',
-            '1', '3', '0', '0', '0', '0', '0', '0', '0', '1',
-            '1', '0', '0', '0', '0', '0', '0', '0', '0', '1',
-            '1', '0', '0', '0', '4', '0', '0', '0', '0', '1',
-            '1', '0', '0', '0', '0', '0', '0', '0', '0', '1',
-            '1', '1', '1', '1', '1', '1', '1', '1', '1', '1',
+            '1', '1', '1', '1', '1',
+            '1', '0', '0', '0', '1',
+            '1', '0', '0', '0', '1', 
+            '1', '1', '1', '1', '1', 
         ];
 
         // Sauvegardes des éléments : 
@@ -29,23 +23,6 @@ export class TileMap {
         this.walls = [];
         this.trees = [];
         this.exitDoor = null;
-
-        // Initialisation de la carte :
-
-        this.initMap();
-    }
-
-    initMap() {
-        for (let i = 0; i < this.mapData.length; i++) { // i représente les lignes
-            for (let j = 0; j < this.mapData[i].length; j++) { // j représente les colonnes
-                const createAsset = new AssetFactory(); 
-
-                const tileType = this.mapData[i][j];
-                const sprite = createAsset.createAssetInstance(tileType, i, j);
-
-                this.storeTileReference(tileType, sprite);
-            }
-        }
     }
 
         /**  Les différentes propriétés de la map :

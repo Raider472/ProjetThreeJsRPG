@@ -60,23 +60,21 @@ const tileMap = new TileMap(scene);
 
 function initialize() {
     let map = [];
-    let column = [];
+
     for (let i = 0; i < tileMap.mapData.length; i++) {
+        for (let j = 0; j < tileMap.mapData[i].length; j++) {
+            const tileType = tileMap.mapData[i][j];
+            const createAsset = new AssetFactory();
+            const newSprite = createAsset.createAssetInstance(tileType, i, j);
 
-      for (let j = 0; j < tileMap.mapData[i].length; j++) {
-        const tileType = tileMap.mapData[i][j];
-        const createAsset = new AssetFactory();
-        const newSprite = createAsset.createAssetInstance(tileType, i, j); 
-
-        if (tileType === newSprite.userData) {
-        scene.add(newSprite);
-        column.push(newSprite);
+            scene.add(newSprite);
+            map.push(newSprite);
         }
-      }
     }
-    map.push(column);
+
     console.log(map);
 }
+
 // Gestion du zoom avec la molette de la souris avec listener de la molette de la souris pour le zoom de la caméra.
 
 document.addEventListener('wheel', onZoom);
