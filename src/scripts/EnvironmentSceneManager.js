@@ -25,7 +25,7 @@ const SCREEN_HEIGHT = window.innerHeight;
 const FOV = 90; 
 const SCREEN_ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
 const NEAR = 1;
-const FAR = 1000;
+const FAR = 100;
 
 const camera = new THREE.PerspectiveCamera(FOV, SCREEN_ASPECT, NEAR, FAR);
 
@@ -58,7 +58,7 @@ audioPlay.onclick = () => {audioLoader.load( '/assets/sounds/rpg_background_musi
 
 const tileMap = new TileMap(scene);
 
-function initialize() {
+function initializeMap() {
     let map = [];
 
     for (let i = 0; i < tileMap.mapData.length; i++) {
@@ -192,5 +192,5 @@ function animate() {
 }
 animate();
 inventoryManagement();
-initialize();
+initializeMap();
 onZoom();
