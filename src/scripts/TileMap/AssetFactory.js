@@ -57,7 +57,7 @@ export class AssetFactory {
                 return monstersDeclaration;
             },
             // 5 - Porte de sortie
-            '5': (x, y, z = 1) => {
+            '5': (x, y, z = -0.1) => {
                 const scale = {x: 1, y: 1, z: 1}
                 const mapDoor = new THREE.TextureLoader().load("/assets/game_assets/timefantasy_characters/RPGMAKERMV/characters/!doors.png");
                 const materialDoor = new THREE.SpriteMaterial({map: mapDoor});
