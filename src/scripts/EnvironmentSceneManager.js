@@ -1,9 +1,9 @@
 import * as THREE from "three";
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { collisionDetection, collisionMonsters } from "./Collision/Collision";
 import * as Move from "./Mouvement";
 import { SpriteList } from "./Declarations/SpriteDeclaration";
 import { Combat } from "./Combat";
+import { TileMap } from "./TileMap/TileMap"; // Import the TileMap class from the appropriate module
 
 //Variable importante
 let isInCombat = false;
@@ -16,7 +16,7 @@ export const scene = new THREE.Scene();
 const gameWindow = document.getElementById('game-renderer');
 
 const renderer = new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.setSize( window.innerWidth, window.innerHeight*8/10 );
 gameWindow.appendChild( renderer.domElement );
 
 scene.add(SpriteList.playerSprite, SpriteList.tree, SpriteList.tree2, SpriteList.tree3, SpriteList.testMonster, SpriteList.testMonster2);
@@ -50,17 +50,17 @@ scene.add(camera, camera2);
 const listener = new THREE.AudioListener();
 camera.add(listener);
 
-const audioLoader = new THREE.AudioLoader();
+//const audioLoader = new THREE.AudioLoader();
 
 const backgroundMusic = new THREE.Audio(listener);
 
-const audioPlay = document.getElementById('play-audio');
+/* const audioPlay = document.getElementById('play-audio');
 audioPlay.onclick = () => {audioLoader.load( '/assets/sounds/rpg_background_music.mp3', function( buffer ) {
 	backgroundMusic.setBuffer( buffer );
 	backgroundMusic.setLoop( true );
 	backgroundMusic.setVolume( 0.3 );
 	backgroundMusic.play();
-})}
+})} */
 
 console.log(backgroundMusic.isPlaying);
 

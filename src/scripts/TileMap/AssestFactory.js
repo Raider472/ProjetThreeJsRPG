@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { SpriteObject } from '../Sprite/Sprite';
+import { SpriteObject } from '../Sprite/SpriteObject';
 
 export class AssetFactory {
     /**
