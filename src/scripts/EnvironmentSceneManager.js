@@ -60,6 +60,18 @@ const tileMap = new TileMap(scene);
 
 function initializeMap() {
     let map = [];
+    let terrain = [];
+
+    for (let i = 0; i < tileMap.terrainData.length; i++) {
+        for (let j = 0; j < tileMap.terrainData[i].length; j++) {
+            const tileType = tileMap.terrainData[i][j];
+            const createAsset = new AssetFactory();
+            const newSprite = createAsset.createAssetInstance(tileType, i, j);
+
+            scene.add(newSprite);
+            terrain.push(newSprite);
+        }
+    }
 
     for (let i = 0; i < tileMap.mapData.length; i++) {
         for (let j = 0; j < tileMap.mapData[i].length; j++) {
