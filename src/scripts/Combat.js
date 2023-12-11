@@ -15,8 +15,14 @@ export class Combat {
 
     scene;
 
+    actions = {
+        normalAttack: 0,
+        specialAttack: 1
+    }
+
     //DOM Element
     domCombat;
+    controller
 
     //Debug DOM, may change during the development
     pActual;
@@ -25,21 +31,15 @@ export class Combat {
     constructor(heroTeam, monsterTeam, scene) {
         this.giveIdToActors(heroTeam, monsterTeam);
         this.scene = scene;
-        this.domCombat = document.getElementById("menuCombatTest");
+        this.domCombat = document.getElementById("menuCombat");
         this.deployCharacter();
         this.createInitialTurn();
-        //debug
+        //Info Tour Actuel
         this.pActual = this.domCombat.querySelector("#entityActuel");
         this.pActual.innerHTML = this.turnActors[0].entity.name;
-        //debug
-        this.domCombat.classList.add("menuCombatTestVisible")
-        //debug
-        this.chooseEnemyDiv = document.getElementById("menuChooseEnnemyTest")
-        this.chooseEnemyDiv.classList.add("menuChooseTestVisible")
-        for(let i = 0; i < this.monsterTeam.length; i++) {
-            this.chooseEnemyDiv.children[i].value = this.monsterTeam[i].id
-            this.chooseEnemyDiv.children[i].classList.remove("menuButtonTestHidden")
-        }
+        //Dom
+        this.domCombat.classList.add("menuCombatVisible")
+        this.chooseEnemyDiv = document.getElementById("menuChooseEnnemy")
     }
 
     giveIdToActors(heroTeam, monsterTeam) {
@@ -86,14 +86,36 @@ export class Combat {
 
     turnOver() {
         this.turnActors.push(this.turnActors.shift());
+        this.pActual.innerHTML = this.turnActors[0].entity.name;
         if(this.turnActors[0].entity.isAi === true) {
-            this.pActual.innerHTML = this.turnActors[0].entity.name;
             this.aiActionSelection()
         }
         else {
             //debug
-            this.pActual.innerHTML = this.turnActors[0].entity.name;
         }
+    }
+
+    generateTarget(decision) {
+        this.controller = new AbortController()
+        this.domCombat.querySelector("#actionButton").classList.add("menuCombatHiddenButton")
+        for(let i = 0; i < this.monsterTeam.length; i++) {
+            let inputButton = document.createElement("input");
+            inputButton.value = this.monsterTeam[i].id;
+            inputButton.type = "button"
+            this.chooseEnemyDiv.appendChild(inputButton);
+            inputButton.addEventListener('click', () => this.attack(inputButton.value, decision), { signal: this.controller.signal });
+        }
+        let inputButton = document.createElement("input");
+        inputButton.value = "back";
+        inputButton.type = "button"
+        this.chooseEnemyDiv.appendChild(inputButton);
+        inputButton.addEventListener('click', () => this.removeGeneratedTarget(), { signal: this.controller.signal });
+    }
+
+    removeGeneratedTarget() {
+        this.controller.abort();
+        this.domCombat.querySelector("#actionButton").classList.remove("menuCombatHiddenButton");
+        this.chooseEnemyDiv.innerHTML = "";
     }
 
     aiActionSelection() {
@@ -110,6 +132,14 @@ export class Combat {
         }
     }
 
+    attack(index, decision) {
+        this.removeGeneratedTarget();
+        if(decision === this.actions.normalAttack) {
+            this.normalAttack(index);
+        }
+    }
+
+    //TODO Use DefStats
     normalAttack(index) {
         index = Number(index)
         let indexNumber = this.turnActors.findIndex(actor => actor.id === index);

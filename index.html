@@ -211,21 +211,20 @@
         </div>
     </div>
 
-    <div id="menuCombatTest" class="menuCombatTestHidden">
+    <div id="menuCombat" class="menuCombaHidden">
         <label for="entityActuel">tour actuel: </p>
         <p id="entityActuel"></p>
-        <input type="button" id="attack" value="attack">
-        <input type="button" id="crystalAttack" value="crystal attack">
-        <input type="button" id="defend" value="defend">
-        <input type="button" id="skip" value="skip">
+        <div id="actionButton">
+            <input type="button" id="attack" value="attack">
+            <input type="button" id="crystalAttack" value="crystal attack">
+            <input type="button" id="defend" value="defend">
+            <input type="button" id="item" value="item">
+            <input type="button" id="skip" value="skip">
+        </div>
     </div>
 
-    <div id="menuChooseEnnemyTest" class="menuChooseTestHidden">
-        <input type="button" value="0" id="attackBtn1" class="menuButtonTestHidden">
-        <input type="button" value="0" id="attackBtn2" class="menuButtonTestHidden">
-        <input type="button" value="0" id="attackBtn3" class="menuButtonTestHidden">
-        <input type="button" value="0" id="attackBtn4" class="menuButtonTestHidden">
-        <input type="button" value="back" onclick="console.log(this.value)">
+    <div id="menuChooseEnnemy" class="menuChoose">
+
     </div>
 
     <script type="module" src="src/scripts/EnvironmentSceneManager.js"></script>

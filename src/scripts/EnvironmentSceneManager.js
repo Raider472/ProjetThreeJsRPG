@@ -5,13 +5,8 @@ import * as Move from "./Mouvement";
 import { SpriteList } from "./Declarations/SpriteDeclaration";
 import { Combat } from "./Combat";
 
-function attack(index) {
-    combat.normalAttack(index);
-}
-document.querySelector('[id=attackBtn1]').addEventListener('click', function() {attack(this.value)});
-document.querySelector('[id=attackBtn2]').addEventListener('click', function() {attack(this.value)});
-document.querySelector('[id=attackBtn3]').addEventListener('click', function() {attack(this.value)});
-document.querySelector('[id=attackBtn4]').addEventListener('click', function() {attack(this.value)});
+
+document.querySelector('[id=attack]').addEventListener('click',() => combat.generateTarget(0));
 
 //Variable importante
 let isInCombat = false;
