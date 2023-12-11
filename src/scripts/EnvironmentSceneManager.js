@@ -5,6 +5,14 @@ import * as Move from "./Mouvement";
 import { SpriteList } from "./Declarations/SpriteDeclaration";
 import { Combat } from "./Combat";
 
+function attack(index) {
+    combat.normalAttack(index);
+}
+document.querySelector('[id=attackBtn1]').addEventListener('click', function() {attack(this.value)});
+document.querySelector('[id=attackBtn2]').addEventListener('click', function() {attack(this.value)});
+document.querySelector('[id=attackBtn3]').addEventListener('click', function() {attack(this.value)});
+document.querySelector('[id=attackBtn4]').addEventListener('click', function() {attack(this.value)});
+
 //Variable importante
 let isInCombat = false;
 let combat = null;
@@ -139,7 +147,13 @@ window.addEventListener("keyup", (event)=>{
         case "KeyK":
             //debug Key for console log
             if(combat != null) {
-                console.log(combat, "combat class information");
+                console.log(combat.turnActors, "combat class information");
+            }
+            break;
+        case "KeyJ":
+            //debug Key for console log
+            if(combat != null) {
+                console.log(combat, "combat class information Overall");
             }
             break;
         case "KeyL":
