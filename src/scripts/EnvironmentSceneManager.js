@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { collisionDetection, collisionMonsters } from "./Collision/Collision";
 import * as Move from "./Mouvement";
 import { SpriteList } from "./SpriteDeclaration";
