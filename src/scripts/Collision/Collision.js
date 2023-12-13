@@ -76,7 +76,16 @@ export function collisionDetection(obstacle, sprite) {
 }
 
 export function collisionMonsters(monsters, sprite) {
-    return monsters.some((monster) => {
-        return collision(monster, sprite, sprite.velocity);
+    let result = { collision: false, monster: null};
+
+    monsters.some((monster) => {
+        if (collision(monster, sprite, sprite.velocity)) {
+            result.collision = true;
+            result.monster = monster;
+            return true; // exit the loop early if there is a collision
+        }
+        return false;
     });
+
+    return result;
 }

@@ -4,7 +4,6 @@ import { collisionDetection, collisionMonsters } from "./Collision/Collision";
 import * as Move from "./Mouvement";
 import { SpriteList } from "./SpriteDeclaration";
 import { TileMap } from "./TileMap/TileMap";
-import { AssetFactory } from "./TileMap/AssetFactory";
 
 export const scene = new THREE.Scene();
 const gameWindow = document.getElementById('game-renderer');
@@ -34,8 +33,8 @@ const DEFAULT_CAMERA_POSITION = camera.position.z = 5;
 const MAX_CAMERA_POSITION = 100;
 
 const camera2 = new THREE.PerspectiveCamera(FOV, SCREEN_ASPECT, NEAR, FAR)
-camera2.position.z = 5;
-camera2.position.x = 3
+camera2.position.x = 50
+camera2.position.z = 5
 
 scene.add(camera, camera2);
 
@@ -57,6 +56,7 @@ audioPlay.onclick = () => {audioLoader.load( '/assets/sounds/rpg_background_musi
 })}
 
 const tileMap = new TileMap(scene);
+console.log(backgroundMusic.isPlaying);
 
 function initializeMap() {
     let map = [];
@@ -97,7 +97,7 @@ function onZoom(e) {
 	camera.position.z -= e.deltaY * zoomSpeed;
 	camera.position.z = Math.min(MAX_CAMERA_POSITION, Math.max(MIN_CAMERA_POSITION, camera.position.z));
 	camera.updateProjectionMatrix();
-  }
+}
 
 // Fin camera
 
@@ -115,7 +115,6 @@ window.addEventListener("keyup", (event)=>{
 	switch(event.code) {
 		case "KeyA":
 			keys.a.pressed = false;
-            console.log(SpriteList.playerSprite.team)
 			break;
 		case "KeyD":
 			keys.d.pressed = false;
@@ -126,6 +125,21 @@ window.addEventListener("keyup", (event)=>{
 		case "KeyS":
 			keys.s.pressed = false;
 			break;
+        case "KeyK":
+            //debug Key for console log
+            if(combat != null) {
+                console.log(combat, "combat class information");
+            }
+            break;
+        case "KeyL":
+            //debug Key to pass a turn
+            if(combat != null) {
+                combat.turnOver()
+            }
+            break;
+        case "KeyO":
+            switchCamera1 = !switchCamera1
+            break;
 	}
 })
 
@@ -154,52 +168,71 @@ function inventoryManagement() {
 
 function animate() {
 	requestAnimationFrame( animate );
-	renderer.render( scene, camera );
+    if(isInCombat) {
+        renderer.render( scene, camera2 );
+    }
+    else {
+        renderer.render( scene, camera );
+    }
 
 	let deltaTime = clock.getDelta();
 
 	SpriteList.playerSprite.velocity.y = 0;
-	if(keys.w.pressed) {
-        SpriteList.playerSprite.velocity.y = 0.008;
-        //renderer.render( scene, camera );
+
+	if(keys.w.pressed && isInCombat === false) {
+        SpriteList.playerSprite.velocity.y = 0.05;
+        //0.008
         if(!animationInProgress) {
-            SpriteList.playerSprite.loop(SpriteList.playerSprite.upSprite, 1.5);
+            SpriteList.playerSprite.loop(SpriteList.playerSprite.upSprite, loopSpeed);
             animationInProgress = true;
         }
     }
-    else if(keys.s.pressed) {
-        SpriteList.playerSprite.velocity.y = -0.008;
-        //renderer.render( scene, camera2 );
+    else if(keys.s.pressed && isInCombat === false) {
+        SpriteList.playerSprite.velocity.y = -0.05;
+        //-0.008
         if(!animationInProgress) {
-            SpriteList.playerSprite.loop(SpriteList.playerSprite.downSprite, 1.5);
+            SpriteList.playerSprite.loop(SpriteList.playerSprite.downSprite, loopSpeed);
             animationInProgress = true;
         }
     }
 
     SpriteList.playerSprite.velocity.x = 0;
-    if(keys.d.pressed) {
-        SpriteList.playerSprite.velocity.x = 0.008;
+    if(keys.d.pressed && isInCombat === false) {
+        SpriteList.playerSprite.velocity.x = 0.05;
+        //0.008
         if(!animationInProgress) {
-            SpriteList.playerSprite.loop(SpriteList.playerSprite.rightSprite, 1.5);
+            SpriteList.playerSprite.loop(SpriteList.playerSprite.rightSprite, loopSpeed);
             animationInProgress = true;
         }
     }
-    else if(keys.a.pressed) {
-        SpriteList.playerSprite.velocity.x = -0.008;
+    else if(keys.a.pressed && isInCombat === false) {
+        SpriteList.playerSprite.velocity.x = -0.05;
+        //-0.008
         if(!animationInProgress) {
-            SpriteList.playerSprite.loop(SpriteList.playerSprite.leftSprite, 1.5);
+            SpriteList.playerSprite.loop(SpriteList.playerSprite.leftSprite, loopSpeed);
             animationInProgress = true;
         }
+    }
+    if(switchCamera1 === true) {
+        renderer.render( scene, camera )
+        switchCamera1 = false;
     }
 	collisionDetection(obstacle, SpriteList.playerSprite);
-    if(collisionMonsters(monsters, SpriteList.playerSprite) === true) {
-        console.log("collMonst");
+    //Colision for player/monster
+    let resultColissionMonster = collisionMonsters(monsters, SpriteList.playerSprite);
+    if(resultColissionMonster.collision === true && isInCombat === false) {
+        isInCombat = true;
+        combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray, scene);
     }
-    else {
-        console.log("gdtrfjuhybrdfhuy")
+    //debug
+    if(isInCombat === true) {
+        for(let i = 0; i < combat.actors.length; i++) {
+            combat.actors[i].update(deltaTime);
+        }
     }
 	SpriteList.playerSprite.update(deltaTime);
     SpriteList.testMonster.update(deltaTime);
+    SpriteList.testMonster2.update(deltaTime);
 
 }
 animate();

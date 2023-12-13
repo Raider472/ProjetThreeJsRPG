@@ -12,7 +12,7 @@
 			"def": 15,
 			"defS": 10,
 			"shield": 3,
-			"vit": 10,
+			"vit": 30,
 			"passiveSkills": [
 				{
 					"id": "01S",
@@ -30,7 +30,7 @@
 		{
 			"id": 2,
 			"class": "Tank",
-			"nom": "Edvard",
+			"name": "Edvard",
 			"rarity": 1,
 			"hp": 130,
 			"atk": 15,
@@ -50,7 +50,7 @@
 		{
 			"id": 3,
 			"class": "Healer",
-			"nom": "Average Herbalist",
+			"name": "Average Herbalist",
 			"rarity": 1,
 			"hp": 60,
 			"atk": 40,
@@ -59,7 +59,7 @@
 			"def": 20,
 			"defS": 20,
 			"shield": 0,
-			"vit": 10,
+			"vit": 25,
 			"passiveSkills": [
 				
 			],
@@ -70,7 +70,7 @@
 		{
 			"id": 4,
 			"class": "Archer",
-			"nom": "Archer",
+			"name": "Archer",
 			"rarity": 1,
 			"hp": 60,
 			"atk": 45,
@@ -90,7 +90,7 @@
 		{
 			"id": 5,
 			"class": "Mage",
-			"nom": "Phyllis, the Sage Mage",
+			"name": "Phyllis, the Sage Mage",
 			"rarity": 1,
 			"hp": 45,
 			"atk": 55,

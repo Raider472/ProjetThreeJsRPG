@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import { SpriteObject } from './Sprite';
+import { EntitySprite } from './EntitySprite';
 import { Team } from '../Actors/Team';
 
-//TODO extendre la classe de la classe monstre (+ renommer monstre en entité)
-export class PlayerSprite extends SpriteObject {
+
+export class PlayerSprite extends EntitySprite {
 
     velocity = {
         x: 0,
@@ -11,21 +11,18 @@ export class PlayerSprite extends SpriteObject {
         z: 0
     }
 
-    team;
-
     leftSprite
     rightSprite
     upSprite
     downSprite
 
-    constructor(material, horiTile, vertiTile, map, team, position = {x: 0, y:0, z:0}, scaleObj = {x: 1, y: 1, z: 1}, idle = [], left = [], right = [], up = [], down = []) {
-        super(material, horiTile, vertiTile, map, position, scaleObj, idle);
-        this.team = new Team(team);
+    constructor(path, horiTile, vertiTile, team, position = {x: 0, y:0, z:0}, scaleObj = {x: 1, y: 1, z: 1}, idle = [], left = [], right = [], up = [], down = []) {
+        super(path, horiTile, vertiTile, team, position, scaleObj, idle);
         this.leftSprite = left
         this.rightSprite = right
         this.upSprite = up
         this.downSprite = down
-        this.loop(this.idle, 1.5)
+        this.loop(this.idle, 1)
         this.updateSides();
     }
 
@@ -37,8 +34,8 @@ export class PlayerSprite extends SpriteObject {
             this.runningTileSprite = (this.runningTileSprite +1) % this.indexSprite.length;
             this.currentTile = this.indexSprite[this.runningTileSprite];
 
-            this.offsetX = (this.currentTile %  this.horiTile) / this.vertiTile;
-            this.offsetY = (this.vertiTile - Math.floor(this.currentTile/ this.horiTile)-1) / this.vertiTile;
+            this.offsetX = (this.currentTile % this.horiTile) / this.horiTile;
+            this.offsetY = (this.vertiTile - Math.floor(this.currentTile / this.horiTile)-1) / this.vertiTile;
             this.map.offset.x = this.offsetX;
             this.map.offset.y = this.offsetY;
         }

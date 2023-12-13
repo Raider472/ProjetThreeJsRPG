@@ -153,8 +153,16 @@ a:hover {
     margin: 10px 10px 10px 10px;
 }
 
-.main-attack, .secondary-attack, .defend-character {
+.menuCombatTestHidden {
+    display: flex;
+    justify-content: center;
+    visibility: hidden;
+}
 
+.menuCombatTestVisible {
+    display: flex;
+    justify-content: center;
+    visibility: visible;
 }
 
 .lifepoints {
