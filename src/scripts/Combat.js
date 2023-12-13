@@ -43,12 +43,11 @@ export class Combat {
     }
 
     giveIdToActors(heroTeam, monsterTeam) {
-        console.log(heroTeam[0])
         for(let i = 0; i < heroTeam.length; i++) {
-            this.heroTeam.push({id: i+1, entity: heroTeam[i]})
+            this.heroTeam.push({id: i+1, entity: heroTeam[i]});
         }
         for(let i = 0; i < monsterTeam.length; i++) {
-            this.monsterTeam.push({id: i+5, entity: monsterTeam[i]})
+            this.monsterTeam.push({id: i+5, entity: monsterTeam[i]});
         }
     }
 
@@ -56,7 +55,6 @@ export class Combat {
         let scale = {x: 1, y: 1, z: 1};
         //Add heroes to the scene
         for(let i = 0; i < this.heroTeam.length; i++) {
-            console.log(this.heroTeam[i].entity.id)
             let filteredEntities = mapsCrossReferenceHeroCombat.entities.filter(entity => entity.id === this.heroTeam[i].entity.id);
 
             let position = {x: 45, y: 2.25 - i*2, z: 0};
@@ -76,7 +74,9 @@ export class Combat {
     }
 
     createInitialTurn() {
-        let tempActors = this.heroTeam.concat(this.monsterTeam);
+        let tempHero = structuredClone(this.heroTeam);
+        let tempMonster = structuredClone(this.monsterTeam);
+        let tempActors = tempHero.concat(tempMonster);
         tempActors.sort(function (a, b){
             return b.entity.vit - a.entity.vit;
         })
@@ -120,29 +120,55 @@ export class Combat {
 
     aiActionSelection() {
         let randomNumber = Math.floor(Math.random() * 100);
-        if(randomNumber <= 30) {
+        if(randomNumber <= 1) {
             this.turnOver()
             alert("ia has done nothing")
         }
         else {
-            let randomIndex = Math.floor(Math.random() * 5);
-            randomIndex = Math.min(Math.max(randomIndex, 1), 4)
-            this.normalAttack(randomIndex)
-            alert("ia has attacked " + this.turnActors[randomIndex].entity.name)
+            let arrayProb = this.generateHeroAttackPropability();
+            console.log(arrayProb, "test arrayProb");
+            let randomId = Math.floor(Math.random() * 5);
+            randomId = Math.min(Math.max(randomId, 1), 4)
+            alert("ia has attacked " + this.heroTeam[randomId-1].entity.name)
+            this.normalAttack(randomId)
         }
     }
 
-    attack(index, decision) {
+    generateHeroAttackPropability() {
+        let arrayProb = [];
+        for(let i =0; i < this.heroTeam.length; i++) {
+            if(this.isHeroUnderWeak(this.heroTeam[i])) {
+                arrayProb.push((100 / this.heroTeam.length) * i + 20);
+            }
+            else {
+                arrayProb.push((100 / this.heroTeam.length) * i);
+            }
+        }
+        return arrayProb;
+    }
+
+    isHeroUnderWeak(hero) {
+        let heroInTurn = this.turnActors.filter(entity => entity.id === hero.id);
+        if(heroInTurn[0].entity.hp < hero.entity.hp / 2 ) {
+            console.log("heroIsWeak")
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    attack(id, decision) {
         this.removeGeneratedTarget();
         if(decision === this.actions.normalAttack) {
-            this.normalAttack(index);
+            this.normalAttack(id);
         }
     }
 
     //TODO Use DefStats
-    normalAttack(index) {
-        index = Number(index)
-        let indexNumber = this.turnActors.findIndex(actor => actor.id === index);
+    normalAttack(id) {
+        id = Number(id)
+        let indexNumber = this.turnActors.findIndex(actor => actor.id === id);
         this.turnActors[indexNumber].entity.hp -= this.turnActors[0].entity.atk;
         this.turnOver()
     }
