@@ -8,13 +8,31 @@ export class AssetFactory {
      */
     
     constructor() {
-        // TODO : La propriété 'y' ne se met pas à jour !
+        this.spritesToAnimate = ['3'];
         this.tileSize = 1;
         this.assets = {
             // 0 - Terrain du jeu
             '0': (x, y, z = -0.005) => {
                 const scale = {x: 1, y: 1, z: 1}
-                const terrainDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/Grass/Grass02.png", 1, 1, {x, y, z}, scale);
+                const terrainDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/Grass/Grass12.png", 1, 1, {x, y, z}, scale);
+                terrainDeclaration.userData = '0';
+                return terrainDeclaration;
+            },
+            '0-1': (x, y, z = -0.005) => {
+                const scale = {x: 1, y: 1, z: 1}
+                const terrainDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/Grass/Grass01.png", 1, 1, {x, y, z}, scale);
+                terrainDeclaration.userData = '0';
+                return terrainDeclaration;
+            },
+            '0-2': (x, y, z = -0.005) => {
+                const scale = {x: 1, y: 1, z: 1}
+                const terrainDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/Grass/Grass03.png", 1, 1, {x, y, z}, scale);
+                terrainDeclaration.userData = '0';
+                return terrainDeclaration;
+            },
+            '0-3': (x, y, z = -0.005) => {
+                const scale = {x: 1, y: 1, z: 1}
+                const terrainDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/Grass/Grass04.png", 1, 1, {x, y, z}, scale);
                 terrainDeclaration.userData = '0';
                 return terrainDeclaration;
             },
@@ -26,7 +44,7 @@ export class AssetFactory {
                 return wallDeclaration;
             },
             // 2 - Arbres
-            '2': (x, y, z = 0.005) => {
+            '2': (x, y, z = 0.010) => {
                 const scale = {x: 1, y: 1, z: 1}
                 const treesDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/tree.png", 1, 1, {x, y, z}, scale);
                 treesDeclaration.userData = '2';
@@ -35,7 +53,7 @@ export class AssetFactory {
            // 3 - Eau
             '3': (x, y, z = -0.004) => {
                 const scale = {x: 1, y: 1, z: 1}
-                const oceanDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/ocean.png", 8, 2, {x, y, z}, scale);
+                const oceanDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/ocean.png", 8, 2, {x, y, z}, scale, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
                 oceanDeclaration.userData = '0';
                 return oceanDeclaration;
             },
@@ -77,6 +95,17 @@ export class AssetFactory {
         } else {
             console.warn(`l'id de l'asset : ${assetId} est introuvable !`);
             return undefined;
+        }
+    }
+
+    updateAllSprites(deltaTime) {
+        for (const assetId in this.assets) {
+            if (this.spritesToAnimate.includes(assetId)) {
+                const assetInstance = this.createAssetInstance(assetId, 0, 0);
+                if (assetInstance instanceof SpriteObject) {
+                    assetInstance.update(deltaTime);
+                }
+            }
         }
     }
 }

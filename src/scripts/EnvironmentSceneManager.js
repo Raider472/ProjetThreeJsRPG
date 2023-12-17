@@ -5,19 +5,15 @@ import { TileMap } from "./TileMap/TileMap";
 import { SpriteList } from "./Declarations/SpriteDeclaration";
 import { Combat } from "./Combat";
 import { AssetFactory } from "./TileMap/AssetFactory";
-import { PlayerSprite } from "./Sprite/PlayerSprite";
 
 export const scene = new THREE.Scene();
 const gameWindow = document.getElementById('game-renderer');
 
-//Variable importante
+//Variables importantes :
 let isInCombat = false;
 let combat = null;
 let switchCamera1 = false;
 export const loopSpeed = 1;
-
-//Fin
-
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -38,7 +34,7 @@ const FAR = 100;
 const camera = new THREE.PerspectiveCamera(FOV, SCREEN_ASPECT, NEAR, FAR);
 
 const MIN_CAMERA_POSITION = 2;
-const DEFAULT_CAMERA_POSITION = camera.position.z = 5;
+const DEFAULT_CAMERA_POSITION = camera.position.z = 4;
 camera.position.y = 5;
 camera.position.x = 5;
 const MAX_CAMERA_POSITION = 8;
@@ -48,7 +44,7 @@ camera2.position.x = 50
 camera2.position.z = 5
 
 scene.add(camera, camera2);
-scene.add(SpriteList.playerSprite)
+scene.add(SpriteList.playerSprite);
 
 // Music de fond du jeu :
 
@@ -70,6 +66,7 @@ audioPlay.onclick = () => {audioLoader.load( '/assets/sounds/rpg_background_musi
 const tileMap = new TileMap(scene);
 
 let obstacles = [];
+let terrainAnimationHandler = [];
 let monsters = [];
 
 function initializeMap() {
@@ -94,7 +91,7 @@ function initializeMap() {
             const newSprite = createAsset.createAssetInstance(tileType, i, j);
 
             if (tileType === '4') {
-                monsters.push(newSprite)
+                monsters.push(newSprite);
             }
 
             scene.add(newSprite);
@@ -102,6 +99,7 @@ function initializeMap() {
         }
     }
     obstacles = [...map];
+    terrainAnimationHandler = [...terrain];
 }
 
 // Gestion du zoom avec la molette de la souris avec listener de la molette de la souris pour le zoom de la caméra.
@@ -127,38 +125,93 @@ const keys = Move.keys;
 
 Move.PlayerMovementControlsDown(keys)
 
-window.addEventListener("keyup", (event)=>{
-	animationInProgress = false;
-	switch(event.code) {
-		case "KeyA":
-			keys.a.pressed = false;
-			break;
-		case "KeyD":
-			keys.d.pressed = false;
-			break;
-		case "KeyW":
-			keys.w.pressed = false;
-			break;
-		case "KeyS":
-			keys.s.pressed = false;
-			break;
-        case "KeyK":
-            //debug Key for console log
-            if(combat != null) {
-                console.log(combat, "combat class information");
-            }
+const footsteps = [
+    "/assets/sounds/footsteps/dirt-footstep-1_3.wav",
+    "/assets/sounds/footsteps/dirt-footstep-1_4.wav",
+    "/assets/sounds/footsteps/dirt-footstep-1_8.wav",
+    "/assets/sounds/footsteps/dirt-footstep-1_12.wav",
+    "/assets/sounds/footsteps/dirt-footstep-1_15.wav",
+    "/assets/sounds/footsteps/dirt-footstep-1_16.wav",
+    "/assets/sounds/footsteps/dirt-footstep-1_17.wav",
+    "/assets/sounds/footsteps/dirt-footstep-1_31.wav",
+    "/assets/sounds/footsteps/dirt-footstep-1_33.wav",
+    "/assets/sounds/footsteps/dirt-footstep-1_34.wav",
+    "/assets/sounds/footsteps/dirt-footstep-1_29.wav",
+    "/assets/sounds/footsteps/dirt-footstep-1_9.wav",
+    "/assets/sounds/footsteps/dirt-footstep-1_7.wav",
+    "/assets/sounds/footsteps/dirt-footstep-1_5.wav",
+    "/assets/sounds/footsteps/dirt-footstep-1_11.wav",
+    "/assets/sounds/footsteps/dirt-footstep-1_10.wav",
+]
+
+const footstepAudioObjects = [];
+let footstepIntervalId;
+
+footsteps.forEach((footstepSound) => {
+    const audio = new THREE.Audio(listener);
+    audioLoader.load(footstepSound, (buffer) => {
+        audio.setBuffer(buffer);
+        audio.setLoop(false);
+        audio.setVolume(1.0);
+        footstepAudioObjects.push(audio);
+    });
+});
+
+function playRandomFootstepSound() {
+    const randomIndex = Math.floor(Math.random() * footstepAudioObjects.length);
+    const randomFootstepSound = footstepAudioObjects[randomIndex];
+
+    if (randomFootstepSound) {
+        randomFootstepSound.setVolume(0.6);
+        randomFootstepSound.play();
+    }
+}
+
+document.addEventListener('keydown', (event) => {
+    if (animationInProgress) return;
+
+    switch (event.code) {
+        case "KeyA":
+            keys.a.pressed = true;
+            footstepIntervalId = setInterval(playRandomFootstepSound, 500);
             break;
-        case "KeyL":
-            //debug Key to pass a turn
-            if(combat != null) {
-                combat.turnOver()
-            }
+        case "KeyD":
+            keys.d.pressed = true;
+            footstepIntervalId = setInterval(playRandomFootstepSound, 500);
             break;
-        case "KeyO":
-            switchCamera1 = !switchCamera1
+        case "KeyW":
+            keys.w.pressed = true;
+            footstepIntervalId = setInterval(playRandomFootstepSound, 500);
             break;
-	}
-})
+        case "KeyS":
+            keys.s.pressed = true;
+            footstepIntervalId = setInterval(playRandomFootstepSound, 500);
+            break;
+    }
+});
+
+document.addEventListener("keyup", (event) => {
+    animationInProgress = false;
+
+    switch (event.code) {
+        case "KeyA":
+            keys.a.pressed = false;
+            clearInterval(footstepIntervalId);
+            break;
+        case "KeyD":
+            keys.d.pressed = false;
+            clearInterval(footstepIntervalId);
+            break;
+        case "KeyW":
+            keys.w.pressed = false;
+            clearInterval(footstepIntervalId);
+            break;
+        case "KeyS":
+            keys.s.pressed = false;
+            clearInterval(footstepIntervalId);
+            break;
+    }
+});
 
 // UI :
 
@@ -249,6 +302,9 @@ function animate() {
     SpriteList.testMonster.update(deltaTime);
     SpriteList.testMonster2.update(deltaTime);
 
+    const asset = new AssetFactory();
+
+    asset.updateAllSprites(deltaTime);
 }
 animate();
 inventoryManagement();
