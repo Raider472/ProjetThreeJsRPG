@@ -42,9 +42,9 @@ const posMons2 = {
     z:0
 }
 const posHero = {
-    x:0,
-    y:2,
-    z:0
+    x:5,
+    y:5,
+    z:0.1
 }
 const scaleHero = {
     x:1,

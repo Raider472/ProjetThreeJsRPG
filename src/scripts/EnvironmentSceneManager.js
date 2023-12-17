@@ -5,6 +5,7 @@ import { TileMap } from "./TileMap/TileMap";
 import { SpriteList } from "./Declarations/SpriteDeclaration";
 import { Combat } from "./Combat";
 import { AssetFactory } from "./TileMap/AssetFactory";
+import { PlayerSprite } from "./Sprite/PlayerSprite";
 
 export const scene = new THREE.Scene();
 const gameWindow = document.getElementById('game-renderer');
@@ -37,16 +38,17 @@ const FAR = 100;
 const camera = new THREE.PerspectiveCamera(FOV, SCREEN_ASPECT, NEAR, FAR);
 
 const MIN_CAMERA_POSITION = 2;
-const Z_DEFAULT_CAMERA_POSITION = camera.position.z = 5;
-camera.position.y = 8;
-camera.position.x = 8;
-const MAX_CAMERA_POSITION = 100;
+const DEFAULT_CAMERA_POSITION = camera.position.z = 5;
+camera.position.y = 5;
+camera.position.x = 5;
+const MAX_CAMERA_POSITION = 8;
 
 const camera2 = new THREE.PerspectiveCamera(FOV, SCREEN_ASPECT, NEAR, FAR)
 camera2.position.x = 50
 camera2.position.z = 5
 
 scene.add(camera, camera2);
+scene.add(SpriteList.playerSprite)
 
 // Music de fond du jeu :
 
@@ -66,7 +68,9 @@ audioPlay.onclick = () => {audioLoader.load( '/assets/sounds/rpg_background_musi
 })}
 
 const tileMap = new TileMap(scene);
-console.log(backgroundMusic.isPlaying);
+
+let obstacles = [];
+let monsters = [];
 
 function initializeMap() {
     let map = [];
@@ -89,12 +93,15 @@ function initializeMap() {
             const createAsset = new AssetFactory();
             const newSprite = createAsset.createAssetInstance(tileType, i, j);
 
+            if (tileType === '4') {
+                monsters.push(newSprite)
+            }
+
             scene.add(newSprite);
             map.push(newSprite);
         }
     }
-
-    console.log(map);
+    obstacles = [...map];
 }
 
 // Gestion du zoom avec la molette de la souris avec listener de la molette de la souris pour le zoom de la caméra.
@@ -103,7 +110,7 @@ document.addEventListener('wheel', onZoom);
 
 function onZoom(e) {
 	const zoomSpeed = 0.01;
-	Z_DEFAULT_CAMERA_POSITION;
+	DEFAULT_CAMERA_POSITION;
 	camera.position.z -= e.deltaY * zoomSpeed;
 	camera.position.z = Math.min(MAX_CAMERA_POSITION, Math.max(MIN_CAMERA_POSITION, camera.position.z));
 	camera.updateProjectionMatrix();
@@ -153,8 +160,6 @@ window.addEventListener("keyup", (event)=>{
 	}
 })
 
-const obstacle = [SpriteList.tree, SpriteList.tree2, SpriteList.tree3];
-const monsters = [SpriteList.testMonster, SpriteList.testMonster2];
 // UI :
 
 function inventoryManagement() {
@@ -190,16 +195,16 @@ function animate() {
 	SpriteList.playerSprite.velocity.y = 0;
 
 	if(keys.w.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.y = 0.05;
-        //0.008
+        SpriteList.playerSprite.velocity.y = 0.008;
+        camera.position.y += 0.008;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.upSprite, loopSpeed);
             animationInProgress = true;
         }
     }
     else if(keys.s.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.y = -0.05;
-        //-0.008
+        SpriteList.playerSprite.velocity.y = -0.008;
+        camera.position.y -= 0.008;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.downSprite, loopSpeed);
             animationInProgress = true;
@@ -208,16 +213,16 @@ function animate() {
 
     SpriteList.playerSprite.velocity.x = 0;
     if(keys.d.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.x = 0.05;
-        //0.008
+        SpriteList.playerSprite.velocity.x = 0.008;
+        camera.position.x += 0.008;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.rightSprite, loopSpeed);
             animationInProgress = true;
         }
     }
     else if(keys.a.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.x = -0.05;
-        //-0.008
+        SpriteList.playerSprite.velocity.x = -0.008;
+        camera.position.x -= 0.008;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.leftSprite, loopSpeed);
             animationInProgress = true;
@@ -227,7 +232,7 @@ function animate() {
         renderer.render( scene, camera )
         switchCamera1 = false;
     }
-	collisionDetection(obstacle, SpriteList.playerSprite);
+	collisionDetection(obstacles, SpriteList.playerSprite);
     //Colision for player/monster
     let resultColissionMonster = collisionMonsters(monsters, SpriteList.playerSprite);
     if(resultColissionMonster.collision === true && isInCombat === false) {
