@@ -126,11 +126,10 @@ export class Combat {
         }
         else {
             let arrayProb = this.generateHeroAttackPropability();
-            console.log(arrayProb, "test arrayProb");
-            let randomId = Math.floor(Math.random() * 5);
-            randomId = Math.min(Math.max(randomId, 1), 4)
-            alert("ia has attacked " + this.heroTeam[randomId-1].entity.name)
-            this.normalAttack(randomId)
+            let id = this.aiSelectionWeightedDecisions(this.heroTeam, arrayProb)
+            //TODO maybe better alert
+            alert("ia has attacked " + this.heroTeam[id-1].entity.name)
+            this.normalAttack(id)
         }
     }
 
@@ -138,10 +137,10 @@ export class Combat {
         let arrayProb = [];
         for(let i =0; i < this.heroTeam.length; i++) {
             if(this.isHeroUnderWeak(this.heroTeam[i])) {
-                arrayProb.push((100 / this.heroTeam.length) * i + 20);
+                arrayProb.push((100 / this.heroTeam.length) + 25);
             }
             else {
-                arrayProb.push((100 / this.heroTeam.length) * i);
+                arrayProb.push((100 / this.heroTeam.length));
             }
         }
         return arrayProb;
@@ -150,11 +149,23 @@ export class Combat {
     isHeroUnderWeak(hero) {
         let heroInTurn = this.turnActors.filter(entity => entity.id === hero.id);
         if(heroInTurn[0].entity.hp < hero.entity.hp / 2 ) {
-            console.log("heroIsWeak")
             return true;
         }
         else {
             return false;
+        }
+    }
+
+    aiSelectionWeightedDecisions(items, weights) {
+        let cumulativeWeights = [];
+        for (let i = 0; i < weights.length; i++) {
+            cumulativeWeights[i] = weights[i] + (cumulativeWeights[i - 1] || 0);
+        }
+        const randomNumber = Math.floor(Math.random() * cumulativeWeights[cumulativeWeights.length-1]);
+        for (let i = 0; i < items.length; i++) {
+            if (cumulativeWeights[i] >= randomNumber) {
+                return items[i].id;
+            }
         }
     }
 
@@ -165,11 +176,14 @@ export class Combat {
         }
     }
 
-    //TODO Use DefStats
     normalAttack(id) {
         id = Number(id)
         let indexNumber = this.turnActors.findIndex(actor => actor.id === id);
-        this.turnActors[indexNumber].entity.hp -= this.turnActors[0].entity.atk;
+        let damageAttack = Math.floor(this.turnActors[indexNumber].entity.def*0.5) - this.turnActors[0].entity.atk
+        if(damageAttack > -10) {
+            damageAttack = -10;
+        }
+        this.turnActors[indexNumber].entity.hp += damageAttack;
         this.turnOver()
     }
 }

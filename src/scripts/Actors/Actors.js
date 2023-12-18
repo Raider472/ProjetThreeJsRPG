@@ -8,6 +8,7 @@ export class Actors {
     hp;
     atk;
     atkS;
+    heal;
     crit;
     def;
     defS;
@@ -32,6 +33,7 @@ export class Actors {
                 this.hp = actor[0].hp;
                 this.atk = actor[0].atk;
                 this.atkS = actor[0].atkS;
+                this.heal = actor[0].heal;
                 this.crit = actor[0].crit;
                 this.def = actor[0].def;
                 this.defS = actor[0].defS;
