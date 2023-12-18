@@ -53,7 +53,7 @@ export class AssetFactory {
            // 3 - Eau
             '3': (x, y, z = -0.004) => {
                 const scale = {x: 1, y: 1, z: 1}
-                const oceanDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/ocean.png", 8, 2, {x, y, z}, scale, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+                const oceanDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/ocean.png", 8, 2, {x, y, z}, scale, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
                 oceanDeclaration.userData = '0';
                 return oceanDeclaration;
             },
@@ -101,7 +101,7 @@ export class AssetFactory {
     updateAllSprites(deltaTime) {
         for (const assetId in this.assets) {
             if (this.spritesToAnimate.includes(assetId)) {
-                const assetInstance = this.createAssetInstance(assetId, 0, 0);
+                const assetInstance = this.assets.userData;
                 if (assetInstance instanceof SpriteObject) {
                     assetInstance.update(deltaTime);
                 }

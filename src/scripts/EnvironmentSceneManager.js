@@ -35,9 +35,10 @@ const camera = new THREE.PerspectiveCamera(FOV, SCREEN_ASPECT, NEAR, FAR);
 
 const MIN_CAMERA_POSITION = 2;
 const DEFAULT_CAMERA_POSITION = camera.position.z = 4;
-camera.position.y = 5;
-camera.position.x = 5;
 const MAX_CAMERA_POSITION = 8;
+
+camera.position.x = SpriteList.playerSprite.position.x;
+camera.position.y = SpriteList.playerSprite.position.y;
 
 const camera2 = new THREE.PerspectiveCamera(FOV, SCREEN_ASPECT, NEAR, FAR)
 camera2.position.x = 50
@@ -59,7 +60,7 @@ const audioPlay = document.getElementById('play-audio');
 audioPlay.onclick = () => {audioLoader.load( '/assets/sounds/rpg_background_music.mp3', function( buffer ) {
 	backgroundMusic.setBuffer( buffer );
 	backgroundMusic.setLoop( true );
-	backgroundMusic.setVolume( 0.3 );
+	backgroundMusic.setVolume( 0.2 );
 	backgroundMusic.play();
 })}
 
@@ -173,18 +174,37 @@ document.addEventListener('keydown', (event) => {
     switch (event.code) {
         case "KeyA":
             keys.a.pressed = true;
-            footstepIntervalId = setInterval(playRandomFootstepSound, 500);
+            clearInterval(footstepIntervalId);
             break;
         case "KeyD":
             keys.d.pressed = true;
-            footstepIntervalId = setInterval(playRandomFootstepSound, 500);
+            clearInterval(footstepIntervalId);
             break;
         case "KeyW":
             keys.w.pressed = true;
-            footstepIntervalId = setInterval(playRandomFootstepSound, 500);
+            clearInterval(footstepIntervalId);
             break;
         case "KeyS":
             keys.s.pressed = true;
+            clearInterval(footstepIntervalId);
+            break;
+    }
+});
+
+document.addEventListener('keypress', (event) => {
+    if (animationInProgress) return;
+
+    switch (event.code) {
+        case "KeyA":
+            footstepIntervalId = setInterval(playRandomFootstepSound, 500);
+            break;
+        case "KeyD":
+            footstepIntervalId = setInterval(playRandomFootstepSound, 500);
+            break;
+        case "KeyW":
+            footstepIntervalId = setInterval(playRandomFootstepSound, 500);
+            break;
+        case "KeyS":
             footstepIntervalId = setInterval(playRandomFootstepSound, 500);
             break;
     }
