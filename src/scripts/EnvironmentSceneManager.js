@@ -31,7 +31,7 @@ const SCREEN_ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
 const NEAR = 1;
 const FAR = 100;
 
-const camera = new THREE.PerspectiveCamera(FOV, SCREEN_ASPECT, NEAR, FAR);
+export const camera = new THREE.PerspectiveCamera(FOV, SCREEN_ASPECT, NEAR, FAR);
 
 const MIN_CAMERA_POSITION = 2;
 const DEFAULT_CAMERA_POSITION = camera.position.z = 4;
