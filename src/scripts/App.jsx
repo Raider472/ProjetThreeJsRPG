@@ -1,12 +1,13 @@
 import React from "react";
 import ReactDOM from 'react-dom/client'
+import {Inventaire} from "./component/Inventaire.jsx"
 
-function App() {
+export function App() {
   return (
-    <div>
-      <h1 className="">Hello World</h1>
-    </div>
+    <>
+     <Inventaire />
+    </>
   );
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App />)
+ReactDOM.createRoot(document.getElementById('game-ui')).render(<App />)
