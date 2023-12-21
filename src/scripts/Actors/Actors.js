@@ -17,6 +17,9 @@ export class Actors {
     passiveSkills = [];
     crystalAttacks = [];
 
+    status = [];
+    buffs = [];
+
     isAi = true;
 
     constructor(id) {

@@ -7,6 +7,7 @@ import { Combat } from "./Combat";
 
 
 document.querySelector('[id=attack]').addEventListener('click',() => combat.generateTarget(0));
+document.querySelector('[id=defend]').addEventListener('click',() => combat.defend());
 
 //Variable importante
 let isInCombat = false;

@@ -86,6 +86,7 @@ export class Combat {
 
     turnOver() {
         this.turnActors.push(this.turnActors.shift());
+        this.checkBuff(this.turnActors[0].entity);
         this.pActual.innerHTML = this.turnActors[0].entity.name;
         if(this.turnActors[0].entity.isAi === true) {
             this.aiActionSelection()
@@ -117,6 +118,8 @@ export class Combat {
         this.domCombat.querySelector("#actionButton").classList.remove("menuCombatHiddenButton");
         this.chooseEnemyDiv.innerHTML = "";
     }
+
+    //AI
 
     aiActionSelection() {
         let randomNumber = Math.floor(Math.random() * 100);
@@ -169,6 +172,10 @@ export class Combat {
         }
     }
 
+    //AI
+
+    //Menu Decisions
+
     attack(id, decision) {
         this.removeGeneratedTarget();
         if(decision === this.actions.normalAttack) {
@@ -176,7 +183,7 @@ export class Combat {
         }
     }
 
-    normalAttack(id) {
+    normalAttack(id) { //TODO Shield System
         id = Number(id)
         let indexNumber = this.turnActors.findIndex(actor => actor.id === id);
         let damageAttack = Math.floor(this.turnActors[indexNumber].entity.def*0.5) - this.turnActors[0].entity.atk
@@ -185,5 +192,51 @@ export class Combat {
         }
         this.turnActors[indexNumber].entity.hp += damageAttack;
         this.turnOver()
+    }
+
+    defend() {
+        this.turnActors[0].entity.buffs.push({name: "defend", turn: 1, originalStats:[this.turnActors[0].entity.def, this.turnActors[0].entity.defS]});
+        console.log("before mult", this.turnActors[0].entity.def, this.turnActors[0].entity.defS) //TODO
+        Math.floor(this.turnActors[0].entity.def *= 1.5);
+        Math.floor(this.turnActors[0].entity.defS *= 1.5);
+        console.log(this.turnActors[0].entity.buffs, this.turnActors[0].entity.def, this.turnActors[0].entity.defS, "turnActorsInfo after defend") //TODO
+        this.turnOver()
+    }
+
+    //Menu Decisions
+
+    //Buff
+
+    checkBuff(actor) {
+        if(actor.buffs != 0) {
+            console.log("not 0")
+            this.decrementBuff(actor.buffs);
+        }
+    }
+
+    decrementBuff(buff) {
+        for(let i = 0; i < buff.length; i++) {
+            buff[i].turn --
+            console.log(buff[i], "i =")
+            if(buff[i].turn === 0) {
+                this.removeBuff(buff[i]);
+                buff.splice(i, 1);
+                i--;
+            }
+        }
+        console.log(buff, "buff after for")
+    }
+
+    removeBuff(buff) {
+        console.log("removeBuff")
+        switch(buff.name) {
+            case "defend":
+                console.log(buff.name, "reset defense")
+                console.log(this.turnActors[0].entity.def, this.turnActors[0].entity.defS, "actorDef", "before reset")
+                this.turnActors[0].entity.def /= 1.5;
+                this.turnActors[0].entity.defS /= 1.5;
+                console.log(this.turnActors[0].entity.def, this.turnActors[0].entity.defS, "actorDef", "after reset")
+                break;
+        }
     }
 }
