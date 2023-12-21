@@ -66,8 +66,9 @@ audioPlay.onclick = () => {audioLoader.load( '/assets/sounds/rpg_background_musi
 
 const tileMap = new TileMap(scene);
 
+// Variables globales pour la scène : 
+
 let obstacles = [];
-let terrainAnimationHandler = [];
 let monsters = [];
 
 function initializeMap() {
@@ -100,7 +101,6 @@ function initializeMap() {
         }
     }
     obstacles = [...map];
-    terrainAnimationHandler = [...terrain];
 }
 
 // Gestion du zoom avec la molette de la souris avec listener de la molette de la souris pour le zoom de la caméra.
@@ -196,16 +196,16 @@ document.addEventListener('keypress', (event) => {
 
     switch (event.code) {
         case "KeyA":
-            footstepIntervalId = setInterval(playRandomFootstepSound, 500);
+            footstepIntervalId = setInterval(playRandomFootstepSound, 350);
             break;
         case "KeyD":
-            footstepIntervalId = setInterval(playRandomFootstepSound, 500);
+            footstepIntervalId = setInterval(playRandomFootstepSound, 350);
             break;
         case "KeyW":
-            footstepIntervalId = setInterval(playRandomFootstepSound, 500);
+            footstepIntervalId = setInterval(playRandomFootstepSound, 350);
             break;
         case "KeyS":
-            footstepIntervalId = setInterval(playRandomFootstepSound, 500);
+            footstepIntervalId = setInterval(playRandomFootstepSound, 350);
             break;
     }
 });
@@ -268,16 +268,16 @@ function animate() {
 	SpriteList.playerSprite.velocity.y = 0;
 
 	if(keys.w.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.y = 0.008;
-        camera.position.y += 0.008;
+        SpriteList.playerSprite.velocity.y = 0.020;
+        camera.position.y += 0.020;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.upSprite, loopSpeed);
             animationInProgress = true;
         }
     }
     else if(keys.s.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.y = -0.008;
-        camera.position.y -= 0.008;
+        SpriteList.playerSprite.velocity.y = -0.020;
+        camera.position.y -= 0.020;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.downSprite, loopSpeed);
             animationInProgress = true;
@@ -286,16 +286,16 @@ function animate() {
 
     SpriteList.playerSprite.velocity.x = 0;
     if(keys.d.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.x = 0.008;
-        camera.position.x += 0.008;
+        SpriteList.playerSprite.velocity.x = 0.020;
+        camera.position.x += 0.020;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.rightSprite, loopSpeed);
             animationInProgress = true;
         }
     }
     else if(keys.a.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.x = -0.008;
-        camera.position.x -= 0.008;
+        SpriteList.playerSprite.velocity.x = -0.020;
+        camera.position.x -= 0.020;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.leftSprite, loopSpeed);
             animationInProgress = true;
@@ -324,7 +324,7 @@ function animate() {
 
     const asset = new AssetFactory();
 
-    asset.updateAllSprites(deltaTime);
+    asset.updateObstaclesSprites(deltaTime *= 0.6, obstacles);
 }
 animate();
 inventoryManagement();

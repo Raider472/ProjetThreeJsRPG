@@ -54,7 +54,6 @@ export function collisionDetection(obstacle, sprite) {
     obstacle.forEach((obstacles) => {
 		if(collision(obstacles, sprite, sprite.velocity)) {
 			if(collisionFromLeft(obstacles, sprite, sprite.velocity)) {
-                console.log("Vitesse sprite en x : ", sprite.velocity.x)
                 if(sprite.velocity.x > 0) {
                     sprite.velocity.x = 0
                     camera.position.x = sprite.position.x
@@ -62,7 +61,6 @@ export function collisionDetection(obstacle, sprite) {
                 }
             }
             if(collisionFromRight(obstacles, sprite, sprite.velocity)) {
-                console.log("Vitesse sprite en x : ", sprite.velocity.x)
                 if(sprite.velocity.x < 0) {
                     sprite.velocity.x = 0
                     camera.position.x = sprite.position.x
@@ -70,7 +68,6 @@ export function collisionDetection(obstacle, sprite) {
                 }
             }
             if(collisionFrombottom(obstacles, sprite, sprite.velocity)) {
-                console.log("Vitesse sprite en y : ", sprite.velocity.y)
                 if(sprite.velocity.y > 0) {
                     sprite.velocity.y = 0
                     camera.position.y = sprite.position.y
@@ -78,7 +75,6 @@ export function collisionDetection(obstacle, sprite) {
                 }
             }
             if(collisionFromtop(obstacles, sprite, sprite.velocity)) {
-                console.log("Vitesse sprite en y : ", sprite.velocity.y)
                 if (sprite.velocity.y < 0) {
                     sprite.velocity.y = 0
                     camera.position.y = sprite.position.y
