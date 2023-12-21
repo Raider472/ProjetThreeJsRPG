@@ -57,15 +57,15 @@ const scaleMonster = {
     z:0.5
 }
 
-const testMonster = new EntitySprite("/sprite/Zombie.png", 4, 4, teamMonsterTest, posMons, scaleMonster, [0, 1, 2, 3]);
-const testMonster2 = new EntitySprite("/sprite/Zombie.png", 4, 4, teamMonsterTest, posMons2, scaleMonster, [0, 1, 2, 3]);
-const testSprite = new PlayerSprite("/assets/game_assets/timefantasy_characters/sheets/military1.png", 12, 8, teamHeroes, posHero, scaleHero, arrayS, arrayQ, arrayD, arrayZ, arrayS);
+const testMonster = new EntitySprite("/assets/sprites/characters/monsters/zombie/zombie.png", 4, 4, teamMonsterTest, posMons, scaleMonster, [0, 1, 2, 3]);
+const testMonster2 = new EntitySprite("/assets/sprites/characters/monsters/zombie/zombie.png", 4, 4, teamMonsterTest, posMons2, scaleMonster, [0, 1, 2, 3]);
+const testSprite = new PlayerSprite("/assets/sprites/characters/players/dps/military1.png", 12, 8, teamHeroes, posHero, scaleHero, arrayS, arrayQ, arrayD, arrayZ, arrayS);
 
-const arbre = new SpriteObject("/sprite/TreeTest.png", 1, 1, pos);
-const arbre2 = new SpriteObject("/sprite/TreeTest.png", 1, 1, pos2);
-const arbre3 = new SpriteObject("/sprite/TreeTest.png", 1, 1, pos3);
-const skeletonSprite = new SpriteObject("/sprite/Monsters/Skeleton/Attack3.png", 6, 1, pos);
-const goblinSprite = new SpriteObject("/sprite/Monsters/Goblin/Attack3.png", 12, 1, pos3);
+const arbre = new SpriteObject("/assets/sprites/environment/tree/tree_test.png", 1, 1, pos);
+const arbre2 = new SpriteObject("/assets/sprites/environment/tree/tree_test.png", 1, 1, pos2);
+const arbre3 = new SpriteObject("/assets/sprites/environment/tree/tree_test.png", 1, 1, pos3);
+const skeletonSprite = new SpriteObject("/assets/sprites/characters/monsters/skeleton/attack3.png", 6, 1, pos);
+const goblinSprite = new SpriteObject("/assets/sprites/characters/monsters/goblin/attack3.png", 12, 1, pos3);
 
 const SpriteList = {
     playerSprite: testSprite,
