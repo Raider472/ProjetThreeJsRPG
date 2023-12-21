@@ -17,6 +17,8 @@ export class Actors {
     passiveSkills = [];
     crystalAttacks = [];
 
+    maxHp;
+
     status = [];
     buffs = [];
 
@@ -34,6 +36,7 @@ export class Actors {
                 this.name = actor[0].name;
                 this.rarity = actor[0].rarity;
                 this.hp = actor[0].hp;
+                this.maxHp = actor[0].hp;
                 this.atk = actor[0].atk;
                 this.atkS = actor[0].atkS;
                 this.heal = actor[0].heal;

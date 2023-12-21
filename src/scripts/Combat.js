@@ -87,6 +87,7 @@ export class Combat {
     turnOver() {
         this.turnActors.push(this.turnActors.shift());
         this.checkBuff(this.turnActors[0].entity);
+        this.checkStatus(this.turnActors[0].entity);
         this.pActual.innerHTML = this.turnActors[0].entity.name;
         if(this.turnActors[0].entity.isAi === true) {
             this.aiActionSelection()
@@ -140,6 +141,7 @@ export class Combat {
         let arrayProb = [];
         for(let i =0; i < this.heroTeam.length; i++) {
             if(this.isHeroUnderWeak(this.heroTeam[i])) {
+                console.log("Hero weak")
                 arrayProb.push((100 / this.heroTeam.length) + 25);
             }
             else {
@@ -151,7 +153,7 @@ export class Combat {
 
     isHeroUnderWeak(hero) {
         let heroInTurn = this.turnActors.filter(entity => entity.id === hero.id);
-        if(heroInTurn[0].entity.hp < hero.entity.hp / 2 ) {
+        if(heroInTurn[0].entity.hp < hero.entity.maxHp / 2 ) {
             return true;
         }
         else {
@@ -195,10 +197,11 @@ export class Combat {
     }
 
     defend() {
-        this.turnActors[0].entity.buffs.push({name: "defend", turn: 1, originalStats:[this.turnActors[0].entity.def, this.turnActors[0].entity.defS]});
+        let modifier = 1.5;
+        this.turnActors[0].entity.buffs.push({name: "defend", turn: 1, modifier: modifier, originalStats:[this.turnActors[0].entity.def, this.turnActors[0].entity.defS]});
         console.log("before mult", this.turnActors[0].entity.def, this.turnActors[0].entity.defS) //TODO
-        Math.floor(this.turnActors[0].entity.def *= 1.5);
-        Math.floor(this.turnActors[0].entity.defS *= 1.5);
+        Math.floor(this.turnActors[0].entity.def *= modifier);
+        Math.floor(this.turnActors[0].entity.defS *= modifier);
         console.log(this.turnActors[0].entity.buffs, this.turnActors[0].entity.def, this.turnActors[0].entity.defS, "turnActorsInfo after defend") //TODO
         this.turnOver()
     }
@@ -233,10 +236,44 @@ export class Combat {
             case "defend":
                 console.log(buff.name, "reset defense")
                 console.log(this.turnActors[0].entity.def, this.turnActors[0].entity.defS, "actorDef", "before reset")
-                this.turnActors[0].entity.def /= 1.5;
-                this.turnActors[0].entity.defS /= 1.5;
+                this.turnActors[0].entity.def /= buff.modifier;
+                this.turnActors[0].entity.defS /= buff.modifier;
                 console.log(this.turnActors[0].entity.def, this.turnActors[0].entity.defS, "actorDef", "after reset")
                 break;
         }
     }
+
+    //Buff
+
+    //Status
+    checkStatus(actor) {
+        if(actor.status != 0) {
+            console.log("not 0 status");
+            this.decrementStatus(actor.status);
+        }
+    }
+
+    decrementStatus(status) {
+        for(let i = 0; i < status.length; i++) {
+            status[i].turn --;
+            console.log(status[i], "i =")
+            if(status[i].turn === 0) {
+                this.applyStatus(status[i]);
+                status.splice(i, 1);
+                i--;
+            }
+        }
+        console.log(status, "status after for")
+    }
+
+    applyStatus(status) {
+        if(status.modifier < 1.1) {
+            let lostHp = Math.floor(this.turnActors[0].entity.maxHp * status.modifier);
+            this.turnActors[0].entity.hp -= lostHp;
+        }
+        else {
+            this.turnActors[0].entity.hp -= status.modifier;
+        }
+    }
+    //Status
 }
