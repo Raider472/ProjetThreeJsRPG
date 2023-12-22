@@ -12,16 +12,17 @@ export class AssetFactory {
         this.tileSize = 1;
         this.chestSize = 0.5;
         this.assets = {
-            // 0 - Terrain du jeu
+            // 0 - Sable
             '0': (x, y, z = -0.005) => {
                 const scale = {x: 1, y: 1, z: 1}
-                const terrainDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/Grass/Grass12.png", 1, 1, {x, y, z}, scale);
-                terrainDeclaration.userData = '0';
+                const terrainDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/32x32_sand_desert_dune.png", 1, 1, {x, y, z}, scale);
+                terrainDeclaration.userData = '0-1';
                 return terrainDeclaration;
             },
+            // 0-1 - Herbe
             '0-1': (x, y, z = -0.005) => {
                 const scale = {x: 1, y: 1, z: 1}
-                const terrainDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/Grass/Grass01.png", 1, 1, {x, y, z}, scale);
+                const terrainDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/Grass/Grass12.png", 1, 1, {x, y, z}, scale);
                 terrainDeclaration.userData = '0';
                 return terrainDeclaration;
             },
@@ -52,9 +53,23 @@ export class AssetFactory {
                 return treesDeclaration;
             },
             '2-1': (x, y, z = 0.008) => {
-                const scale = {x: 1.5, y: 1.5, z: 1}
+                const scale = {x: 0.8, y: 0.8, z: 1}
                 const treesDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/expansion/bonus_trees.png", 3, 3, {x, y, z}, scale);
                 treesDeclaration.userData = '2-1';
+                return treesDeclaration;
+            },
+            // 2-2 Palmier 1
+            '2-2': (x, y, z = 0.008) => {
+                const scale = {x: 0.95, y: 0.95, z: 1}
+                const treesDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/palm.png", 1, 1, {x, y, z}, scale);
+                treesDeclaration.userData = '2-2';
+                return treesDeclaration;
+            },
+            // 2-2 Palmier 2
+            '2-3': (x, y, z = 0.008) => {
+                const scale = {x: 0.95, y: 0.95, z: 1}
+                const treesDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/palm_2.png", 1, 1, {x, y, z}, scale);
+                treesDeclaration.userData = '2-3';
                 return treesDeclaration;
             },
            // 3 - Eau

@@ -57,10 +57,10 @@ const audioLoader = new THREE.AudioLoader();
 const backgroundMusic = new THREE.Audio(listener);
 
 const audioPlay = document.getElementById('play-audio');
-audioPlay.onclick = () => {audioLoader.load( '/assets/sounds/rpg_background_music.mp3', function( buffer ) {
+audioPlay.onclick = () => {audioLoader.load( '/assets/sounds/retroclassic-game-music.wav', function( buffer ) {
 	backgroundMusic.setBuffer( buffer );
 	backgroundMusic.setLoop( true );
-	backgroundMusic.setVolume( 0.2 );
+	backgroundMusic.setVolume( 0.15 );
 	backgroundMusic.play();
 })}
 
@@ -126,34 +126,43 @@ const keys = Move.keys;
 
 Move.PlayerMovementControlsDown(keys)
 
-const footsteps = [
-    "/assets/sounds/footsteps/dirt-footstep-1_3.wav",
-    "/assets/sounds/footsteps/dirt-footstep-1_4.wav",
-    "/assets/sounds/footsteps/dirt-footstep-1_8.wav",
-    "/assets/sounds/footsteps/dirt-footstep-1_12.wav",
-    "/assets/sounds/footsteps/dirt-footstep-1_15.wav",
-    "/assets/sounds/footsteps/dirt-footstep-1_16.wav",
-    "/assets/sounds/footsteps/dirt-footstep-1_17.wav",
-    "/assets/sounds/footsteps/dirt-footstep-1_31.wav",
-    "/assets/sounds/footsteps/dirt-footstep-1_33.wav",
-    "/assets/sounds/footsteps/dirt-footstep-1_34.wav",
-    "/assets/sounds/footsteps/dirt-footstep-1_29.wav",
-    "/assets/sounds/footsteps/dirt-footstep-1_9.wav",
-    "/assets/sounds/footsteps/dirt-footstep-1_7.wav",
-    "/assets/sounds/footsteps/dirt-footstep-1_5.wav",
-    "/assets/sounds/footsteps/dirt-footstep-1_11.wav",
-    "/assets/sounds/footsteps/dirt-footstep-1_10.wav",
-]
+const footstepsGravel = [
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_1.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_2.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_10.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_11.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_12.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_13.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_14.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_15.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_16.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_17.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_18.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_19.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_20.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_21.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_22.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-2_3.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-2_28.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-2_29.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-2_30.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-2_31.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-2_32.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-2_33.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-2_34.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-2_35.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-2_36.wav",
+];
 
 const footstepAudioObjects = [];
 let footstepIntervalId;
 
-footsteps.forEach((footstepSound) => {
+footstepsGravel.forEach((footstepSound) => {
     const audio = new THREE.Audio(listener);
     audioLoader.load(footstepSound, (buffer) => {
         audio.setBuffer(buffer);
         audio.setLoop(false);
-        audio.setVolume(1.0);
+        audio.setVolume(0.8);
         footstepAudioObjects.push(audio);
     });
 });
@@ -272,16 +281,16 @@ function animate() {
 	SpriteList.playerSprite.velocity.y = 0;
 
 	if(keys.w.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.y = 0.018;
-        camera.position.y += 0.018;
+        SpriteList.playerSprite.velocity.y = 0.020;
+        camera.position.y += 0.020;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.upSprite, loopSpeed);
             animationInProgress = true;
         }
     }
     else if(keys.s.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.y = -0.018;
-        camera.position.y -= 0.018;
+        SpriteList.playerSprite.velocity.y = -0.020;
+        camera.position.y -= 0.020;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.downSprite, loopSpeed);
             animationInProgress = true;
@@ -290,16 +299,16 @@ function animate() {
 
     SpriteList.playerSprite.velocity.x = 0;
     if(keys.d.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.x = 0.018;
-        camera.position.x += 0.018;
+        SpriteList.playerSprite.velocity.x = 0.020;
+        camera.position.x += 0.020;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.rightSprite, loopSpeed);
             animationInProgress = true;
         }
     }
     else if(keys.a.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.x = -0.018;
-        camera.position.x -= 0.018;
+        SpriteList.playerSprite.velocity.x = -0.020;
+        camera.position.x -= 0.020;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.leftSprite, loopSpeed);
             animationInProgress = true;
