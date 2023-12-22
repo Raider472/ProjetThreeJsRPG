@@ -1,3 +1,4 @@
+import { SpriteList } from '../Declarations/SpriteDeclaration';
 import { SpriteObject } from '../Sprite/SpriteObject';
 
 export class AssetFactory {
@@ -39,7 +40,7 @@ export class AssetFactory {
             // 1 - Murs
             '1': (x, y, z = 0.005) => {
                 const scale = {x: 1, y: 1, z: 1}
-                const wallDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/brick_wall.png", 1, 1, {x, y, z}, scale);
+                const wallDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/brick_wall_sunny.png", 1, 1, {x, y, z}, scale);
                 wallDeclaration.userData = '1';
                 return wallDeclaration;
             },
@@ -73,7 +74,7 @@ export class AssetFactory {
             // 4 - Monstres
             '4': (x, y, z = 0.006) => {
                 const scale = {x: 1, y: 1, z: 1}
-                const monstersDeclaration = new SpriteObject("/sprite/Monsters/Skeleton/Attack3.png", 1, 6, {x, y, z}, scale);
+                const monstersDeclaration = SpriteList.testMonster2;
                 monstersDeclaration.userData = '4';
                 return monstersDeclaration;
             },
@@ -114,7 +115,6 @@ export class AssetFactory {
     updateObstaclesSprites(deltaTime, animationHandlerArray) {
         for (let i = 0; i < animationHandlerArray.length; i++) {
             let assetInstance = animationHandlerArray[i];
-            console.log(assetInstance)
             if (assetInstance instanceof SpriteObject) {
                 assetInstance.update(deltaTime);
             }

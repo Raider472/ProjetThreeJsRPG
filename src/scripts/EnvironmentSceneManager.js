@@ -166,6 +166,10 @@ function playRandomFootstepSound() {
         randomFootstepSound.setVolume(0.6);
         randomFootstepSound.play();
     }
+
+    if (SpriteList.playerSprite.velocity.y === 0 && SpriteList.playerSprite.velocity.x === 0) {
+        randomFootstepSound.stop();
+    }
 }
 
 document.addEventListener('keydown', (event) => {
@@ -268,16 +272,16 @@ function animate() {
 	SpriteList.playerSprite.velocity.y = 0;
 
 	if(keys.w.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.y = 0.020;
-        camera.position.y += 0.020;
+        SpriteList.playerSprite.velocity.y = 0.018;
+        camera.position.y += 0.018;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.upSprite, loopSpeed);
             animationInProgress = true;
         }
     }
     else if(keys.s.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.y = -0.020;
-        camera.position.y -= 0.020;
+        SpriteList.playerSprite.velocity.y = -0.018;
+        camera.position.y -= 0.018;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.downSprite, loopSpeed);
             animationInProgress = true;
@@ -286,16 +290,16 @@ function animate() {
 
     SpriteList.playerSprite.velocity.x = 0;
     if(keys.d.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.x = 0.020;
-        camera.position.x += 0.020;
+        SpriteList.playerSprite.velocity.x = 0.018;
+        camera.position.x += 0.018;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.rightSprite, loopSpeed);
             animationInProgress = true;
         }
     }
     else if(keys.a.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.x = -0.020;
-        camera.position.x -= 0.020;
+        SpriteList.playerSprite.velocity.x = -0.018;
+        camera.position.x -= 0.018;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.leftSprite, loopSpeed);
             animationInProgress = true;
