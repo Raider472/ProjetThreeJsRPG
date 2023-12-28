@@ -8,7 +8,8 @@ export class Combat {
     heroTeam = [];
     monsterTeam = [];
 
-    crystal = 0;
+    crystal = 2;
+    crystalMax = 10;
 
     turnActors = [];
     actors = []
@@ -17,12 +18,13 @@ export class Combat {
 
     actions = {
         normalAttack: 0,
-        specialAttack: 1
+        crystalAttack: 1
     }
 
     //DOM Element
     domCombat;
     controller
+    crystalShow;
 
     //Debug DOM, may change during the development
     pActual;
@@ -32,6 +34,8 @@ export class Combat {
         this.giveIdToActors(heroTeam, monsterTeam);
         this.scene = scene;
         this.domCombat = document.getElementById("menuCombat");
+        this.crystalShow = document.getElementById("numberCrystal");
+        this.crystalShow.innerHTML = this.crystal;
         this.deployCharacter();
         this.createInitialTurn();
         //Info Tour Actuel
@@ -97,16 +101,88 @@ export class Combat {
         }
     }
 
-    generateTarget(decision) {
+    newAbort() {
         this.controller = new AbortController()
-        this.domCombat.querySelector("#actionButton").classList.add("menuCombatHiddenButton")
-        for(let i = 0; i < this.monsterTeam.length; i++) {
-            let inputButton = document.createElement("input");
-            inputButton.value = this.monsterTeam[i].id;
-            inputButton.type = "button"
-            this.chooseEnemyDiv.appendChild(inputButton);
-            inputButton.addEventListener('click', () => this.attack(inputButton.value, decision), { signal: this.controller.signal });
+    }
+
+    gainCrystal() {
+        this.crystal += this.turnActors[0].entity.crystalGeneration;
+        if(this.crystal > 10) {
+            this.crystal = 10;
         }
+        this.crystalShow.innerHTML = this.crystal;
+    }
+
+    consumeCrystal(ammount) {
+        this.crystal -= ammount;
+        if(this.crystal < 0) {
+            this.crystal = 0;
+        }
+        this.crystalShow.innerHTML = this.crystal;
+    }
+
+    checkEnoughCrystal(cost) {
+        if(cost > this.crystal) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    //Generate Buttons
+
+    generateTarget(decision) {
+        this.newAbort();
+        this.hideMenu();
+        if(decision === this.actions.normalAttack) {
+            for(let i = 0; i < this.monsterTeam.length; i++) {
+                let inputButton = document.createElement("button");
+                inputButton.value = this.monsterTeam[i].id;
+                inputButton.innerHTML = this.monsterTeam[i].entity.name
+                this.chooseEnemyDiv.appendChild(inputButton);
+                inputButton.addEventListener('click', () => this.attack(inputButton.value, decision), { signal: this.controller.signal });
+            }
+        }
+        else if(decision === this.actions.crystalAttack){
+            for(let i = 0; i < this.turnActors[0].entity.crystalAttacks.length; i++) {
+                let inputButton = document.createElement("button");
+                let cost = this.turnActors[0].entity.crystalAttacks[i].cost;
+                inputButton.value = this.turnActors[0].entity.crystalAttacks[i].id;
+                inputButton.title = this.turnActors[0].entity.crystalAttacks[i].desc;
+                inputButton.innerHTML = this.turnActors[0].entity.crystalAttacks[i].name + " / crystal: " + cost;
+                this.chooseEnemyDiv.appendChild(inputButton);
+                inputButton.addEventListener('click', () => this.verifyCrystalNumber(inputButton.value, decision, cost), { signal: this.controller.signal });
+            }
+        }
+        this.generateBackButton();
+    }
+
+    verifyCrystalNumber(idAttack, decision, cost) {
+        if(this.checkEnoughCrystal(cost) === true) {
+            this.generateTargetCrystalAttack(idAttack, decision, cost);
+        }
+        else {
+            this.removeGeneratedTarget()
+            this.newAbort();
+            alert("Not enough crystal")
+        }
+    }
+
+    generateTargetCrystalAttack(idAttack, decision, cost) {
+        this.removeGeneratedTarget()
+        this.newAbort();
+        this.hideMenu();
+        for(let i = 0; i < this.monsterTeam.length; i++) {
+            let inputButton = document.createElement("button");
+            inputButton.value = this.monsterTeam[i].id;
+            inputButton.innerHTML = this.monsterTeam[i].entity.name
+            this.chooseEnemyDiv.appendChild(inputButton);
+            inputButton.addEventListener('click', () => this.attack(inputButton.value, decision, idAttack, cost), { signal: this.controller.signal });
+        }
+    }
+
+    generateBackButton() {
         let inputButton = document.createElement("input");
         inputButton.value = "back";
         inputButton.type = "button"
@@ -119,6 +195,8 @@ export class Combat {
         this.domCombat.querySelector("#actionButton").classList.remove("menuCombatHiddenButton");
         this.chooseEnemyDiv.innerHTML = "";
     }
+
+    //Generate Buttons
 
     //AI
 
@@ -178,22 +256,52 @@ export class Combat {
 
     //Menu Decisions
 
-    attack(id, decision) {
+    hideMenu() {
+        this.domCombat.querySelector("#actionButton").classList.add("menuCombatHiddenButton")
+    }
+
+    attack(id, decision, idAttack = 0, cost = 0) {
         this.removeGeneratedTarget();
         if(decision === this.actions.normalAttack) {
             this.normalAttack(id);
         }
+        else if(decision === this.actions.crystalAttack) {
+            this.consumeCrystal(cost);
+            this.crystalAttack(id, idAttack);
+        }
     }
 
     normalAttack(id) { //TODO Shield System
-        id = Number(id)
+        id = Number(id);
         let indexNumber = this.turnActors.findIndex(actor => actor.id === id);
-        let damageAttack = Math.floor(this.turnActors[indexNumber].entity.def*0.5) - this.turnActors[0].entity.atk
+        let damageAttack = Math.floor(this.turnActors[indexNumber].entity.def*0.5) - this.turnActors[0].entity.atk;
         if(damageAttack > -10) {
             damageAttack = -10;
         }
         this.turnActors[indexNumber].entity.hp += damageAttack;
-        this.turnOver()
+        this.gainCrystal();
+        this.turnOver();
+    }
+
+    crystalAttack(id, idAttack) {
+        id = Number(id);
+        let indexNumber = this.turnActors.findIndex(actor => actor.id === id);
+        let crystalAttack = this.turnActors[0].entity.crystalAttacks.filter(entity => entity.id === idAttack)
+        if(crystalAttack[0].damageMult != 0) {
+            let atk = this.turnActors[0].entity.atk * crystalAttack[0].damageMult;
+            let damageAttack = Math.floor(this.turnActors[indexNumber].entity.def*0.5) - atk;
+            if(damageAttack > -10) {
+                damageAttack = -10;
+            }
+            this.turnActors[indexNumber].entity.hp += damageAttack;
+        }
+        if(crystalAttack[0].debuff != 0) {
+            alert("debuff enemy")
+        }
+        if(crystalAttack[0].buff != 0) {
+            alert("buff ally")
+        }
+        this.turnOver();
     }
 
     defend() {

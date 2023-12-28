@@ -7,6 +7,7 @@ import { Combat } from "./Combat";
 
 
 document.querySelector('[id=attack]').addEventListener('click',() => combat.generateTarget(0));
+document.querySelector('[id=crystalAttack]').addEventListener('click',() => combat.generateTarget(1));
 document.querySelector('[id=defend]').addEventListener('click',() => combat.defend());
 document.querySelector('[id=skip]').addEventListener('click',() => combat.turnOver());
 

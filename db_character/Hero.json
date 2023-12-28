@@ -14,6 +14,7 @@
 			"defS": 10,
 			"shield": 3,
 			"vit": 30,
+			"crystalGeneration": 1,
 			"passiveSkills": [
 				{
 					"id": "01S",
@@ -25,7 +26,24 @@
 				}
 			],
 			"crystalAttacks": [
-				{"id": "01C", "name": "Forward Slash" }
+				{
+					"id": "01C", 
+					"name": "Forward Slash", 
+					"desc": "Deal 150% of total attack to a single ennemy", 
+					"damageMult":1.5, 
+					"buff":0, 
+					"debuff":0, 
+					"cost":2 
+				},
+				{
+					"id": "02C", 
+					"name": "Among Us Slash", 
+					"desc": "Deal 150% of total attack to a single ennemy", 
+					"damageMult":1.5, 
+					"buff":1, 
+					"debuff":"sdss", 
+					"cost":2 
+				}
 			]
 		},
 		{
@@ -42,6 +60,7 @@
 			"defS": 20,
 			"shield": 15,
 			"vit": 10,
+			"crystalGeneration": 1,
 			"passiveSkills": [
 				
 			],
@@ -63,6 +82,7 @@
 			"defS": 20,
 			"shield": 0,
 			"vit": 25,
+			"crystalGeneration": 2,
 			"passiveSkills": [
 				
 			],
@@ -84,6 +104,7 @@
 			"defS": 10,
 			"shield": 0,
 			"vit": 15,
+			"crystalGeneration": 1,
 			"passiveSkills": [
 				
 			],
@@ -105,6 +126,7 @@
 			"defS": 10,
 			"shield": 0,
 			"vit": 12,
+			"crystalGeneration": 2,
 			"passiveSkills": [
 				
 			],

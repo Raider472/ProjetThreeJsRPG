@@ -14,6 +14,7 @@
 			"defS": 10,
 			"shield": 1,
 			"vit": 10,
+			"crystalGeneration": 0,
 			"passiveSkills": [
 
 			],
@@ -35,6 +36,7 @@
 			"defS": 20,
 			"shield": 5,
 			"vit": 10,
+			"crystalGeneration": 0,
 			"passiveSkills": [
 
 			],
@@ -56,6 +58,7 @@
 			"defS": 5,
 			"shield": 2,
 			"vit": 30,
+			"crystalGeneration": 0,
 			"passiveSkills": [
 
 			],
@@ -77,6 +80,7 @@
 			"defS": 5,
 			"shield": 2,
 			"vit": 15,
+			"crystalGeneration": 0,
 			"passiveSkills": [
 
 			],
