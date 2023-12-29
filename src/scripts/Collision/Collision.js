@@ -1,3 +1,5 @@
+import { camera } from "../EnvironmentSceneManager";
+
 export function collision(obstacle, sprite, velocity) {
     const xColl = obstacle.right >= sprite.left + velocity.x && obstacle.left <= sprite.right + velocity.x;
     const yColl = sprite.top + velocity.y >= obstacle.bottom && sprite.bottom + velocity.y <= obstacle.top;
@@ -53,22 +55,30 @@ export function collisionDetection(obstacle, sprite) {
 		if(collision(obstacles, sprite, sprite.velocity)) {
 			if(collisionFromLeft(obstacles, sprite, sprite.velocity)) {
                 if(sprite.velocity.x > 0) {
-                    sprite.velocity.x = 0;
+                    sprite.velocity.x = 0
+                    camera.position.x = sprite.position.x
+                    
                 }
             }
             if(collisionFromRight(obstacles, sprite, sprite.velocity)) {
                 if(sprite.velocity.x < 0) {
-                    sprite.velocity.x = 0;
+                    sprite.velocity.x = 0
+                    camera.position.x = sprite.position.x
+
                 }
             }
             if(collisionFrombottom(obstacles, sprite, sprite.velocity)) {
                 if(sprite.velocity.y > 0) {
-                    sprite.velocity.y = 0;
+                    sprite.velocity.y = 0
+                    camera.position.y = sprite.position.y
+                    
                 }
             }
             if(collisionFromtop(obstacles, sprite, sprite.velocity)) {
                 if (sprite.velocity.y < 0) {
-                    sprite.velocity.y = 0;
+                    sprite.velocity.y = 0
+                    camera.position.y = sprite.position.y
+        
                 }
             }
 		}
