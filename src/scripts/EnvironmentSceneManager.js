@@ -263,6 +263,15 @@ function inventoryManagement() {
     })
 }
 
+// backgroundMusic.stop();
+
+// const backgroundCombatMusic = new THREE.Audio(listener);;  
+// audioLoader.load('/assets/sounds/combat_music.mp3', function( buffer ) {
+//     backgroundCombatMusic.setBuffer( buffer );
+//     backgroundCombatMusic.setLoop( true );
+//     backgroundCombatMusic.setVolume( 0.15 );
+//     backgroundCombatMusic.play()
+// });
 
 function animate() {
 	requestAnimationFrame( animate );
@@ -321,12 +330,6 @@ function animate() {
     if(resultColissionMonster.collision === true && isInCombat === false) {
         isInCombat = true;
         combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray, scene);
-        audioLoader.load("/public/assets/sounds/combat_music.wav", (buffer) => {
-            backgroundMusic.setBuffer( buffer );
-            backgroundMusic.setLoop( true );
-            backgroundMusic.setVolume( 0.15 );
-            backgroundMusic.play();
-        });
     }
     //debug
     if(isInCombat === true) {
