@@ -14,6 +14,9 @@ export class Combat {
     turnActors = [];
     actors = []
 
+    deadHero = [];
+    deadMonsters = [];
+
     scene;
 
     actions = {
@@ -173,12 +176,31 @@ export class Combat {
         this.removeGeneratedTarget()
         this.newAbort();
         this.hideMenu();
-        for(let i = 0; i < this.monsterTeam.length; i++) {
-            let inputButton = document.createElement("button");
-            inputButton.value = this.monsterTeam[i].id;
-            inputButton.innerHTML = this.monsterTeam[i].entity.name
-            this.chooseEnemyDiv.appendChild(inputButton);
-            inputButton.addEventListener('click', () => this.attack(inputButton.value, decision, idAttack, cost), { signal: this.controller.signal });
+        let crystalAttack = this.turnActors[0].entity.crystalAttacks.filter(entity => entity.id === idAttack);
+        crystalAttack = crystalAttack[0];
+        if(crystalAttack.isAOE) {
+            alert("AOE attack")
+        }
+        else if(!crystalAttack.isFriendly) {
+            for(let i = 0; i < this.monsterTeam.length; i++) {
+                let inputButton = document.createElement("button");
+                inputButton.value = this.monsterTeam[i].id;
+                inputButton.innerHTML = this.monsterTeam[i].entity.name
+                this.chooseEnemyDiv.appendChild(inputButton);
+                inputButton.addEventListener('click', () => this.attack(inputButton.value, decision, idAttack, cost), { signal: this.controller.signal });
+            }
+        }
+        else {
+            for(let i = 0; i < this.heroTeam.length; i++) {
+                let inputButton = document.createElement("button");
+                inputButton.value = this.heroTeam[i].id;
+                inputButton.innerHTML = this.heroTeam[i].entity.name
+                this.chooseEnemyDiv.appendChild(inputButton);
+                inputButton.addEventListener('click', () => this.attack(inputButton.value, decision, idAttack, cost), { signal: this.controller.signal });
+            }
+        }
+        if(!crystalAttack.isAOE) {
+            this.generateBackButton();
         }
     }
 
@@ -286,19 +308,38 @@ export class Combat {
     crystalAttack(id, idAttack) {
         id = Number(id);
         let indexNumber = this.turnActors.findIndex(actor => actor.id === id);
-        let crystalAttack = this.turnActors[0].entity.crystalAttacks.filter(entity => entity.id === idAttack)
-        if(crystalAttack[0].damageMult != 0) {
-            let atk = this.turnActors[0].entity.atk * crystalAttack[0].damageMult;
+        let crystalAttack = this.turnActors[0].entity.crystalAttacks.filter(entity => entity.id === idAttack);
+        crystalAttack = crystalAttack[0];
+        console.log(crystalAttack);
+        if(crystalAttack.damageMult != 0) {
+            let atk = Math.floor(this.turnActors[0].entity.atk * crystalAttack.damageMult);
             let damageAttack = Math.floor(this.turnActors[indexNumber].entity.def*0.5) - atk;
             if(damageAttack > -10) {
                 damageAttack = -10;
             }
             this.turnActors[indexNumber].entity.hp += damageAttack;
         }
-        if(crystalAttack[0].debuff != 0) {
+        if(crystalAttack.healMult != 0) {
+            let heal = Math.floor(this.turnActors[0].entity.heal * crystalAttack.healMult);
+            this.turnActors[indexNumber].entity.hp += heal;
+            if(this.turnActors[indexNumber].entity.hp > this.turnActors[indexNumber].entity.maxHp) {
+                this.turnActors[indexNumber].entity.hp = this.turnActors[indexNumber].entity.maxHp
+            }
+        }
+        if(crystalAttack.debuff != 0) {
             alert("debuff enemy")
         }
-        if(crystalAttack[0].buff != 0) {
+        if(crystalAttack.status != 0) {
+            let statusExists = this.turnActors[indexNumber].entity.status.some(status => status.name === crystalAttack.status.name);
+            if(!statusExists) {
+                this.turnActors[indexNumber].entity.status.push({
+                    name: crystalAttack.status.name,
+                    turn: crystalAttack.status.turn,
+                    modifier: crystalAttack.status.modifier
+                });
+            }
+        }
+        if(crystalAttack.buff != 0) {
             alert("buff ally")
         }
         this.turnOver();
@@ -306,7 +347,11 @@ export class Combat {
 
     defend() {
         let modifier = 1.5;
-        this.turnActors[0].entity.buffs.push({name: "defend", turn: 1, modifier: modifier, originalStats:[this.turnActors[0].entity.def, this.turnActors[0].entity.defS]});
+        this.turnActors[0].entity.buffs.push({
+            name: "defend",
+            turn: 1,
+            modifier: modifier
+        });
         console.log("before mult", this.turnActors[0].entity.def, this.turnActors[0].entity.defS) //TODO
         Math.floor(this.turnActors[0].entity.def *= modifier);
         Math.floor(this.turnActors[0].entity.defS *= modifier);
@@ -319,7 +364,7 @@ export class Combat {
     //Buff
 
     checkBuff(actor) {
-        if(actor.buffs != 0) {
+        if(actor.buffs.length != 0) {
             console.log("not 0")
             this.decrementBuff(actor.buffs);
         }
@@ -355,8 +400,7 @@ export class Combat {
 
     //Status
     checkStatus(actor) {
-        if(actor.status != 0) {
-            console.log("not 0 status");
+        if(actor.status.length != 0) {
             this.decrementStatus(actor.status);
         }
     }
@@ -364,18 +408,19 @@ export class Combat {
     decrementStatus(status) {
         for(let i = 0; i < status.length; i++) {
             status[i].turn --;
-            console.log(status[i], "i =")
             if(status[i].turn === 0) {
                 this.applyStatus(status[i]);
                 status.splice(i, 1);
                 i--;
             }
+            else {
+                this.applyStatus(status[i]);
+            }
         }
-        console.log(status, "status after for")
     }
 
     applyStatus(status) {
-        if(status.modifier < 1.1) {
+        if(status.modifier < 1) {
             let lostHp = Math.floor(this.turnActors[0].entity.maxHp * status.modifier);
             this.turnActors[0].entity.hp -= lostHp;
         }

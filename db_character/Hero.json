@@ -31,18 +31,26 @@
 					"name": "Forward Slash", 
 					"desc": "Deal 150% of total attack to a single ennemy", 
 					"damageMult":1.5, 
+					"healMult": 0,
 					"buff":0, 
-					"debuff":0, 
-					"cost":2 
+					"debuff":0,
+					"status":0,
+					"cost":2,
+					"isFriendly": false,
+					"isAOE": false
 				},
 				{
 					"id": "02C", 
 					"name": "Among Us Slash", 
 					"desc": "Deal 150% of total attack to a single ennemy", 
-					"damageMult":1.5, 
+					"damageMult":1.5,
+					"healMult": 0,
 					"buff":1, 
 					"debuff":"sdss", 
-					"cost":2 
+					"status":0,
+					"cost":2,
+					"isFriendly": false,
+					"isAOE": false
 				}
 			]
 		},
@@ -74,7 +82,7 @@
 			"name": "Average Herbalist",
 			"rarity": 1,
 			"hp": 60,
-			"atk": 40,
+			"atk": 20,
 			"atkS": 0,
 			"heal": 30,
 			"crit": 0,
@@ -87,7 +95,32 @@
 				
 			],
 			"crystalAttacks": [
-				
+				{
+					"id": "03C", 
+					"name": "Heal", 
+					"desc": "Heal a single ally with 100% of this character heal stat", 
+					"damageMult":0,
+					"healMult": 1,
+					"buff":0, 
+					"debuff":0,
+					"status": 0,
+					"cost":3,
+					"isFriendly": true,
+					"isAOE": false
+				},
+				{
+					"id": "03C", 
+					"name": "Heal Everyone", 
+					"desc": "Heal every Allies with 50% of this character heal stat", 
+					"damageMult":0,
+					"healMult": 0.5,
+					"buff":0, 
+					"debuff":0,
+					"status": 0,
+					"cost":3,
+					"isFriendly": true,
+					"isAOE": true
+				}
 			]
 		},
 		{
@@ -109,7 +142,23 @@
 				
 			],
 			"crystalAttacks": [
-				
+				{
+					"id": "02C", 
+					"name": "Poison Arrow", 
+					"desc": "Deal 125% of total attack and give the poison status to a single ennemy", 
+					"damageMult":1.25,
+					"healMult": 0,
+					"buff":0, 
+					"debuff":0,
+					"status": {
+						"name": "poison", 
+						"turn": 2, 
+						"modifier": 0.15 
+					},
+					"cost":2,
+					"isFriendly": false,
+					"isAOE": false
+				}
 			]
 		},
 		{

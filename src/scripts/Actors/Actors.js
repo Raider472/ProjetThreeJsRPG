@@ -24,6 +24,7 @@ export class Actors {
     buffs = [];
 
     isAi = true;
+    isFreezed = false;
 
     constructor(id) {
         if(this.constructor === Actors) {
