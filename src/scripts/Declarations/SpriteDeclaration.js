@@ -32,9 +32,9 @@ const pos3 = {
     z:0
 }
 const posMons = {
-    x:0,
-    y:0,
-    z:0
+    x:28,
+    y:16,
+    z:0.008
 }
 const posMons2 = {
     x:-1,
@@ -52,9 +52,9 @@ const scaleHero = {
     z:1
 }
 const scaleMonster = {
-    x:0.5,
-    y:0.5,
-    z:0.5
+    x:1,
+    y:1,
+    z:1
 }
 
 const testMonster = new EntitySprite("/sprite/Zombie.png", 4, 4, teamMonsterTest, posMons, scaleMonster, [0, 1, 2, 3]);

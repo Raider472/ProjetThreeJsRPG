@@ -45,7 +45,7 @@ camera2.position.x = 50
 camera2.position.z = 5
 
 scene.add(camera, camera2);
-scene.add(SpriteList.playerSprite);
+scene.add(SpriteList.playerSprite, SpriteList.testMonster);
 
 // Music de fond du jeu :
 
@@ -70,6 +70,7 @@ const tileMap = new TileMap(scene);
 
 let obstacles = [];
 let monsters = [];
+monsters.push(SpriteList.testMonster)
 
 function initializeMap() {
     let map = [];
@@ -91,10 +92,6 @@ function initializeMap() {
             const tileType = tileMap.mapData[i][j];
             const createAsset = new AssetFactory();
             const newSprite = createAsset.createAssetInstance(tileType, i, j);
-
-            if (tileType === '4') {
-                monsters.push(newSprite);
-            }
 
             scene.add(newSprite);
             map.push(newSprite);
@@ -281,16 +278,16 @@ function animate() {
 	SpriteList.playerSprite.velocity.y = 0;
 
 	if(keys.w.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.y = 0.020;
-        camera.position.y += 0.020;
+        SpriteList.playerSprite.velocity.y = 0.018;
+        camera.position.y += 0.018;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.upSprite, loopSpeed);
             animationInProgress = true;
         }
     }
     else if(keys.s.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.y = -0.020;
-        camera.position.y -= 0.020;
+        SpriteList.playerSprite.velocity.y = -0.018;
+        camera.position.y -= 0.018;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.downSprite, loopSpeed);
             animationInProgress = true;
@@ -299,16 +296,16 @@ function animate() {
 
     SpriteList.playerSprite.velocity.x = 0;
     if(keys.d.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.x = 0.020;
-        camera.position.x += 0.020;
+        SpriteList.playerSprite.velocity.x = 0.018;
+        camera.position.x += 0.018;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.rightSprite, loopSpeed);
             animationInProgress = true;
         }
     }
     else if(keys.a.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.x = -0.020;
-        camera.position.x -= 0.020;
+        SpriteList.playerSprite.velocity.x = -0.018;
+        camera.position.x -= 0.018;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.leftSprite, loopSpeed);
             animationInProgress = true;
@@ -324,6 +321,12 @@ function animate() {
     if(resultColissionMonster.collision === true && isInCombat === false) {
         isInCombat = true;
         combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray, scene);
+        audioLoader.load("/public/assets/sounds/combat_music.wav", (buffer) => {
+            backgroundMusic.setBuffer( buffer );
+            backgroundMusic.setLoop( true );
+            backgroundMusic.setVolume( 0.15 );
+            backgroundMusic.play();
+        });
     }
     //debug
     if(isInCombat === true) {

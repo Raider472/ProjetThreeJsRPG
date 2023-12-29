@@ -59,16 +59,30 @@ export class AssetFactory {
                 return treesDeclaration;
             },
             // 2-2 Palmier 1
-            '2-2': (x, y, z = 0.008) => {
-                const scale = {x: 0.95, y: 0.95, z: 1}
+            '2-2': (x, y, z = 0.009) => {
+                const scale = {x: 2, y: 2, z: 1}
                 const treesDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/palm.png", 1, 1, {x, y, z}, scale);
                 treesDeclaration.userData = '2-2';
                 return treesDeclaration;
             },
-            // 2-2 Palmier 2
-            '2-3': (x, y, z = 0.008) => {
-                const scale = {x: 0.95, y: 0.95, z: 1}
+            // 2-3 Palmier 2
+            '2-3': (x, y, z = 0.009) => {
+                const scale = {x: 2, y: 2, z: 1}
                 const treesDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/palm_2.png", 1, 1, {x, y, z}, scale);
+                treesDeclaration.userData = '2-3';
+                return treesDeclaration;
+            },
+            // 2-4 Palmier 3
+            '2-4': (x, y, z = 0.009) => {
+                const scale = {x: 2, y: 2, z: 1}
+                const treesDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/palm_3.png", 1, 1, {x, y, z}, scale);
+                treesDeclaration.userData = '2-3';
+                return treesDeclaration;
+            },
+            // 2-5 Palmier 4
+            '2-5': (x, y, z = 0.009) => {
+                const scale = {x: 2, y: 2, z: 1}
+                const treesDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/palm_4.png", 1, 1, {x, y, z}, scale);
                 treesDeclaration.userData = '2-3';
                 return treesDeclaration;
             },
