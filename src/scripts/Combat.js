@@ -21,7 +21,8 @@ export class Combat {
 
     actions = {
         normalAttack: 0,
-        crystalAttack: 1
+        crystalAttack: 1,
+        crystalAttackAoe: 2
     }
 
     //DOM Element
@@ -92,6 +93,9 @@ export class Combat {
     }
 
     turnOver() {
+        if(this.turnActors[0].entity.pv <= 0) { //TODO Death Condition
+            console.log(this.turnActors[0].entity.name, " is dead");
+        }
         this.turnActors.push(this.turnActors.shift());
         this.checkBuff(this.turnActors[0].entity);
         this.checkStatus(this.turnActors[0].entity);
@@ -179,7 +183,12 @@ export class Combat {
         let crystalAttack = this.turnActors[0].entity.crystalAttacks.filter(entity => entity.id === idAttack);
         crystalAttack = crystalAttack[0];
         if(crystalAttack.isAOE) {
-            alert("AOE attack")
+            if(crystalAttack.isFriendly) {
+                this.attack(this.heroTeam, 2, idAttack, cost)
+            }
+            else {
+                this.attack(this.monsterTeam, 2, idAttack, cost)
+            }
         }
         else if(!crystalAttack.isFriendly) {
             for(let i = 0; i < this.monsterTeam.length; i++) {
@@ -291,6 +300,10 @@ export class Combat {
             this.consumeCrystal(cost);
             this.crystalAttack(id, idAttack);
         }
+        else if(decision === this.actions.crystalAttackAoe) {
+            this.consumeCrystal(cost);
+            this.crystalAttackAOE(id, idAttack);
+        }
     }
 
     normalAttack(id) { //TODO Shield System
@@ -305,12 +318,11 @@ export class Combat {
         this.turnOver();
     }
 
-    crystalAttack(id, idAttack) {
+    crystalAttack(id, idAttack, AOE = false) {
         id = Number(id);
         let indexNumber = this.turnActors.findIndex(actor => actor.id === id);
         let crystalAttack = this.turnActors[0].entity.crystalAttacks.filter(entity => entity.id === idAttack);
         crystalAttack = crystalAttack[0];
-        console.log(crystalAttack);
         if(crystalAttack.damageMult != 0) {
             let atk = Math.floor(this.turnActors[0].entity.atk * crystalAttack.damageMult);
             let damageAttack = Math.floor(this.turnActors[indexNumber].entity.def*0.5) - atk;
@@ -341,6 +353,15 @@ export class Combat {
         }
         if(crystalAttack.buff != 0) {
             alert("buff ally")
+        }
+        if(!AOE) {
+            this.turnOver();
+        }
+    }
+
+    crystalAttackAOE(teamToAOE, idAttack) {
+        for(let i = 0; i < teamToAOE.length; i++) {
+            this.crystalAttack(teamToAOE[i].id, idAttack, true)
         }
         this.turnOver();
     }

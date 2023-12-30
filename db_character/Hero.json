@@ -60,7 +60,7 @@
 			"name": "Edvard",
 			"rarity": 1,
 			"hp": 130,
-			"atk": 15,
+			"atk": 20,
 			"atkS": 0,
 			"heal": 0,
 			"crit": 0.05,
@@ -73,7 +73,19 @@
 				
 			],
 			"crystalAttacks": [
-				
+				{
+					"id": "05C", 
+					"name": "Smash the Ground", 
+					"desc": "Attack every ennemy with 150% of this character attack", 
+					"damageMult":1.5,
+					"healMult": 0,
+					"buff":0, 
+					"debuff":0,
+					"status": 0,
+					"cost":2,
+					"isFriendly": false,
+					"isAOE": true
+				}
 			]
 		},
 		{
@@ -109,7 +121,7 @@
 					"isAOE": false
 				},
 				{
-					"id": "03C", 
+					"id": "04C", 
 					"name": "Heal Everyone", 
 					"desc": "Heal every Allies with 50% of this character heal stat", 
 					"damageMult":0,
