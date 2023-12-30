@@ -76,8 +76,8 @@
 				{
 					"id": "05C", 
 					"name": "Smash the Ground", 
-					"desc": "Attack every ennemy with 150% of this character attack", 
-					"damageMult":1.5,
+					"desc": "Attack every ennemy with 125% of this character attack", 
+					"damageMult":1.25,
 					"healMult": 0,
 					"buff":0, 
 					"debuff":0,
