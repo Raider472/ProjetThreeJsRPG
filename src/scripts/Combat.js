@@ -234,15 +234,14 @@ export class Combat {
     aiActionSelection() {
         let randomNumber = Math.floor(Math.random() * 100);
         if(randomNumber <= 1) {
-            this.turnOver()
+            this.turnOver();
             alert("ia has done nothing")
         }
         else {
             let arrayProb = this.generateHeroAttackPropability();
-            let id = this.aiSelectionWeightedDecisions(this.heroTeam, arrayProb)
-            //TODO maybe better alert
-            alert("ia has attacked " + this.heroTeam[id-1].entity.name)
-            this.normalAttack(id)
+            let id = this.aiSelectionWeightedDecisions(this.heroTeam, arrayProb);
+            alert(this.turnActors[0].entity.name + " has attacked " + this.heroTeam[id-1].entity.name);
+            this.normalAttack(id);
         }
     }
 
@@ -306,14 +305,27 @@ export class Combat {
         }
     }
 
-    normalAttack(id) { //TODO Shield System
-        id = Number(id);
+    normalAttack(id) {
+        id = Number(id); //TODO Crit
         let indexNumber = this.turnActors.findIndex(actor => actor.id === id);
-        let damageAttack = Math.floor(this.turnActors[indexNumber].entity.def*0.5) - this.turnActors[0].entity.atk;
-        if(damageAttack > -10) {
-            damageAttack = -10;
+        let atk = this.turnActors[0].entity.atk;
+        if(this.turnActors[indexNumber].entity.shield > 0) {
+            this.turnActors[indexNumber].entity.shield -= atk;
+            if(this.turnActors[indexNumber].entity.shield < 0) {
+                atk = (this.turnActors[indexNumber].entity.shield * -1);
+                this.turnActors[indexNumber].entity.shield = 0;
+            }
+            else {
+                atk = 0;
+            }
         }
-        this.turnActors[indexNumber].entity.hp += damageAttack;
+        if(atk != 0) {
+            let damageAttack = Math.floor(this.turnActors[indexNumber].entity.def*0.5) - atk;
+            if(damageAttack > -10) {
+                damageAttack = -10;
+            }
+            this.turnActors[indexNumber].entity.hp += damageAttack;
+        }
         this.gainCrystal();
         this.turnOver();
     }
@@ -325,7 +337,27 @@ export class Combat {
         crystalAttack = crystalAttack[0];
         if(crystalAttack.damageMult != 0) {
             let atk = Math.floor(this.turnActors[0].entity.atk * crystalAttack.damageMult);
-            let damageAttack = Math.floor(this.turnActors[indexNumber].entity.def*0.5) - atk;
+            if(this.turnActors[indexNumber].entity.shield > 0) {
+                this.turnActors[indexNumber].entity.shield -= atk;
+                if(this.turnActors[indexNumber].entity.shield < 0) {
+                    atk = (this.turnActors[indexNumber].entity.shield * -1);
+                    this.turnActors[indexNumber].entity.shield = 0;
+                }
+                else {
+                    atk = 0;
+                }
+            }
+            if(atk != 0) {
+                let damageAttack = Math.floor(this.turnActors[indexNumber].entity.def*0.5) - atk;
+                if(damageAttack > -10) {
+                    damageAttack = -10;
+                }
+                this.turnActors[indexNumber].entity.hp += damageAttack;
+            }
+        }
+        if(crystalAttack.damageSMult != 0) {
+            let atkS = Math.floor(this.turnActors[0].entity.atkS * crystalAttack.damageSMult);
+            let damageAttack = Math.floor(this.turnActors[indexNumber].entity.defS*0.5) - atkS;
             if(damageAttack > -10) {
                 damageAttack = -10;
             }
@@ -339,7 +371,17 @@ export class Combat {
             }
         }
         if(crystalAttack.debuff != 0) {
-            alert("debuff enemy")
+            let debuffExists = this.turnActors[indexNumber].entity.buffs.some(debuff => debuff.name === crystalAttack.debuff.name);
+            if(!debuffExists) {
+                this.turnActors[indexNumber].entity.buffs.push({
+                    name: crystalAttack.debuff.name,
+                    turn: crystalAttack.debuff.turn,
+                    modifier: crystalAttack.debuff.modifier,
+                    stats: crystalAttack.debuff.stats,
+                    applied: crystalAttack.debuff.applied
+                });
+            }
+            this.applyBuff(this.turnActors[indexNumber]);
         }
         if(crystalAttack.status != 0) {
             let statusExists = this.turnActors[indexNumber].entity.status.some(status => status.name === crystalAttack.status.name);
@@ -353,6 +395,17 @@ export class Combat {
         }
         if(crystalAttack.buff != 0) {
             alert("buff ally")
+            let buffExists = this.turnActors[indexNumber].entity.buffs.some(buff => buff.name === crystalAttack.buff.name);
+            if(!buffExists) {
+                this.turnActors[indexNumber].entity.buffs.push({
+                    name: crystalAttack.buff.name,
+                    turn: crystalAttack.buff.turn,
+                    modifier: crystalAttack.buff.modifier,
+                    stats: crystalAttack.buff.stats,
+                    applied: crystalAttack.buff.applied
+                });
+            }
+            this.applyBuff(this.turnActors[indexNumber]);
         }
         if(!AOE) {
             this.turnOver();
@@ -371,12 +424,11 @@ export class Combat {
         this.turnActors[0].entity.buffs.push({
             name: "defend",
             turn: 1,
-            modifier: modifier
+            modifier: modifier,
+            stats: ["def", "defS"],
+            applied: false
         });
-        console.log("before mult", this.turnActors[0].entity.def, this.turnActors[0].entity.defS) //TODO
-        Math.floor(this.turnActors[0].entity.def *= modifier);
-        Math.floor(this.turnActors[0].entity.defS *= modifier);
-        console.log(this.turnActors[0].entity.buffs, this.turnActors[0].entity.def, this.turnActors[0].entity.defS, "turnActorsInfo after defend") //TODO
+        this.applyBuff(this.turnActors[0]);
         this.turnOver()
     }
 
@@ -384,9 +436,42 @@ export class Combat {
 
     //Buff
 
+    applyBuff(actor) {
+        let buffList = actor.entity.buffs
+        for(let i = 0; i < buffList.length; i++) {
+            if(!buffList[i].applied) {
+                for(let j = 0; j < buffList[i].stats.length; j++) {
+                    switch(buffList[i].stats[j]) {
+                        case "atk":
+                            actor.entity.atk *= buffList[i].modifier;
+                            break;
+                        case "atkS":
+                            actor.entity.atkS *= buffList[i].modifier;
+                            break;
+                        case "heal":
+                            actor.entity.heal *= buffList[i].modifier;
+                            break;
+                        case "crit":
+                            actor.entity.crit += buffList[i].modifier;
+                            break;
+                        case "def":
+                            actor.entity.def *= buffList[i].modifier;
+                            break;
+                        case "defS":
+                            actor.entity.defS *= buffList[i].modifier;
+                            break;
+                        case "vit":
+                            actor.entity.vit *= buffList[i].modifier;
+                            break;
+                    }
+                }
+                buffList[i].applied = true;
+            }
+        }
+    }
+
     checkBuff(actor) {
         if(actor.buffs.length != 0) {
-            console.log("not 0")
             this.decrementBuff(actor.buffs);
         }
     }
@@ -394,26 +479,39 @@ export class Combat {
     decrementBuff(buff) {
         for(let i = 0; i < buff.length; i++) {
             buff[i].turn --
-            console.log(buff[i], "i =")
             if(buff[i].turn === 0) {
                 this.removeBuff(buff[i]);
                 buff.splice(i, 1);
                 i--;
             }
         }
-        console.log(buff, "buff after for")
     }
 
     removeBuff(buff) {
-        console.log("removeBuff")
-        switch(buff.name) {
-            case "defend":
-                console.log(buff.name, "reset defense")
-                console.log(this.turnActors[0].entity.def, this.turnActors[0].entity.defS, "actorDef", "before reset")
-                this.turnActors[0].entity.def /= buff.modifier;
-                this.turnActors[0].entity.defS /= buff.modifier;
-                console.log(this.turnActors[0].entity.def, this.turnActors[0].entity.defS, "actorDef", "after reset")
-                break;
+        for(let i = 0; i < buff.stats.length; i++) {
+            switch(buff.stats[i]) {
+                case "atk":
+                    this.turnActors[0].entity.atk /= buff.modifier;
+                    break;
+                case "atkS":
+                    this.turnActors[0].entity.atkS /= buff.modifier;
+                    break;
+                case "heal":
+                    this.turnActors[0].entity.heal /= buff.modifier;
+                    break;
+                case "crit":
+                    this.turnActors[0].entity.crit -= buff.modifier;
+                    break;
+                case "def":
+                    this.turnActors[0].entity.def /= buff.modifier;
+                    break;
+                case "defS":
+                    this.turnActors[0].entity.defS /= buff.modifier;
+                    break;
+                case "vit":
+                    this.turnActors[0].entity.vit /= buff.modifier;
+                    break;
+            }
         }
     }
 
