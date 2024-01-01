@@ -144,11 +144,13 @@ export class Combat {
         this.hideMenu();
         if(decision === this.actions.normalAttack) {
             for(let i = 0; i < this.monsterTeam.length; i++) {
-                let inputButton = document.createElement("button");
-                inputButton.value = this.monsterTeam[i].id;
-                inputButton.innerHTML = this.monsterTeam[i].entity.name
-                this.chooseEnemyDiv.appendChild(inputButton);
-                inputButton.addEventListener('click', () => this.attack(inputButton.value, decision), { signal: this.controller.signal });
+                if(!this.isActorOnDeathList(this.monsterTeam[i])) {
+                    let inputButton = document.createElement("button");
+                    inputButton.value = this.monsterTeam[i].id;
+                    inputButton.innerHTML = this.monsterTeam[i].entity.name
+                    this.chooseEnemyDiv.appendChild(inputButton);
+                    inputButton.addEventListener('click', () => this.attack(inputButton.value, decision), { signal: this.controller.signal });
+                }
             }
         }
         else if(decision === this.actions.crystalAttack){
@@ -192,20 +194,24 @@ export class Combat {
         }
         else if(!crystalAttack.isFriendly) {
             for(let i = 0; i < this.monsterTeam.length; i++) {
-                let inputButton = document.createElement("button");
-                inputButton.value = this.monsterTeam[i].id;
-                inputButton.innerHTML = this.monsterTeam[i].entity.name
-                this.chooseEnemyDiv.appendChild(inputButton);
-                inputButton.addEventListener('click', () => this.attack(inputButton.value, decision, idAttack, cost), { signal: this.controller.signal });
+                if(!this.isActorOnDeathList(this.monsterTeam[i])) {
+                    let inputButton = document.createElement("button");
+                    inputButton.value = this.monsterTeam[i].id;
+                    inputButton.innerHTML = this.monsterTeam[i].entity.name
+                    this.chooseEnemyDiv.appendChild(inputButton);
+                    inputButton.addEventListener('click', () => this.attack(inputButton.value, decision, idAttack, cost), { signal: this.controller.signal });
+                }
             }
         }
         else {
             for(let i = 0; i < this.heroTeam.length; i++) {
-                let inputButton = document.createElement("button");
-                inputButton.value = this.heroTeam[i].id;
-                inputButton.innerHTML = this.heroTeam[i].entity.name
-                this.chooseEnemyDiv.appendChild(inputButton);
-                inputButton.addEventListener('click', () => this.attack(inputButton.value, decision, idAttack, cost), { signal: this.controller.signal });
+                if(!this.isActorOnDeathList(this.heroTeam[i])) {
+                    let inputButton = document.createElement("button");
+                    inputButton.value = this.heroTeam[i].id;
+                    inputButton.innerHTML = this.heroTeam[i].entity.name
+                    this.chooseEnemyDiv.appendChild(inputButton);
+                    inputButton.addEventListener('click', () => this.attack(inputButton.value, decision, idAttack, cost), { signal: this.controller.signal });
+                }
             }
         }
         if(!crystalAttack.isAOE) {
@@ -235,7 +241,7 @@ export class Combat {
         let randomNumber = Math.floor(Math.random() * 100);
         if(randomNumber <= 1) {
             this.turnOver();
-            alert("ia has done nothing")
+            alert(this.turnActors[0].entity.name + " has done nothing");
         }
         else {
             let arrayProb = this.generateHeroAttackPropability();
@@ -248,12 +254,13 @@ export class Combat {
     generateHeroAttackPropability() {
         let arrayProb = [];
         for(let i =0; i < this.heroTeam.length; i++) {
-            if(this.isHeroUnderWeak(this.heroTeam[i])) {
-                console.log("Hero weak")
-                arrayProb.push((100 / this.heroTeam.length) + 25);
-            }
-            else {
-                arrayProb.push((100 / this.heroTeam.length));
+            if (!this.isActorOnDeathList(this.heroTeam[i])) {
+                if(this.isHeroUnderWeak(this.heroTeam[i])) {
+                    arrayProb.push((100 / this.heroTeam.length - this.deadHero.length) + 25);
+                }
+                else {
+                    arrayProb.push((100 / this.heroTeam.length - this.deadHero.length));
+                }
             }
         }
         return arrayProb;
@@ -274,10 +281,16 @@ export class Combat {
         for (let i = 0; i < weights.length; i++) {
             cumulativeWeights[i] = weights[i] + (cumulativeWeights[i - 1] || 0);
         }
+        let aliveHero = [];
+        for(let i = 0; i < items.length; i++) {
+            if(!this.isActorOnDeathList(items[i])) {
+                aliveHero.push(items[i]);
+            }
+        }
         const randomNumber = Math.floor(Math.random() * cumulativeWeights[cumulativeWeights.length-1]);
-        for (let i = 0; i < items.length; i++) {
+        for (let i = 0; i < aliveHero.length; i++) {
             if (cumulativeWeights[i] >= randomNumber) {
-                return items[i].id;
+                return aliveHero[i].id;
             }
         }
     }
@@ -306,9 +319,13 @@ export class Combat {
     }
 
     normalAttack(id) {
-        id = Number(id); //TODO Crit
+        id = Number(id);
         let indexNumber = this.turnActors.findIndex(actor => actor.id === id);
+        let critNumber = Math.random();
         let atk = this.turnActors[0].entity.atk;
+        if(this.turnActors[0].entity.crit >= critNumber) {
+            atk = Math.floor(2 * this.turnActors[0].entity.atk);
+        }
         if(this.turnActors[indexNumber].entity.shield > 0) {
             this.turnActors[indexNumber].entity.shield -= atk;
             if(this.turnActors[indexNumber].entity.shield < 0) {
@@ -327,6 +344,7 @@ export class Combat {
             this.turnActors[indexNumber].entity.hp += damageAttack;
         }
         this.gainCrystal();
+        this.checkDead(this.turnActors[indexNumber]);
         this.turnOver();
     }
 
@@ -337,6 +355,10 @@ export class Combat {
         crystalAttack = crystalAttack[0];
         if(crystalAttack.damageMult != 0) {
             let atk = Math.floor(this.turnActors[0].entity.atk * crystalAttack.damageMult);
+            let critNumber = Math.random();
+            if(this.turnActors[0].entity.crit >= critNumber) {
+                atk = Math.floor(1.75 * this.turnActors[0].entity.atk);
+            }
             if(this.turnActors[indexNumber].entity.shield > 0) {
                 this.turnActors[indexNumber].entity.shield -= atk;
                 if(this.turnActors[indexNumber].entity.shield < 0) {
@@ -357,6 +379,10 @@ export class Combat {
         }
         if(crystalAttack.damageSMult != 0) {
             let atkS = Math.floor(this.turnActors[0].entity.atkS * crystalAttack.damageSMult);
+            let critNumber = Math.random();
+            if(this.turnActors[0].entity.crit >= critNumber) {
+                atkS = Math.floor(1.5 * this.turnActors[0].entity.atkS);
+            }
             let damageAttack = Math.floor(this.turnActors[indexNumber].entity.defS*0.5) - atkS;
             if(damageAttack > -10) {
                 damageAttack = -10;
@@ -414,7 +440,9 @@ export class Combat {
 
     crystalAttackAOE(teamToAOE, idAttack) {
         for(let i = 0; i < teamToAOE.length; i++) {
-            this.crystalAttack(teamToAOE[i].id, idAttack, true)
+            if(!this.isActorOnDeathList(teamToAOE[i])) {
+                this.crystalAttack(teamToAOE[i].id, idAttack, true)
+            }
         }
         this.turnOver();
     }
@@ -433,6 +461,41 @@ export class Combat {
     }
 
     //Menu Decisions
+
+    //Death
+    isActorOnDeathList(actor) {
+        if(actor.entity.isAi) {
+            return this.deadMonsters.some(monster => monster.id === actor.id)
+        }
+        else {
+            return this.deadHero.some(hero => hero.id === actor.id) 
+        }
+    }
+
+    checkDead(actor) {
+        if(actor.entity.hp <= 0) {
+            console.log("actor is dead")
+            this.removeActor(actor);
+        }
+    }
+
+    removeActor(actor) {
+        let indexNumber = this.turnActors.findIndex(actorIndex => actorIndex.id === actor.id);
+        let splicedElement = this.turnActors.splice(indexNumber, 1);
+        splicedElement = splicedElement[0];
+        if(actor.entity.isAi) {
+            console.log(splicedElement, "splicedElement");
+            this.deadMonsters.push(splicedElement);
+            console.log(this.deadMonsters, "deadMonster list");
+        }
+        else {
+            console.log(splicedElement, "splicedElement");
+            this.deadHero.push(splicedElement);
+            console.log(this.deadHero, "deadHero list");
+        }
+    }
+
+    //Death
 
     //Buff
 
