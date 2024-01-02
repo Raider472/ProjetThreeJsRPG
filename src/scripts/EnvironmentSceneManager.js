@@ -10,10 +10,29 @@ export const scene = new THREE.Scene();
 const gameWindow = document.getElementById('game-renderer');
 
 //Variables importantes :
+
 let isInCombat = false;
 let combat = null;
 let switchCamera1 = false;
 export const loopSpeed = 1;
+
+// Variables globales pour la scène : 
+
+let obstacles = [];
+let monsters = [];
+monsters.push(SpriteList.testMonster)
+
+// Variable cookies :
+
+export let coins = 0;
+let combatWon = 0;
+let combatLosed = 0;
+let combatDone = 0;
+export let charactersUnlocked = [];
+
+function cookieSaveManager() {
+
+}
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -65,12 +84,6 @@ audioPlay.onclick = () => {audioLoader.load( '/assets/sounds/retroclassic-game-m
 })}
 
 const tileMap = new TileMap(scene);
-
-// Variables globales pour la scène : 
-
-let obstacles = [];
-let monsters = [];
-monsters.push(SpriteList.testMonster)
 
 function initializeMap() {
     let map = [];
@@ -173,35 +186,18 @@ function playRandomFootstepSound() {
         randomFootstepSound.play();
     }
 
-    if (SpriteList.playerSprite.velocity.y === 0 && SpriteList.playerSprite.velocity.x === 0) {
-        randomFootstepSound.stop();
+    switch(SpriteList.playerSprite.velocity) {
+        case SpriteList.playerSprite.velocity.y === 0 && SpriteList.playerSprite.velocity.x === 0:
+            randomFootstepSound.stop();
+        break;
+        case SpriteList.playerSprite.velocity.y > 0 && SpriteList.playerSprite.velocity.x > 0:
+            randomFootstepSound.play();
+        break;
     }
 }
 
+
 document.addEventListener('keydown', (event) => {
-    if (animationInProgress) return;
-
-    switch (event.code) {
-        case "KeyA":
-            keys.a.pressed = true;
-            clearInterval(footstepIntervalId);
-            break;
-        case "KeyD":
-            keys.d.pressed = true;
-            clearInterval(footstepIntervalId);
-            break;
-        case "KeyW":
-            keys.w.pressed = true;
-            clearInterval(footstepIntervalId);
-            break;
-        case "KeyS":
-            keys.s.pressed = true;
-            clearInterval(footstepIntervalId);
-            break;
-    }
-});
-
-document.addEventListener('keypress', (event) => {
     if (animationInProgress) return;
 
     switch (event.code) {
