@@ -248,7 +248,6 @@ function animate() {
         isInCombat = true;
         lastEntityCombat = resultColissionMonster.monster;
         indexOfLasteEntity = monsters.findIndex(monster => monster === lastEntityCombat);
-        console.log(indexOfLasteEntity);
         combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray, scene);
     }
     //debug
