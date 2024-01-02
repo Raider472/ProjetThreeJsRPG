@@ -15,6 +15,8 @@ document.querySelector('[id=skip]').addEventListener('click',() => combat.turnOv
 let isInCombat = false;
 let combat = null;
 let switchCamera1 = false;
+let lastEntityCombat = null;
+let indexOfLasteEntity = null;
 export const loopSpeed = 1;
 
 //Fin
@@ -46,11 +48,11 @@ const MIN_CAMERA_POSITION = 2;
 const DEFAULT_CAMERA_POSITION = camera.position.z = 5;
 const MAX_CAMERA_POSITION = 100;
 
-const camera2 = new THREE.PerspectiveCamera(FOV, SCREEN_ASPECT, NEAR, FAR)
-camera2.position.x = 50
-camera2.position.z = 5
+const cameraCombat = new THREE.PerspectiveCamera(FOV, SCREEN_ASPECT, NEAR, FAR)
+cameraCombat.position.x = 500
+cameraCombat.position.z = 5
 
-scene.add(camera, camera2);
+scene.add(camera, cameraCombat);
 
 // Music de fond du jeu :
 
@@ -163,6 +165,9 @@ window.addEventListener("keyup", (event)=>{
         case "KeyO":
             switchCamera1 = !switchCamera1
             break;
+        case "KeyT":
+            console.log(SpriteList.playerSprite.team.teamArray)
+            break;
 	}
 })
 
@@ -192,7 +197,7 @@ function inventoryManagement() {
 function animate() {
 	requestAnimationFrame( animate );
     if(isInCombat) {
-        renderer.render( scene, camera2 );
+        renderer.render( scene, cameraCombat );
     }
     else {
         renderer.render( scene, camera );
@@ -236,21 +241,37 @@ function animate() {
             animationInProgress = true;
         }
     }
-    if(switchCamera1 === true) {
-        renderer.render( scene, camera )
-        switchCamera1 = false;
-    }
 	collisionDetection(obstacle, SpriteList.playerSprite);
     //Colision for player/monster
     let resultColissionMonster = collisionMonsters(monsters, SpriteList.playerSprite);
     if(resultColissionMonster.collision === true && isInCombat === false) {
         isInCombat = true;
+        lastEntityCombat = resultColissionMonster.monster;
+        indexOfLasteEntity = monsters.findIndex(monster => monster === lastEntityCombat);
+        console.log(indexOfLasteEntity);
         combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray, scene);
     }
     //debug
     if(isInCombat === true) {
         for(let i = 0; i < combat.actors.length; i++) {
-            combat.actors[i].update(deltaTime);
+            combat.actors[i].entity.update(deltaTime);
+        }
+        if(combat.isFinished) {
+            if(combat.hasLost) {
+                combat.removeActors();
+                isInCombat = false;
+                combat = null;
+                SpriteList.playerSprite.position.x = 0;
+                SpriteList.playerSprite.position.y = 2;
+                SpriteList.playerSprite.position.z = 0;
+            }
+            else {
+                combat.removeActors();
+                scene.remove(lastEntityCombat);
+                monsters.splice(indexOfLasteEntity, 1);
+                isInCombat = false;
+                combat = null
+            }
         }
     }
 	SpriteList.playerSprite.update(deltaTime);

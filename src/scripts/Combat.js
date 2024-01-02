@@ -17,6 +17,9 @@ export class Combat {
     deadHero = [];
     deadMonsters = [];
 
+    isFinished = false;
+    hasLost = false;
+
     scene;
 
     actions = {
@@ -65,18 +68,18 @@ export class Combat {
         for(let i = 0; i < this.heroTeam.length; i++) {
             let filteredEntities = mapsCrossReferenceHeroCombat.entities.filter(entity => entity.id === this.heroTeam[i].entity.id);
 
-            let position = {x: 45, y: 2.25 - i*2, z: 0};
+            let position = {x: 495, y: 2.25 - i*2, z: 0};
             let hero = new SpriteObject(filteredEntities[0].path, filteredEntities[0].horiTile, filteredEntities[0].vertiTile, position, scale, filteredEntities[0].idle);
-            this.actors.push(hero);
+            this.actors.push({id: this.heroTeam[i].id, entity: hero, originalPos: position});
             this.scene.add(hero);
         }
         //Add Monsters to the scene
         for(let i = 0; i < this.monsterTeam.length; i++) {
             let filteredEntities = mapsCrossReferenceMonsterCombat.entities.filter(entity => entity.id === this.monsterTeam[i].entity.id);
 
-            let position = {x: 55, y: 2.25 - i*2, z: 0};
+            let position = {x: 505, y: 2.25 - i*2, z: 0};
             let monster = new SpriteObject(filteredEntities[0].path, filteredEntities[0].horiTile, filteredEntities[0].vertiTile, position, scale, filteredEntities[0].idle);
-            this.actors.push(monster);
+            this.actors.push({id: this.monsterTeam[i].id, entity: monster, originalPos: position});
             this.scene.add(monster);
         }
     }
@@ -93,9 +96,7 @@ export class Combat {
     }
 
     turnOver() {
-        if(this.turnActors[0].entity.pv <= 0) { //TODO Death Condition
-            console.log(this.turnActors[0].entity.name, " is dead");
-        }
+        this.checkWipedOutTeam()
         this.turnActors.push(this.turnActors.shift());
         this.checkBuff(this.turnActors[0].entity);
         this.checkStatus(this.turnActors[0].entity);
@@ -433,6 +434,7 @@ export class Combat {
             }
             this.applyBuff(this.turnActors[indexNumber]);
         }
+        this.checkDead(this.turnActors[indexNumber]);
         if(!AOE) {
             this.turnOver();
         }
@@ -462,7 +464,7 @@ export class Combat {
 
     //Menu Decisions
 
-    //Death
+    //Death //TODO move avtor out of frame
     isActorOnDeathList(actor) {
         if(actor.entity.isAi) {
             return this.deadMonsters.some(monster => monster.id === actor.id)
@@ -493,6 +495,22 @@ export class Combat {
             this.deadHero.push(splicedElement);
             console.log(this.deadHero, "deadHero list");
         }
+        this.deathAnimation(actor);
+    }
+
+    checkWipedOutTeam() {
+        if(this.deadMonsters.length === this.monsterTeam.length) {
+            this.isFinished = true;
+        }
+        else if(this.deadHero.length === this.heroTeam.length ) {
+            this.isFinished = true;
+            this.hasLost = true;
+        }
+    }
+
+    deathAnimation(actor) {
+        let indexActor = this.actors.findIndex(entity => entity.id === actor.id);
+        this.actors[indexActor].entity.position.x = 1000
     }
 
     //Death
@@ -609,6 +627,14 @@ export class Combat {
         else {
             this.turnActors[0].entity.hp -= status.modifier;
         }
+        this.checkDead(this.turnActors[0]);
     }
     //Status
+
+    //Cleanup Combat
+    removeActors() {
+        for(let i = 0; i < this.actors.length; i++) {
+            this.scene.remove(this.actors[i].entity);
+        }
+    }
 }
