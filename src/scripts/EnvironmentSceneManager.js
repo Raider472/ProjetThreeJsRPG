@@ -9,11 +9,17 @@ import { AssetFactory } from "./TileMap/AssetFactory";
 export const scene = new THREE.Scene();
 const gameWindow = document.getElementById('game-renderer');
 
-//Variables importantes :
+document.querySelector('[id=attack]').addEventListener('click',() => combat.generateTarget(0));
+document.querySelector('[id=crystalAttack]').addEventListener('click',() => combat.generateTarget(1));
+document.querySelector('[id=defend]').addEventListener('click',() => combat.defend());
+document.querySelector('[id=skip]').addEventListener('click',() => combat.turnOver());
 
+//Variables importantes :
 let isInCombat = false;
 let combat = null;
 let switchCamera1 = false;
+let lastEntityCombat = null;
+let indexOfLasteEntity = null;
 export const loopSpeed = 1;
 
 // Variables globales pour la scène : 
@@ -59,11 +65,11 @@ const MAX_CAMERA_POSITION = 8;
 camera.position.x = SpriteList.playerSprite.position.x;
 camera.position.y = SpriteList.playerSprite.position.y;
 
-const camera2 = new THREE.PerspectiveCamera(FOV, SCREEN_ASPECT, NEAR, FAR)
-camera2.position.x = 50
-camera2.position.z = 5
+const cameraCombat = new THREE.PerspectiveCamera(FOV, SCREEN_ASPECT, NEAR, FAR)
+cameraCombat.position.x = 500
+cameraCombat.position.z = 5
 
-scene.add(camera, camera2);
+scene.add(camera, cameraCombat);
 scene.add(SpriteList.playerSprite, SpriteList.testMonster);
 
 // Music de fond du jeu :
@@ -236,6 +242,30 @@ document.addEventListener("keyup", (event) => {
             keys.s.pressed = false;
             clearInterval(footstepIntervalId);
             break;
+        case "KeyK":
+            //debug Key for console log
+            if(combat != null) {
+                console.log(combat.turnActors, "combat class information");
+            }
+            break;
+        case "KeyJ":
+            //debug Key for console log
+            if(combat != null) {
+                console.log(combat, "combat class information Overall");
+            }
+            break;
+        case "KeyL":
+            //debug Key to pass a turn
+            if(combat != null) {
+                combat.turnOver()
+            }
+            break;
+        case "KeyO":
+            switchCamera1 = !switchCamera1
+            break;
+        case "KeyT":
+            console.log(SpriteList.playerSprite.team.teamArray)
+            break;
     }
 });
 
@@ -272,7 +302,7 @@ function inventoryManagement() {
 function animate() {
 	requestAnimationFrame( animate );
     if(isInCombat) {
-        renderer.render( scene, camera2 );
+        renderer.render( scene, cameraCombat );
     }
     else {
         renderer.render( scene, camera );
@@ -316,24 +346,40 @@ function animate() {
             animationInProgress = true;
         }
     }
-    if(switchCamera1 === true) {
-        renderer.render( scene, camera )
-        switchCamera1 = false;
-    }
-	collisionDetection(obstacles, SpriteList.playerSprite);
+	  collisionDetection(obstacles, SpriteList.playerSprite);
     //Colision for player/monster
     let resultColissionMonster = collisionMonsters(monsters, SpriteList.playerSprite);
     if(resultColissionMonster.collision === true && isInCombat === false) {
         isInCombat = true;
+        lastEntityCombat = resultColissionMonster.monster;
+        indexOfLasteEntity = monsters.findIndex(monster => monster === lastEntityCombat);
+        console.log(indexOfLasteEntity);
         combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray, scene);
     }
     //debug
     if(isInCombat === true) {
         for(let i = 0; i < combat.actors.length; i++) {
-            combat.actors[i].update(deltaTime);
+            combat.actors[i].entity.update(deltaTime);
+        }
+        if(combat.isFinished) {
+            if(combat.hasLost) {
+                combat.removeActors();
+                isInCombat = false;
+                combat = null;
+                SpriteList.playerSprite.position.x = 0;
+                SpriteList.playerSprite.position.y = 2;
+                SpriteList.playerSprite.position.z = 0;
+            }
+            else {
+                combat.removeActors();
+                scene.remove(lastEntityCombat);
+                monsters.splice(indexOfLasteEntity, 1);
+                isInCombat = false;
+                combat = null
+            }
         }
     }
-	SpriteList.playerSprite.update(deltaTime);
+	  SpriteList.playerSprite.update(deltaTime);
     SpriteList.testMonster.update(deltaTime);
     SpriteList.testMonster2.update(deltaTime);
 

@@ -92,7 +92,7 @@ export function collisionMonsters(monsters, sprite) {
         if (collision(monster, sprite, sprite.velocity)) {
             result.collision = true;
             result.monster = monster;
-            return true; // exit the loop early if there is a collision
+            return true;
         }
         return false;
     });

@@ -5,14 +5,16 @@
 			"class": "DPS",
 			"name": "Leon, the Rookie Knight",
 			"rarity": 1,
-			"hp": 70,
+			"hp": 50,
 			"atk": 40,
 			"atkS": 0,
+			"heal": 0,
 			"crit": 0.15,
 			"def": 15,
 			"defS": 10,
-			"shield": 3,
+			"shield": 6,
 			"vit": 30,
+			"crystalGeneration": 1,
 			"passiveSkills": [
 				{
 					"id": "01S",
@@ -24,7 +26,20 @@
 				}
 			],
 			"crystalAttacks": [
-				{"id": "01C", "name": "Forward Slash" }
+				{
+					"id": "01C", 
+					"name": "Forward Slash", 
+					"desc": "Deal 150% of total attack to a single ennemy", 
+					"damageMult":1.5,
+					"damageSMult": 0, 
+					"healMult": 0,
+					"buff":0, 
+					"debuff":0,
+					"status":0,
+					"cost":2,
+					"isFriendly": false,
+					"isAOE": false
+				}
 			]
 		},
 		{
@@ -32,19 +47,60 @@
 			"class": "Tank",
 			"name": "Edvard",
 			"rarity": 1,
-			"hp": 130,
-			"atk": 15,
+			"hp": 70,
+			"atk": 20,
 			"atkS": 0,
+			"heal": 0,
 			"crit": 0.05,
-			"def": 35,
+			"def": 45,
 			"defS": 20,
 			"shield": 15,
 			"vit": 10,
+			"crystalGeneration": 1,
 			"passiveSkills": [
 				
 			],
 			"crystalAttacks": [
-				
+				{
+					"id": "05C", 
+					"name": "Smash the Ground", 
+					"desc": "Attack every ennemy with 125% of this character attack and inflicts a defense debuff of -25% to every ennemy for 2 turns", 
+					"damageMult":1.25,
+					"damageSMult": 0,
+					"healMult": 0,
+					"buff":0, 
+					"debuff": {
+						"name": "defense debuff -25%", 
+						"turn": 2, 
+						"modifier": 0.75,
+						"stats": ["def"],
+						"applied": false
+					},
+					"status": 0,
+					"cost":2,
+					"isFriendly": false,
+					"isAOE": true
+				},
+				{
+					"id": "06C", 
+					"name": "The Wall", 
+					"desc": "Grant a defense buff of 25% to every ally", 
+					"damageMult":0,
+					"damageSMult": 0,
+					"healMult": 0,
+					"buff": {
+						"name": "defense buff 25%", 
+						"turn": 2, 
+						"modifier": 1.25,
+						"stats": ["def"],
+						"applied": false
+					}, 
+					"debuff": 0,
+					"status": 0,
+					"cost":3,
+					"isFriendly": true,
+					"isAOE": true
+				}
 			]
 		},
 		{
@@ -52,19 +108,48 @@
 			"class": "Healer",
 			"name": "Average Herbalist",
 			"rarity": 1,
-			"hp": 60,
-			"atk": 40,
+			"hp": 40,
+			"atk": 20,
 			"atkS": 0,
-			"crit": 0,
+			"heal": 30,
+			"crit": 0.01,
 			"def": 20,
 			"defS": 20,
-			"shield": 0,
+			"shield": 10,
 			"vit": 25,
+			"crystalGeneration": 2,
 			"passiveSkills": [
 				
 			],
 			"crystalAttacks": [
-				
+				{
+					"id": "03C", 
+					"name": "Heal", 
+					"desc": "Heal a single ally with 100% of this character heal stat", 
+					"damageMult":0,
+					"damageSMult": 0,
+					"healMult": 1,
+					"buff":0, 
+					"debuff":0,
+					"status": 0,
+					"cost":3,
+					"isFriendly": true,
+					"isAOE": false
+				},
+				{
+					"id": "04C", 
+					"name": "Heal Everyone", 
+					"desc": "Heal every Allies with 50% of this character heal stat", 
+					"damageMult":0,
+					"damageSMult": 0,
+					"healMult": 0.5,
+					"buff":0, 
+					"debuff":0,
+					"status": 0,
+					"cost":3,
+					"isFriendly": true,
+					"isAOE": true
+				}
 			]
 		},
 		{
@@ -72,19 +157,38 @@
 			"class": "Archer",
 			"name": "Archer",
 			"rarity": 1,
-			"hp": 60,
+			"hp": 50,
 			"atk": 45,
 			"atkS": 0,
-			"crit": 0.2,
+			"heal": 0,
+			"crit": 0.15,
 			"def": 25,
 			"defS": 10,
 			"shield": 0,
 			"vit": 15,
+			"crystalGeneration": 1,
 			"passiveSkills": [
 				
 			],
 			"crystalAttacks": [
-				
+				{
+					"id": "02C", 
+					"name": "Poison Arrow", 
+					"desc": "Deal 125% of total attack and give the poison status to a single ennemy", 
+					"damageMult":1.25,
+					"damageSMult": 0,
+					"healMult": 0,
+					"buff":0, 
+					"debuff":0,
+					"status": {
+						"name": "poison", 
+						"turn": 2, 
+						"modifier": 0.15 
+					},
+					"cost":2,
+					"isFriendly": false,
+					"isAOE": false
+				}
 			]
 		},
 		{
@@ -95,11 +199,13 @@
 			"hp": 45,
 			"atk": 55,
 			"atkS": 0,
+			"heal": 0,
 			"crit": 0.05,
 			"def": 15,
 			"defS": 10,
 			"shield": 0,
 			"vit": 12,
+			"crystalGeneration": 2,
 			"passiveSkills": [
 				
 			],

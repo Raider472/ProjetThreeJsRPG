@@ -153,16 +153,23 @@ a:hover {
     margin: 10px 10px 10px 10px;
 }
 
-.menuCombatTestHidden {
+.menuCombaHidden {
     display: flex;
     justify-content: center;
     visibility: hidden;
 }
 
-.menuCombatTestVisible {
+.menuCombatHiddenButton {
+    visibility: hidden;
+}
+
+.menuCombatVisible {
+    visibility: visible;
+}
+
+.menuChoose {
     display: flex;
     justify-content: center;
-    visibility: visible;
 }
 
 .lifepoints {
