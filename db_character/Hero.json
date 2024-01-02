@@ -38,7 +38,8 @@
 					"status":0,
 					"cost":2,
 					"isFriendly": false,
-					"isAOE": false
+					"isAOE": false,
+					"targetDead": false
 				}
 			]
 		},
@@ -79,7 +80,8 @@
 					"status": 0,
 					"cost":2,
 					"isFriendly": false,
-					"isAOE": true
+					"isAOE": true,
+					"targetDead": false
 				},
 				{
 					"id": "06C", 
@@ -99,7 +101,8 @@
 					"status": 0,
 					"cost":3,
 					"isFriendly": true,
-					"isAOE": true
+					"isAOE": true,
+					"targetDead": false
 				}
 			]
 		},
@@ -134,7 +137,8 @@
 					"status": 0,
 					"cost":3,
 					"isFriendly": true,
-					"isAOE": false
+					"isAOE": false,
+					"targetDead": false
 				},
 				{
 					"id": "04C", 
@@ -148,7 +152,23 @@
 					"status": 0,
 					"cost":3,
 					"isFriendly": true,
-					"isAOE": true
+					"isAOE": true,
+					"targetDead": false
+				},
+				{
+					"id": "05C", 
+					"name": "Test Resurection", 
+					"desc": "Resurect an ally tp 75% of it's maxHp", 
+					"damageMult":0,
+					"damageSMult": 0,
+					"healMult": 0.75,
+					"buff":0, 
+					"debuff":0,
+					"status": 0,
+					"cost":1,
+					"isFriendly": true,
+					"isAOE": false,
+					"targetDead": true
 				}
 			]
 		},
@@ -187,7 +207,8 @@
 					},
 					"cost":2,
 					"isFriendly": false,
-					"isAOE": false
+					"isAOE": false,
+					"targetDead": false
 				}
 			]
 		},

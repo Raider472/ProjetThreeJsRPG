@@ -26,7 +26,7 @@ export const loopSpeed = 1;
 
 let obstacles = [];
 let monsters = [];
-monsters.push(SpriteList.testMonster)
+monsters.push(SpriteList.testMonster, SpriteList.testMonster2)
 
 // Variable cookies :
 
@@ -70,7 +70,7 @@ cameraCombat.position.x = 500
 cameraCombat.position.z = 5
 
 scene.add(camera, cameraCombat);
-scene.add(SpriteList.playerSprite, SpriteList.testMonster);
+scene.add(SpriteList.playerSprite, SpriteList.testMonster, SpriteList.testMonster2);
 
 // Music de fond du jeu :
 
@@ -361,16 +361,16 @@ function animate() {
             combat.actors[i].entity.update(deltaTime);
         }
         if(combat.isFinished) {
-            if(combat.hasLost) {
-                combat.removeActors();
+            combat.hideMenuCleanup();
+            combat.removeActors();
+            if(combat.hasLost) {                
                 isInCombat = false;
                 combat = null;
-                SpriteList.playerSprite.position.x = 0;
-                SpriteList.playerSprite.position.y = 2;
-                SpriteList.playerSprite.position.z = 0;
+                SpriteList.playerSprite.position.x = 20;
+                SpriteList.playerSprite.position.y = 1;
+                SpriteList.playerSprite.position.z = 0.008;
             }
             else {
-                combat.removeActors();
                 scene.remove(lastEntityCombat);
                 monsters.splice(indexOfLasteEntity, 1);
                 isInCombat = false;
