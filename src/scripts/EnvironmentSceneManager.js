@@ -29,11 +29,19 @@ export const loopSpeed = 1;
 
 //Test d'ajout d'item
 let potion = new Consumable(1);
+let potion2 = new Consumable(2);
+let potion3 = new Consumable(3);
+let potion4 = new Consumable(4);
+let potion5 = new Consumable(5);
 let armor = new Armor(1);
 
 inventory.addItem(potion);
 inventory.addItem(potion);
 inventory.addItem(armor);
+inventory.addItem(potion2);
+inventory.addItem(potion3);
+inventory.addItem(potion4);
+inventory.addItem(potion5);
 
 // Variables globales pour la scène : 
 

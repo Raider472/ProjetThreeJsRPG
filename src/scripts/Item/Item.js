@@ -16,7 +16,6 @@ export class Item {
         } 
         else {
             this.fetchJson(id).then(item => {
-                console.log(item);
                 this.id = item[0].id;
                 this.name = item[0].name;
                 this.desc = item[0].desc;

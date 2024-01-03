@@ -244,8 +244,27 @@ export class Combat {
                 inputButton.value = i;
                 inputButton.innerHTML = this.inventory.items[i].name
                 this.chooseEnemyDiv.appendChild(inputButton);
-                inputButton.addEventListener('click', () => this.applyPotion(inputButton.value), { signal: this.controller.signal });
+                if(this.inventory.items[i].modifier.targetDead) {
+                    inputButton.addEventListener('click', () => this.generateTargetFeather(inputButton.value), { signal: this.controller.signal });
+                }
+                else {
+                    inputButton.addEventListener('click', () => this.applyPotion(inputButton.value), { signal: this.controller.signal });
+                }
             }
+        }
+        this.generateBackButton();
+    }
+
+    generateTargetFeather(indexItem) {
+        this.removeGeneratedTarget()
+        this.newAbort();
+        this.hideMenu();
+        for(let i = 0; i < this.deadHero.length; i++) {
+            let inputButton = document.createElement("button");
+            inputButton.value = this.deadHero[i].id;
+            inputButton.innerHTML = this.deadHero[i].entity.name
+            this.chooseEnemyDiv.appendChild(inputButton);
+            inputButton.addEventListener('click', () => this.applyPotion(indexItem, inputButton.value), { signal: this.controller.signal });
         }
         this.generateBackButton();
     }
@@ -455,7 +474,6 @@ export class Combat {
             }
         }
         if(crystalAttack.buff != 0) {
-            alert("buff ally")
             let buffExists = this.turnActors[indexNumber].entity.buffs.some(buff => buff.name === crystalAttack.buff.name);
             if(!buffExists) {
                 this.turnActors[indexNumber].entity.buffs.push({
@@ -496,12 +514,12 @@ export class Combat {
         this.turnOver()
     }
 
-    applyPotion(indexPotion) {
+    applyPotion(indexPotion, idHero) {
         this.removeGeneratedTarget();
         indexPotion = Number(indexPotion);
         if(this.inventory.items[indexPotion].modifier.healMult != 0) {
             if(this.inventory.items[indexPotion].modifier.targetDead) {
-                console.log("resurrectPotion");
+                this.resurrection(idHero, this.deadHero, this.inventory.items[indexPotion].modifier, true);
             }
             else {
                 this.turnActors[0].entity.hp += Math.floor(this.inventory.items[indexPotion].modifier.healMult * this.turnActors[0].entity.maxHp);
@@ -511,7 +529,21 @@ export class Combat {
             }
         }
         if(this.inventory.items[indexPotion].modifier.buff != 0) {
-            console.log("buffPotion");
+            let buffItem = this.inventory.items[indexPotion].modifier.buff;
+            let buffExists = this.turnActors[0].entity.buffs.some(buff => buff.name === buffItem.name);
+            if(!buffExists) {
+                this.turnActors[0].entity.buffs.push({
+                    name: buffItem.name,
+                    turn: buffItem.turn,
+                    modifier: buffItem.modifier,
+                    stats: buffItem.stats,
+                    applied: buffItem.applied
+                });
+            }
+            this.applyBuff(this.turnActors[0]);
+        }
+        if(this.inventory.items[indexPotion].modifier.restoreShield) {
+            this.turnActors[0].entity.shield = this.turnActors[0].entity.maxShield
         }
         this.inventory.removeItem(indexPotion);
         this.turnOver();
@@ -568,13 +600,19 @@ export class Combat {
         this.actors[indexActor].entity.position.x = 1000
     }
 
-    resurrection(id, faction, idAttack) { //TODO fix double turn
+    resurrection(id, faction, idAttack, item = false) { //TODO fix double turn
         id = Number(id);
         let indexNumber = faction.findIndex(entity => entity.id === id);
-        let crystalAttack = this.turnActors[0].entity.crystalAttacks.filter(entity => entity.id === idAttack);
-        crystalAttack = crystalAttack[0];
-        console.log(faction[indexNumber]);
-        faction[indexNumber].entity.hp = Math.floor(crystalAttack.healMult * faction[indexNumber].entity.maxHp);
+        if(!item) {
+            let crystalAttack = this.turnActors[0].entity.crystalAttacks.filter(entity => entity.id === idAttack);
+            crystalAttack = crystalAttack[0];
+            faction[indexNumber].entity.hp = Math.floor(crystalAttack.healMult * faction[indexNumber].entity.maxHp);
+        }
+        else {
+            console.log(idAttack)
+            console.log(idAttack.healMult)
+            faction[indexNumber].entity.hp = Math.floor(idAttack.healMult * faction[indexNumber].entity.maxHp);
+        }
 
         let indexActor = this.actors.findIndex(entity => entity.id === faction[indexNumber].id);
         this.actors[indexActor].entity.position.x = this.actors[indexActor].originalPos.x
