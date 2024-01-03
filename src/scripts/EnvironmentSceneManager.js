@@ -35,6 +35,7 @@ let combatWon = 0;
 let combatLosed = 0;
 let combatDone = 0;
 export let charactersUnlocked = [];
+const audioLoader = new THREE.AudioLoader();
 
 function cookieSaveManager() {
 
@@ -263,24 +264,6 @@ document.addEventListener("keyup", (event) => {
 
 // UI :
 
-function inventoryManagement() {
-    const toolbarItem = document.getElementById('toolbar-item');
-    const inventoryUi = document.getElementById('inventory-ui');
-    const closeInventory = document.getElementById('close-inventory');
-
-    inventoryUi.hidden = true;
-
-    toolbarItem.addEventListener('click', () => {
-        inventoryUi.hidden = false;
-        toolbarItem.hidden = true;
-    });
-
-    closeInventory.addEventListener('click', () => {
-        inventoryUi.hidden = true;
-        toolbarItem.hidden = false;
-    })
-}
-
 // backgroundMusic.stop();
 
 // const backgroundCombatMusic = new THREE.Audio(listener);;  
@@ -379,6 +362,5 @@ function animate() {
     asset.updateObstaclesSprites(deltaTime *= 0.6, obstacles);
 }
 animate();
-inventoryManagement();
 initializeMap();
 onZoom();
