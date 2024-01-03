@@ -22,6 +22,8 @@ export class Combat {
 
     scene;
 
+    inventory;
+
     actions = {
         normalAttack: 0,
         crystalAttack: 1,
@@ -38,9 +40,10 @@ export class Combat {
     pActual;
     chooseEnemyDiv;
 
-    constructor(heroTeam, monsterTeam, scene) {
+    constructor(heroTeam, monsterTeam, scene, inventory) {
         this.giveIdToActors(heroTeam, monsterTeam);
         this.scene = scene;
+        this.inventory = inventory;
         this.domCombat = document.getElementById("menuCombat");
         this.crystalShow = document.getElementById("numberCrystal");
         this.crystalShow.innerHTML = this.crystal;
@@ -207,7 +210,6 @@ export class Combat {
         }
         else {
             if(crystalAttack.targetDead) {
-                console.log("fdsdfnjsdxifghvuy")
                 for(let i = 0; i < this.deadHero.length; i++) {
                     let inputButton = document.createElement("button");
                     inputButton.value = this.deadHero[i].id;
@@ -231,6 +233,21 @@ export class Combat {
         if(!crystalAttack.isAOE) {
             this.generateBackButton();
         }
+    }
+
+    generateTargetItems() {
+        this.newAbort();
+        this.hideMenu();
+        for(let i = 0; i < this.inventory.items.length; i++) {
+            if(this.inventory.items[i].type === "consumable") {
+                let inputButton = document.createElement("button");
+                inputButton.value = i;
+                inputButton.innerHTML = this.inventory.items[i].name
+                this.chooseEnemyDiv.appendChild(inputButton);
+                inputButton.addEventListener('click', () => this.applyPotion(inputButton.value), { signal: this.controller.signal });
+            }
+        }
+        this.generateBackButton();
     }
 
     generateBackButton() {
@@ -477,6 +494,27 @@ export class Combat {
         });
         this.applyBuff(this.turnActors[0]);
         this.turnOver()
+    }
+
+    applyPotion(indexPotion) {
+        this.removeGeneratedTarget();
+        indexPotion = Number(indexPotion);
+        if(this.inventory.items[indexPotion].modifier.healMult != 0) {
+            if(this.inventory.items[indexPotion].modifier.targetDead) {
+                console.log("resurrectPotion");
+            }
+            else {
+                this.turnActors[0].entity.hp += Math.floor(this.inventory.items[indexPotion].modifier.healMult * this.turnActors[0].entity.maxHp);
+                if(this.turnActors[0].entity.hp > this.turnActors[0].entity.maxHp) {
+                    this.turnActors[0].entity.hp = this.turnActors[0].entity.maxHp;
+                }
+            }
+        }
+        if(this.inventory.items[indexPotion].modifier.buff != 0) {
+            console.log("buffPotion");
+        }
+        this.inventory.removeItem(indexPotion);
+        this.turnOver();
     }
 
     //Menu Decisions

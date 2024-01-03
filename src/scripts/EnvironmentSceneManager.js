@@ -5,6 +5,9 @@ import { TileMap } from "./TileMap/TileMap";
 import { SpriteList } from "./Declarations/SpriteDeclaration";
 import { Combat } from "./Combat";
 import { AssetFactory } from "./TileMap/AssetFactory";
+import { Inventory } from "./Item/Inventory";
+import { Consumable } from "./Item/Consumable";
+import { Armor } from "./Item/Armor";
 
 export const scene = new THREE.Scene();
 const gameWindow = document.getElementById('game-renderer');
@@ -12,6 +15,7 @@ const gameWindow = document.getElementById('game-renderer');
 document.querySelector('[id=attack]').addEventListener('click',() => combat.generateTarget(0));
 document.querySelector('[id=crystalAttack]').addEventListener('click',() => combat.generateTarget(1));
 document.querySelector('[id=defend]').addEventListener('click',() => combat.defend());
+document.querySelector('[id=item]').addEventListener('click',() => combat.generateTargetItems());
 document.querySelector('[id=skip]').addEventListener('click',() => combat.turnOver());
 
 //Variables importantes :
@@ -20,7 +24,16 @@ let combat = null;
 let switchCamera1 = false;
 let lastEntityCombat = null;
 let indexOfLasteEntity = null;
+let inventory = new Inventory();
 export const loopSpeed = 1;
+
+//Test d'ajout d'item
+let potion = new Consumable(1);
+let armor = new Armor(1);
+
+inventory.addItem(potion);
+inventory.addItem(potion);
+inventory.addItem(armor);
 
 // Variables globales pour la scène : 
 
@@ -254,7 +267,7 @@ document.addEventListener("keyup", (event) => {
             }
             break;
         case "KeyO":
-            switchCamera1 = !switchCamera1
+            console.log(inventory);
             break;
         case "KeyT":
             console.log(SpriteList.playerSprite.team.teamArray)
@@ -328,7 +341,7 @@ function animate() {
         isInCombat = true;
         lastEntityCombat = resultColissionMonster.monster;
         indexOfLasteEntity = monsters.findIndex(monster => monster === lastEntityCombat);
-        combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray, scene);
+        combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray, scene, inventory);
     }
     //debug
     if(isInCombat === true) {
@@ -338,9 +351,8 @@ function animate() {
         if(combat.isFinished) {
             combat.hideMenuCleanup();
             combat.removeActors();
+            inventory = combat.inventory; //TODO possibly delete
             if(combat.hasLost) {                
-                isInCombat = false;
-                combat = null;
                 SpriteList.playerSprite.position.x = 20;
                 SpriteList.playerSprite.position.y = 1;
                 SpriteList.playerSprite.position.z = 0.008;
@@ -348,9 +360,9 @@ function animate() {
             else {
                 scene.remove(lastEntityCombat);
                 monsters.splice(indexOfLasteEntity, 1);
-                isInCombat = false;
-                combat = null
             }
+            isInCombat = false;
+            combat = null
         }
     }
 	  SpriteList.playerSprite.update(deltaTime);

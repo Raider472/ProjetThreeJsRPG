@@ -3,6 +3,7 @@ import * as THREE from 'three';
 export class Item {
     id;
     name;
+    type;
     desc;
     price;
     costDesc;
