@@ -1,26 +1,27 @@
 import * as THREE from "three";
 import { collisionDetection, collisionMonsters } from "./Collision/Collision";
 import * as Move from "./Mouvement";
+import { TileMap } from "./TileMap/TileMap";
 import { SpriteList } from "./Declarations/SpriteDeclaration";
 import { Combat } from "./Combat";
-import { TileMap } from "./TileMap/TileMap"; // Import the TileMap class from the appropriate module
+import { AssetFactory } from "./TileMap/AssetFactory";
+
+export const scene = new THREE.Scene();
+const gameWindow = document.getElementById('game-renderer');
 
 //Variable importante
 let isInCombat = false;
 let combat = null;
 let switchCamera1 = false;
+export const loopSpeed = 1;
 
 //Fin
 
-export const scene = new THREE.Scene();
-const gameWindow = document.getElementById('game-renderer');
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight*8/10 );
 gameWindow.appendChild( renderer.domElement );
 
-scene.add(SpriteList.playerSprite, SpriteList.tree, SpriteList.tree2, SpriteList.tree3, SpriteList.testMonster, SpriteList.testMonster2);
-SpriteList.playerSprite.position.y = 2;
 let animationInProgress = false;
 const clock = new THREE.Clock
 
@@ -31,12 +32,14 @@ const SCREEN_HEIGHT = window.innerHeight;
 const FOV = 90; 
 const SCREEN_ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
 const NEAR = 1;
-const FAR = 1000;
+const FAR = 100;
 
 const camera = new THREE.PerspectiveCamera(FOV, SCREEN_ASPECT, NEAR, FAR);
 
 const MIN_CAMERA_POSITION = 2;
-const DEFAULT_CAMERA_POSITION = camera.position.z = 5;
+const Z_DEFAULT_CAMERA_POSITION = camera.position.z = 5;
+camera.position.y = 8;
+camera.position.x = 8;
 const MAX_CAMERA_POSITION = 100;
 
 const camera2 = new THREE.PerspectiveCamera(FOV, SCREEN_ASPECT, NEAR, FAR)
@@ -62,39 +65,37 @@ audioPlay.onclick = () => {audioLoader.load( '/assets/sounds/rpg_background_musi
 	backgroundMusic.play();
 })} */
 
+const tileMap = new TileMap(scene);
 console.log(backgroundMusic.isPlaying);
 
-const tileMap = new TileMap(scene);
-
-let terrain = [];
-
-function initialize() {
+function initializeMap() {
     let map = [];
-    for (let x = 0; x < tileMap.mapData.length; x++) {
-      const column = [];
-      for (let y = 0; y < tileMap.mapData[x].length; y++) {
-        const ids = {
-            terrainId: '0',
-            wallsId: '1',
-            treesId: '2',
-            charactersId: '3',
-            monstersId: '4',
-            exitDoorId: '5'
+    let terrain = [];
+
+    for (let i = 0; i < tileMap.terrainData.length; i++) {
+        for (let j = 0; j < tileMap.terrainData[i].length; j++) {
+            const tileType = tileMap.terrainData[i][j];
+            const createAsset = new AssetFactory();
+            const newSprite = createAsset.createAssetInstance(tileType, i, j);
+
+            scene.add(newSprite);
+            terrain.push(newSprite);
         }
-        for (let id in ids) {
-            if (tileMap.mapData[x][y] == ids[id]) {
-                const newSprite = tileMap.createSprite(ids[id]);
-                console.log(tileMap.mapData[x][y])
-                console.log(newSprite);
-                scene.add(newSprite);
-                column.push(newSprite);
-            }
-        }
-      }
-      map.push(column);
-      map.push([...Array(tileMap.tileSize)]);
     }
-  }
+
+    for (let i = 0; i < tileMap.mapData.length; i++) {
+        for (let j = 0; j < tileMap.mapData[i].length; j++) {
+            const tileType = tileMap.mapData[i][j];
+            const createAsset = new AssetFactory();
+            const newSprite = createAsset.createAssetInstance(tileType, i, j);
+
+            scene.add(newSprite);
+            map.push(newSprite);
+        }
+    }
+
+    console.log(map);
+}
 
 // Gestion du zoom avec la molette de la souris avec listener de la molette de la souris pour le zoom de la caméra.
 
@@ -102,7 +103,7 @@ document.addEventListener('wheel', onZoom);
 
 function onZoom(e) {
 	const zoomSpeed = 0.01;
-	DEFAULT_CAMERA_POSITION;
+	Z_DEFAULT_CAMERA_POSITION;
 	camera.position.z -= e.deltaY * zoomSpeed;
 	camera.position.z = Math.min(MAX_CAMERA_POSITION, Math.max(MIN_CAMERA_POSITION, camera.position.z));
 	camera.updateProjectionMatrix();
@@ -192,7 +193,7 @@ function animate() {
         SpriteList.playerSprite.velocity.y = 0.05;
         //0.008
         if(!animationInProgress) {
-            SpriteList.playerSprite.loop(SpriteList.playerSprite.upSprite, 1.5);
+            SpriteList.playerSprite.loop(SpriteList.playerSprite.upSprite, loopSpeed);
             animationInProgress = true;
         }
     }
@@ -200,7 +201,7 @@ function animate() {
         SpriteList.playerSprite.velocity.y = -0.05;
         //-0.008
         if(!animationInProgress) {
-            SpriteList.playerSprite.loop(SpriteList.playerSprite.downSprite, 1.5);
+            SpriteList.playerSprite.loop(SpriteList.playerSprite.downSprite, loopSpeed);
             animationInProgress = true;
         }
     }
@@ -210,7 +211,7 @@ function animate() {
         SpriteList.playerSprite.velocity.x = 0.05;
         //0.008
         if(!animationInProgress) {
-            SpriteList.playerSprite.loop(SpriteList.playerSprite.rightSprite, 1.5);
+            SpriteList.playerSprite.loop(SpriteList.playerSprite.rightSprite, loopSpeed);
             animationInProgress = true;
         }
     }
@@ -218,7 +219,7 @@ function animate() {
         SpriteList.playerSprite.velocity.x = -0.05;
         //-0.008
         if(!animationInProgress) {
-            SpriteList.playerSprite.loop(SpriteList.playerSprite.leftSprite, 1.5);
+            SpriteList.playerSprite.loop(SpriteList.playerSprite.leftSprite, loopSpeed);
             animationInProgress = true;
         }
     }
@@ -231,11 +232,9 @@ function animate() {
     let resultColissionMonster = collisionMonsters(monsters, SpriteList.playerSprite);
     if(resultColissionMonster.collision === true && isInCombat === false) {
         isInCombat = true;
-        //Possibly have to remove that
-        resultColissionMonster.monster.position.x = 55;
-        //Possibly have to remove that
         combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray, scene);
     }
+    //debug
     if(isInCombat === true) {
         for(let i = 0; i < combat.actors.length; i++) {
             combat.actors[i].update(deltaTime);
@@ -248,5 +247,5 @@ function animate() {
 }
 animate();
 inventoryManagement();
-initialize();
+initializeMap();
 onZoom();

@@ -6,13 +6,13 @@ import { teamHeroes, teamMonsterTest } from "./ActorDeclaration";
 export { SpriteList }
 
 //Sprite S
-const arrayS = [0, 1, 2, 3, 4, 5]
+const arrayS = [3, 4, 5]
 //sprite Z
-const arrayZ = [8, 9, 10, 11, 12, 13]
+const arrayZ = [39, 40, 41]
 //sprite D
-const arrayD = [16, 17, 18, 19, 20, 21]
+const arrayD = [27, 28, 29]
 //sprite Q
-const arrayQ = [24, 25, 26, 27, 28, 29]
+const arrayQ = [15, 16, 17]
 
 //Test De Sprite
 
@@ -59,7 +59,7 @@ const scaleMonster = {
 
 const testMonster = new EntitySprite("/sprite/Zombie.png", 4, 4, teamMonsterTest, posMons, scaleMonster, [0, 1, 2, 3]);
 const testMonster2 = new EntitySprite("/sprite/Zombie.png", 4, 4, teamMonsterTest, posMons2, scaleMonster, [0, 1, 2, 3]);
-const testSprite = new PlayerSprite("/sprite/TemplateChar.png", 8, 8, teamHeroes, posHero, scaleHero, [6, 7], arrayQ, arrayD, arrayZ, arrayS);
+const testSprite = new PlayerSprite("/assets/game_assets/timefantasy_characters/sheets/military1.png", 12, 8, teamHeroes, posHero, scaleHero, arrayS, arrayQ, arrayD, arrayZ, arrayS);
 
 const arbre = new SpriteObject("/sprite/TreeTest.png", 1, 1, pos);
 const arbre2 = new SpriteObject("/sprite/TreeTest.png", 1, 1, pos2);

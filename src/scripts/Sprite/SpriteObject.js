@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 
+
 export class SpriteObject extends THREE.Sprite {
 
     scaleObj = {
@@ -37,17 +38,13 @@ export class SpriteObject extends THREE.Sprite {
     idle
 
     constructor(path, horiTile, vertiTile, position = {x: 0, y:0, z:0}, scaleObj = {x: 1, y: 1, z: 1}, idle = []) {
-        console.log(path)
-        let material = new THREE.TextureLoader().load(path);
-        let mapBefore = new THREE.SpriteMaterial({map: material});
-        console.log(mapBefore)
-        super(mapBefore);
+        let map = new THREE.TextureLoader().load(path);
+        let material = new THREE.SpriteMaterial({map: map});
+        super(material);
         this.horiTile = horiTile;
         this.vertiTile = vertiTile;
-        this.material = mapBefore
-        this.map = material;
-
-        console.log(this.map)
+        this.material = material
+        this.map = map;
 
         this.map.repeat.set(1/horiTile, 1/vertiTile);
         this.map.magFilter = THREE.NearestFilter;
@@ -69,7 +66,7 @@ export class SpriteObject extends THREE.Sprite {
         this.back = this.position.z - this.scale.z/2;
 
         this.idle = idle
-        this.loop(this.idle, 1.5)
+        this.loop(this.idle, 1)
     }
 
     loop(spriteIndex, timeDuration) {
@@ -87,8 +84,8 @@ export class SpriteObject extends THREE.Sprite {
             this.runningTileSprite = (this.runningTileSprite +1) % this.indexSprite.length;
             this.currentTile = this.indexSprite[this.runningTileSprite];
 
-            this.offsetX = (this.currentTile %  this.horiTile) / this.vertiTile;
-            this.offsetY = (this.vertiTile - Math.floor(this.currentTile/ this.horiTile)-1) / this.vertiTile;
+            this.offsetX = (this.currentTile % this.horiTile) / this.horiTile;
+            this.offsetY = (this.vertiTile - Math.floor(this.currentTile / this.horiTile)-1) / this.vertiTile;
             this.map.offset.x = this.offsetX;
             this.map.offset.y = this.offsetY;
         }
