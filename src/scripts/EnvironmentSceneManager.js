@@ -16,7 +16,7 @@ let switchCamera1 = false;
 export const loopSpeed = 1;
 
 const renderer = new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.setSize( window.innerWidth, window.innerHeight*8/10 );
 gameWindow.appendChild( renderer.domElement );
 
 let animationInProgress = false;
@@ -52,17 +52,9 @@ scene.add(SpriteList.playerSprite, SpriteList.testMonster);
 const listener = new THREE.AudioListener();
 camera.add(listener);
 
-const audioLoader = new THREE.AudioLoader();
+//const audioLoader = new THREE.AudioLoader();
 
 const backgroundMusic = new THREE.Audio(listener);
-
-const audioPlay = document.getElementById('play-audio');
-audioPlay.onclick = () => {audioLoader.load( '/assets/sounds/retroclassic-game-music.wav', function( buffer ) {
-	backgroundMusic.setBuffer( buffer );
-	backgroundMusic.setLoop( true );
-	backgroundMusic.setVolume( 0.15 );
-	backgroundMusic.play();
-})}
 
 const tileMap = new TileMap(scene);
 
