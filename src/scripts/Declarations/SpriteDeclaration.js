@@ -32,9 +32,9 @@ const pos3 = {
     z:0
 }
 const posMons = {
-    x:0,
-    y:0,
-    z:0
+    x:28,
+    y:16,
+    z:0.008
 }
 const posMons2 = {
     x:-1,
@@ -42,9 +42,9 @@ const posMons2 = {
     z:0
 }
 const posHero = {
-    x:0,
-    y:2,
-    z:0
+    x:20,
+    y:1,
+    z:0.008
 }
 const scaleHero = {
     x:1,
@@ -52,13 +52,13 @@ const scaleHero = {
     z:1
 }
 const scaleMonster = {
-    x:0.5,
-    y:0.5,
-    z:0.5
+    x:1,
+    y:1,
+    z:1
 }
 
 const testMonster = new EntitySprite("/sprite/Zombie.png", 4, 4, teamMonsterTest, posMons, scaleMonster, [0, 1, 2, 3]);
-const testMonster2 = new EntitySprite("/sprite/Zombie.png", 4, 4, teamMonsterTest, posMons2, scaleMonster, [0, 1, 2, 3]);
+const testMonster2 = new EntitySprite("/sprite/Zombie.png", 4, 4, teamMonsterTest, posHero, scaleMonster, [0, 1, 2, 3]);
 const testSprite = new PlayerSprite("/assets/game_assets/timefantasy_characters/sheets/military1.png", 12, 8, teamHeroes, posHero, scaleHero, arrayS, arrayQ, arrayD, arrayZ, arrayS);
 
 const arbre = new SpriteObject("/sprite/TreeTest.png", 1, 1, pos);

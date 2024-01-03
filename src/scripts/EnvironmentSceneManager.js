@@ -9,14 +9,11 @@ import { AssetFactory } from "./TileMap/AssetFactory";
 export const scene = new THREE.Scene();
 const gameWindow = document.getElementById('game-renderer');
 
-//Variable importante
+//Variables importantes :
 let isInCombat = false;
 let combat = null;
 let switchCamera1 = false;
 export const loopSpeed = 1;
-
-//Fin
-
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight*8/10 );
@@ -34,19 +31,21 @@ const SCREEN_ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
 const NEAR = 1;
 const FAR = 100;
 
-const camera = new THREE.PerspectiveCamera(FOV, SCREEN_ASPECT, NEAR, FAR);
+export const camera = new THREE.PerspectiveCamera(FOV, SCREEN_ASPECT, NEAR, FAR);
 
 const MIN_CAMERA_POSITION = 2;
-const Z_DEFAULT_CAMERA_POSITION = camera.position.z = 5;
-camera.position.y = 8;
-camera.position.x = 8;
-const MAX_CAMERA_POSITION = 100;
+const DEFAULT_CAMERA_POSITION = camera.position.z = 4;
+const MAX_CAMERA_POSITION = 8;
+
+camera.position.x = SpriteList.playerSprite.position.x;
+camera.position.y = SpriteList.playerSprite.position.y;
 
 const camera2 = new THREE.PerspectiveCamera(FOV, SCREEN_ASPECT, NEAR, FAR)
 camera2.position.x = 50
 camera2.position.z = 5
 
 scene.add(camera, camera2);
+scene.add(SpriteList.playerSprite, SpriteList.testMonster);
 
 // Music de fond du jeu :
 
@@ -57,16 +56,13 @@ camera.add(listener);
 
 const backgroundMusic = new THREE.Audio(listener);
 
-/* const audioPlay = document.getElementById('play-audio');
-audioPlay.onclick = () => {audioLoader.load( '/assets/sounds/rpg_background_music.mp3', function( buffer ) {
-	backgroundMusic.setBuffer( buffer );
-	backgroundMusic.setLoop( true );
-	backgroundMusic.setVolume( 0.3 );
-	backgroundMusic.play();
-})} */
-
 const tileMap = new TileMap(scene);
-console.log(backgroundMusic.isPlaying);
+
+// Variables globales pour la scène : 
+
+let obstacles = [];
+let monsters = [];
+monsters.push(SpriteList.testMonster)
 
 function initializeMap() {
     let map = [];
@@ -93,8 +89,7 @@ function initializeMap() {
             map.push(newSprite);
         }
     }
-
-    console.log(map);
+    obstacles = [...map];
 }
 
 // Gestion du zoom avec la molette de la souris avec listener de la molette de la souris pour le zoom de la caméra.
@@ -103,7 +98,7 @@ document.addEventListener('wheel', onZoom);
 
 function onZoom(e) {
 	const zoomSpeed = 0.01;
-	Z_DEFAULT_CAMERA_POSITION;
+	DEFAULT_CAMERA_POSITION;
 	camera.position.z -= e.deltaY * zoomSpeed;
 	camera.position.z = Math.min(MAX_CAMERA_POSITION, Math.max(MIN_CAMERA_POSITION, camera.position.z));
 	camera.updateProjectionMatrix();
@@ -120,41 +115,126 @@ const keys = Move.keys;
 
 Move.PlayerMovementControlsDown(keys)
 
-window.addEventListener("keyup", (event)=>{
-	animationInProgress = false;
-	switch(event.code) {
-		case "KeyA":
-			keys.a.pressed = false;
-			break;
-		case "KeyD":
-			keys.d.pressed = false;
-			break;
-		case "KeyW":
-			keys.w.pressed = false;
-			break;
-		case "KeyS":
-			keys.s.pressed = false;
-			break;
-        case "KeyK":
-            //debug Key for console log
-            if(combat != null) {
-                console.log(combat, "combat class information");
-            }
-            break;
-        case "KeyL":
-            //debug Key to pass a turn
-            if(combat != null) {
-                combat.turnOver()
-            }
-            break;
-        case "KeyO":
-            switchCamera1 = !switchCamera1
-            break;
-	}
-})
+const footstepsGravel = [
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_1.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_2.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_10.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_11.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_12.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_13.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_14.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_15.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_16.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_17.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_18.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_19.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_20.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_21.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-1_22.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-2_3.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-2_28.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-2_29.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-2_30.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-2_31.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-2_32.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-2_33.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-2_34.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-2_35.wav",
+    "/assets/sounds/footsteps/sand/gravel-footstep-2_36.wav",
+];
 
-const obstacle = [SpriteList.tree, SpriteList.tree2, SpriteList.tree3];
-const monsters = [SpriteList.testMonster, SpriteList.testMonster2];
+const footstepAudioObjects = [];
+let footstepIntervalId;
+
+footstepsGravel.forEach((footstepSound) => {
+    const audio = new THREE.Audio(listener);
+    audioLoader.load(footstepSound, (buffer) => {
+        audio.setBuffer(buffer);
+        audio.setLoop(false);
+        audio.setVolume(0.8);
+        footstepAudioObjects.push(audio);
+    });
+});
+
+function playRandomFootstepSound() {
+    const randomIndex = Math.floor(Math.random() * footstepAudioObjects.length);
+    const randomFootstepSound = footstepAudioObjects[randomIndex];
+
+    if (randomFootstepSound) {
+        randomFootstepSound.setVolume(0.6);
+        randomFootstepSound.play();
+    }
+
+    if (SpriteList.playerSprite.velocity.y === 0 && SpriteList.playerSprite.velocity.x === 0) {
+        randomFootstepSound.stop();
+    }
+}
+
+document.addEventListener('keydown', (event) => {
+    if (animationInProgress) return;
+
+    switch (event.code) {
+        case "KeyA":
+            keys.a.pressed = true;
+            clearInterval(footstepIntervalId);
+            break;
+        case "KeyD":
+            keys.d.pressed = true;
+            clearInterval(footstepIntervalId);
+            break;
+        case "KeyW":
+            keys.w.pressed = true;
+            clearInterval(footstepIntervalId);
+            break;
+        case "KeyS":
+            keys.s.pressed = true;
+            clearInterval(footstepIntervalId);
+            break;
+    }
+});
+
+document.addEventListener('keypress', (event) => {
+    if (animationInProgress) return;
+
+    switch (event.code) {
+        case "KeyA":
+            footstepIntervalId = setInterval(playRandomFootstepSound, 350);
+            break;
+        case "KeyD":
+            footstepIntervalId = setInterval(playRandomFootstepSound, 350);
+            break;
+        case "KeyW":
+            footstepIntervalId = setInterval(playRandomFootstepSound, 350);
+            break;
+        case "KeyS":
+            footstepIntervalId = setInterval(playRandomFootstepSound, 350);
+            break;
+    }
+});
+
+document.addEventListener("keyup", (event) => {
+    animationInProgress = false;
+
+    switch (event.code) {
+        case "KeyA":
+            keys.a.pressed = false;
+            clearInterval(footstepIntervalId);
+            break;
+        case "KeyD":
+            keys.d.pressed = false;
+            clearInterval(footstepIntervalId);
+            break;
+        case "KeyW":
+            keys.w.pressed = false;
+            clearInterval(footstepIntervalId);
+            break;
+        case "KeyS":
+            keys.s.pressed = false;
+            clearInterval(footstepIntervalId);
+            break;
+    }
+});
+
 // UI :
 
 function inventoryManagement() {
@@ -175,6 +255,15 @@ function inventoryManagement() {
     })
 }
 
+// backgroundMusic.stop();
+
+// const backgroundCombatMusic = new THREE.Audio(listener);;  
+// audioLoader.load('/assets/sounds/combat_music.mp3', function( buffer ) {
+//     backgroundCombatMusic.setBuffer( buffer );
+//     backgroundCombatMusic.setLoop( true );
+//     backgroundCombatMusic.setVolume( 0.15 );
+//     backgroundCombatMusic.play()
+// });
 
 function animate() {
 	requestAnimationFrame( animate );
@@ -190,16 +279,16 @@ function animate() {
 	SpriteList.playerSprite.velocity.y = 0;
 
 	if(keys.w.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.y = 0.05;
-        //0.008
+        SpriteList.playerSprite.velocity.y = 0.018;
+        camera.position.y += 0.018;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.upSprite, loopSpeed);
             animationInProgress = true;
         }
     }
     else if(keys.s.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.y = -0.05;
-        //-0.008
+        SpriteList.playerSprite.velocity.y = -0.018;
+        camera.position.y -= 0.018;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.downSprite, loopSpeed);
             animationInProgress = true;
@@ -208,16 +297,16 @@ function animate() {
 
     SpriteList.playerSprite.velocity.x = 0;
     if(keys.d.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.x = 0.05;
-        //0.008
+        SpriteList.playerSprite.velocity.x = 0.018;
+        camera.position.x += 0.018;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.rightSprite, loopSpeed);
             animationInProgress = true;
         }
     }
     else if(keys.a.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.x = -0.05;
-        //-0.008
+        SpriteList.playerSprite.velocity.x = -0.018;
+        camera.position.x -= 0.018;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.leftSprite, loopSpeed);
             animationInProgress = true;
@@ -227,7 +316,7 @@ function animate() {
         renderer.render( scene, camera )
         switchCamera1 = false;
     }
-	collisionDetection(obstacle, SpriteList.playerSprite);
+	collisionDetection(obstacles, SpriteList.playerSprite);
     //Colision for player/monster
     let resultColissionMonster = collisionMonsters(monsters, SpriteList.playerSprite);
     if(resultColissionMonster.collision === true && isInCombat === false) {
@@ -244,6 +333,9 @@ function animate() {
     SpriteList.testMonster.update(deltaTime);
     SpriteList.testMonster2.update(deltaTime);
 
+    const asset = new AssetFactory();
+
+    asset.updateObstaclesSprites(deltaTime *= 0.6, obstacles);
 }
 animate();
 inventoryManagement();
