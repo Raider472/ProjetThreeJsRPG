@@ -4,6 +4,7 @@ import * as Move from "./Mouvement";
 import { TileMap } from "./TileMap/TileMap";
 import { SpriteList } from "./Declarations/SpriteDeclaration";
 import { Combat } from "./Combat";
+import { setCookie, getCookie } from "./Cookies";
 import { AssetFactory } from "./TileMap/AssetFactory";
 
 export const scene = new THREE.Scene();
@@ -31,14 +32,24 @@ monsters.push(SpriteList.testMonster)
 // Variable cookies :
 
 export let coins = 0;
-let combatWon = 0;
-let combatLosed = 0;
-let combatDone = 0;
+export let combatWon = 0;
+export let combatLost = 0;
+export let combatDone = 0;
 export let charactersUnlocked = [];
 
 function cookieSaveManager() {
-
-}
+    let savedCombatDone = parseInt(getCookie("combat_done"));
+    let savedCoins = parseInt(getCookie("coins"));
+  
+    if (isInCombat === false && Combat.isFinished) {
+      savedCoins += 5;
+      savedCombatDone += 1;
+  
+      setCookie("combat_done", savedCombatDone, 1);
+      setCookie("coins", savedCoins, 1);
+    }
+    return [savedCoins, savedCombatDone];
+  }
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -208,15 +219,19 @@ document.addEventListener('keydown', (event) => {
 
     switch (event.code) {
         case "KeyA":
+            clearInterval(footstepIntervalId);
             footstepIntervalId = setInterval(playRandomFootstepSound, 350);
             break;
         case "KeyD":
+            clearInterval(footstepIntervalId);
             footstepIntervalId = setInterval(playRandomFootstepSound, 350);
             break;
         case "KeyW":
+            clearInterval(footstepIntervalId);
             footstepIntervalId = setInterval(playRandomFootstepSound, 350);
             break;
         case "KeyS":
+            clearInterval(footstepIntervalId);
             footstepIntervalId = setInterval(playRandomFootstepSound, 350);
             break;
     }
@@ -379,7 +394,7 @@ function animate() {
             }
         }
     }
-	  SpriteList.playerSprite.update(deltaTime);
+	SpriteList.playerSprite.update(deltaTime);
     SpriteList.testMonster.update(deltaTime);
     SpriteList.testMonster2.update(deltaTime);
 
@@ -389,5 +404,6 @@ function animate() {
 }
 animate();
 inventoryManagement();
+cookieSaveManager();
 initializeMap();
 onZoom();
