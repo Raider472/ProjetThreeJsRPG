@@ -8,11 +8,13 @@
 			"hp": 40,
 			"atk": 20,
 			"atkS": 0,
+			"heal": 0,
 			"crit": 0.1,
 			"def": 10,
 			"defS": 10,
 			"shield": 1,
 			"vit": 10,
+			"crystalGeneration": 0,
 			"passiveSkills": [
 
 			],
@@ -28,11 +30,13 @@
 			"hp": 75,
 			"atk": 30,
 			"atkS": 0,
+			"heal": 0,
 			"crit": 0.15,
 			"def": 30,
 			"defS": 20,
 			"shield": 5,
 			"vit": 10,
+			"crystalGeneration": 0,
 			"passiveSkills": [
 
 			],
@@ -48,11 +52,13 @@
 			"hp": 50,
 			"atk": 20,
 			"atkS": 0,
+			"heal": 0,
 			"crit": 0.15,
 			"def": 25,
 			"defS": 5,
 			"shield": 2,
 			"vit": 30,
+			"crystalGeneration": 0,
 			"passiveSkills": [
 
 			],
@@ -68,11 +74,13 @@
 			"hp": 50,
 			"atk": 20,
 			"atkS": 0,
+			"heal": 0,
 			"crit": 0.15,
-			"def": 25,
+			"def": 75,
 			"defS": 5,
 			"shield": 2,
 			"vit": 15,
+			"crystalGeneration": 0,
 			"passiveSkills": [
 
 			],

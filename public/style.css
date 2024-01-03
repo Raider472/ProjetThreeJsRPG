@@ -4,3 +4,185 @@
 body {
     margin: 0;
 }
+
+a {
+    color: blanchedalmond;
+    text-decoration: none;
+}
+
+a:hover {
+    color: white;
+}
+
+#game-renderer {
+    height: 100%;
+}
+
+#play-audio {
+    position: fixed;
+    right: 0;
+    background-color: none;
+}
+
+/** UI pour l'inventaire de la scène environnement **/
+
+#toolbar-row {
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
+}
+
+#toolbar-item {
+    position: absolute;
+    background-color: grey;
+    border: 5px ridge black;
+    padding: 0.25rem;
+    opacity: 0.5;
+}
+
+#toolbar-item:hover {
+    background-color: white;
+}
+
+#inventory-ui {
+    position: absolute;
+    background-color: blanchedalmond;
+    opacity: 0.3;
+}
+
+#inventory-inner {
+    display: flex;
+    flex-direction: row;
+    align-content: space-around;
+    height: auto;
+}
+
+#close-inventory {
+    font-size: 24px;
+    float: right;
+}
+
+#test-combat {
+    color: white;
+    font-size: 48px;
+    background-color: black;
+}
+
+.button-switch {
+    position: absolute;
+    float: right;
+}
+
+.inventory {
+    font-size: 36px;
+    margin-right: 2vh;
+    margin-left: 2vh;
+}
+
+.inventory-column {
+    font-size: 24px;
+    text-align: center;
+    color: black;
+}
+
+.inventory-item {
+    background-color: grey;
+    border-radius: 25%;
+    border: 5px solid black;
+    padding: 2.5rem;
+    margin: 5px 5px 5px 5px;
+}
+
+.inventory-row {
+    display: inline-flex;
+    align-items: center;
+}
+
+/** UI pour la scène de combat **/
+
+#quit-combat {
+    font-size: 48px;
+    color: blanchedalmond;
+    background-color: black;
+    border: 3px solid black;
+}
+
+#ui-combat {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+#nb-crystals {
+    font-size: 64px;
+    text-align: center;
+    font-weight: bolder;
+    color: rebeccapurple;
+}
+
+.select-action {
+    border: none;
+    margin-bottom: 3px;
+    font-size: 24px;
+    background-color: blanchedalmond;
+    color: black;
+}
+
+.select-action:hover {
+    color: grey;
+    border: 2px solid grey;
+}
+
+.bottom-ui {
+    position: fixed;
+    width: 100%;
+    height: 30%;
+    bottom: 0;
+    background-color: blanchedalmond;
+    opacity: 0.3;
+}
+
+.row-combat-ui {
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
+}
+
+.character-combat-ui {
+    float: left;
+    border: 3px solid black;
+    font-size: 36px;
+    padding: 5rem 5rem 0 5rem;
+    margin: 10px 10px 10px 10px;
+}
+
+.menuCombaHidden {
+    display: flex;
+    justify-content: center;
+    visibility: hidden;
+}
+
+.menuCombatHiddenButton {
+    visibility: hidden;
+}
+
+.menuCombatVisible {
+    visibility: visible;
+}
+
+.menuChoose {
+    display: flex;
+    justify-content: center;
+}
+
+.lifepoints {
+    font-size: 24px;
+    color: green;
+    font-weight: bolder;
+}
+
+.attackpoints {
+    font-size: 24px;
+    color: red;
+    font-weight: bolder;
+}
