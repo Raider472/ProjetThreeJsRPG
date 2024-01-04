@@ -28,7 +28,7 @@ export const loopSpeed = 1;
 
 let obstacles = [];
 let monsters = [];
-monsters.push(SpriteList.testMonster)
+monsters.push(SpriteList.testMonster, SpriteList.testMonster2)
 
 // Variable cookies :
 
@@ -37,6 +37,7 @@ export let combatWon = 0;
 export let combatLost = 0;
 export let combatDone = 0;
 export let charactersUnlocked = [];
+const audioLoader = new THREE.AudioLoader();
 
 
 function setCookieForUser() {
@@ -93,7 +94,7 @@ function cookieSaveManager(resultOfCombat) {
 
 
 const renderer = new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.setSize( window.innerWidth, window.innerHeight*8/10 );
 gameWindow.appendChild( renderer.domElement );
 
 let animationInProgress = false;
@@ -122,24 +123,16 @@ cameraCombat.position.x = 500
 cameraCombat.position.z = 5
 
 scene.add(camera, cameraCombat);
-scene.add(SpriteList.playerSprite, SpriteList.testMonster);
+scene.add(SpriteList.playerSprite, SpriteList.testMonster, SpriteList.testMonster2);
 
 // Music de fond du jeu :
 
 const listener = new THREE.AudioListener();
 camera.add(listener);
 
-const audioLoader = new THREE.AudioLoader();
+//const audioLoader = new THREE.AudioLoader();
 
 const backgroundMusic = new THREE.Audio(listener);
-
-const audioPlay = document.getElementById('play-audio');
-audioPlay.onclick = () => {audioLoader.load( '/assets/sounds/retroclassic-game-music.wav', function( buffer ) {
-	backgroundMusic.setBuffer( buffer );
-	backgroundMusic.setLoop( true );
-	backgroundMusic.setVolume( 0.15 );
-	backgroundMusic.play();
-})}
 
 const tileMap = new TileMap(scene);
 
@@ -327,24 +320,6 @@ document.addEventListener("keyup", (event) => {
 
 // UI :
 
-function inventoryManagement() {
-    const toolbarItem = document.getElementById('toolbar-item');
-    const inventoryUi = document.getElementById('inventory-ui');
-    const closeInventory = document.getElementById('close-inventory');
-
-    inventoryUi.hidden = true;
-
-    toolbarItem.addEventListener('click', () => {
-        inventoryUi.hidden = false;
-        toolbarItem.hidden = true;
-    });
-
-    closeInventory.addEventListener('click', () => {
-        inventoryUi.hidden = true;
-        toolbarItem.hidden = false;
-    })
-}
-
 // backgroundMusic.stop();
 
 // const backgroundCombatMusic = new THREE.Audio(listener);;  
@@ -409,7 +384,6 @@ function animate() {
         isInCombat = true;
         lastEntityCombat = resultColissionMonster.monster;
         indexOfLasteEntity = monsters.findIndex(monster => monster === lastEntityCombat);
-        console.log(indexOfLasteEntity);
         combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray, scene);
     }
     //debug
@@ -421,10 +395,11 @@ function animate() {
             let isCombatLost = true;
             if(combat.hasLost) {
                 cookieSaveManager(isCombatLost);
+                combat.hideMenuCleanup();
+                combat.removeActors();              
                 SpriteList.playerSprite.position.x = 20;
                 SpriteList.playerSprite.position.y = 1;
                 SpriteList.playerSprite.position.z = 0.008;
-            }
             else {
                 isCombatLost = false;
                 cookieSaveManager(isCombatLost);
@@ -444,6 +419,5 @@ function animate() {
     asset.updateObstaclesSprites(deltaTime *= 0.6, obstacles);
 }
 animate();
-inventoryManagement();
 initializeMap();
 onZoom();

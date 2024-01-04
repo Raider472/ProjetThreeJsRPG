@@ -1,213 +1,20 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>RPG Three.js</title>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Vite + React</title>
 </head>
-<body>
-    <div id="root-window">
-        <div id="game-renderer">
-            <button id="play-audio"><img src="/public/assets/speaker-icon.png" alt="Logo écouteurs" width="50px" height="50px"></button>
-            <div id="toolbar-row">
-                <button id="toolbar-item">
-                    <img src="assets/backpack-ui.png" alt="" width="150px" height="150px" onclick="inventoryManagement()">
-                </button>
-            </div>
-            <div id="inventory-ui">
-                    <button id="close-inventory">Fermer l'inventaire</button>
-                <div id="inventory-inner">
-                <div class="inventory">
-                    Votre Inventaire
-                        <div class="inventory-row">
-                            <div class="inventory-column">
-                                Head<div class="inventory-item"></div>
-                                Arms<div class="inventory-item"></div>
-                                Legs<div class="inventory-item"></div>
-                                Boots<div class="inventory-item"></div>
-                            </div>
-                            <div class="inventory-character-display"><img src="assets/character-placeholder.png" alt="" width="150px" height="250px"></div>
-                        </div>
-                        <br>
-                        <div class="inventory-row">
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                        </div>
-                        <br>
-                        <div class="inventory-row">
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                        </div>
-                        <br>
-                        <div class="inventory-row">
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                        </div>
-                    </div>
 
-                    <div class="inventory">
-                        Inventaire 2
-                            <div class="inventory-row">
-                                <div class="inventory-column">
-                                    Head<div class="inventory-item"></div>
-                                    Arms<div class="inventory-item"></div>
-                                    Legs<div class="inventory-item"></div>
-                                    Boots<div class="inventory-item"></div>
-                                </div>
-                                <div class="inventory-character-display"><img src="assets/character-placeholder.png" alt="" width="150px" height="250px"></div>
-                            </div>
-                            <br>
-                            <div class="inventory-row">
-                                <div class="inventory-item"></div>
-                                <div class="inventory-item"></div>
-                                <div class="inventory-item"></div>
-                                <div class="inventory-item"></div>
-                                <div class="inventory-item"></div>
-                                <div class="inventory-item"></div>
-                                <div class="inventory-item"></div>
-                                <div class="inventory-item"></div>
-                            </div>
-                            <br>
-                            <div class="inventory-row">
-                                <div class="inventory-item"></div>
-                                <div class="inventory-item"></div>
-                                <div class="inventory-item"></div>
-                                <div class="inventory-item"></div>
-                                <div class="inventory-item"></div>
-                                <div class="inventory-item"></div>
-                                <div class="inventory-item"></div>
-                                <div class="inventory-item"></div>
-                            </div>
-                            <br>
-                            <div class="inventory-row">
-                                <div class="inventory-item"></div>
-                                <div class="inventory-item"></div>
-                                <div class="inventory-item"></div>
-                                <div class="inventory-item"></div>
-                                <div class="inventory-item"></div>
-                                <div class="inventory-item"></div>
-                                <div class="inventory-item"></div>
-                                <div class="inventory-item"></div>
-                            </div>
-                        </div>
+<body class="m-0">
+  <div class="min-h-screen flex flex-col">
+    <div id="game-renderer" class=""></div>
+    <div id="game-ui" class="bg-purple-200 flex-grow"></div>
+  </div>
 
-               <div class="inventory">
-                    Inventaire 3
-                        <div class="inventory-row">
-                            <div class="inventory-column">
-                                Head<div class="inventory-item"></div>
-                                Arms<div class="inventory-item"></div>
-                                Legs<div class="inventory-item"></div>
-                                Boots<div class="inventory-item"></div>
-                            </div>
-                            <div class="inventory-character-display"><img src="assets/character-placeholder.png" alt="" width="150px" height="250px"></div>
-                        </div>
-                        <br>
-                        <div class="inventory-row">
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                        </div>
-                        <br>
-                        <div class="inventory-row">
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                        </div>
-                        <br>
-                        <div class="inventory-row">
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                        </div>
-                    </div>
-
-                <div class="inventory">
-                    Inventaire 4
-                        <div class="inventory-row">
-                            <div class="inventory-column">
-                                Head<div class="inventory-item"></div>
-                                Arms<div class="inventory-item"></div>
-                                Legs<div class="inventory-item"></div>
-                                Boots<div class="inventory-item"></div>
-                            </div>
-                            <div class="inventory-character-display"><img src="assets/character-placeholder.png" alt="" width="150px" height="250px"></div>
-                        </div>
-                        <br>
-                        <div class="inventory-row">
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                        </div>
-                        <br>
-                        <div class="inventory-row">
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                        </div>
-                        <br>
-                        <div class="inventory-row">
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                            <div class="inventory-item"></div>
-                        </div>
-                    </div>
-                        
-                    </div>
-                </div>
-            </div>
-        </div>
-        </div>
-    </div>
 
     <div id="menuCombat" class="menuCombaHidden">
         <label for="entityActuel">tour actuel: </p>
@@ -225,6 +32,9 @@
 
     <div id="menuChooseEnnemy" class="menuChoose">
     </div>
-    <script type="module" src="src/scripts/EnvironmentSceneManager.js"></script>
+
+  <script type="module" src="/src/scripts/EnvironmentSceneManager.js"></script>
+  <script type="module" src="/src/scripts/App.jsx"></script>
 </body>
+
 </html>

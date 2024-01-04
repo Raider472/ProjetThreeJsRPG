@@ -25,7 +25,8 @@ export class Combat {
     actions = {
         normalAttack: 0,
         crystalAttack: 1,
-        crystalAttackAoe: 2
+        crystalAttackAoe: 2,
+        ressurection: 3
     }
 
     //DOM Element
@@ -205,13 +206,25 @@ export class Combat {
             }
         }
         else {
-            for(let i = 0; i < this.heroTeam.length; i++) {
-                if(!this.isActorOnDeathList(this.heroTeam[i])) {
+            if(crystalAttack.targetDead) {
+                console.log("fdsdfnjsdxifghvuy")
+                for(let i = 0; i < this.deadHero.length; i++) {
                     let inputButton = document.createElement("button");
-                    inputButton.value = this.heroTeam[i].id;
-                    inputButton.innerHTML = this.heroTeam[i].entity.name
+                    inputButton.value = this.deadHero[i].id;
+                    inputButton.innerHTML = this.deadHero[i].entity.name
                     this.chooseEnemyDiv.appendChild(inputButton);
-                    inputButton.addEventListener('click', () => this.attack(inputButton.value, decision, idAttack, cost), { signal: this.controller.signal });
+                    inputButton.addEventListener('click', () => this.attack(inputButton.value, 3, idAttack, cost), { signal: this.controller.signal });
+                }
+            }
+            else {
+                for(let i = 0; i < this.heroTeam.length; i++) {
+                    if(!this.isActorOnDeathList(this.heroTeam[i])) {
+                        let inputButton = document.createElement("button");
+                        inputButton.value = this.heroTeam[i].id;
+                        inputButton.innerHTML = this.heroTeam[i].entity.name
+                        this.chooseEnemyDiv.appendChild(inputButton);
+                        inputButton.addEventListener('click', () => this.attack(inputButton.value, decision, idAttack, cost), { signal: this.controller.signal });
+                    }
                 }
             }
         }
@@ -241,8 +254,8 @@ export class Combat {
     aiActionSelection() {
         let randomNumber = Math.floor(Math.random() * 100);
         if(randomNumber <= 1) {
-            this.turnOver();
             alert(this.turnActors[0].entity.name + " has done nothing");
+            this.turnOver();
         }
         else {
             let arrayProb = this.generateHeroAttackPropability();
@@ -316,6 +329,10 @@ export class Combat {
         else if(decision === this.actions.crystalAttackAoe) {
             this.consumeCrystal(cost);
             this.crystalAttackAOE(id, idAttack);
+        }
+        else if(decision === this.actions.ressurection) {
+            this.consumeCrystal(cost);
+            this.resurrection(id, this.deadHero, idAttack);
         }
     }
 
@@ -464,7 +481,7 @@ export class Combat {
 
     //Menu Decisions
 
-    //Death //TODO move avtor out of frame
+    //Death
     isActorOnDeathList(actor) {
         if(actor.entity.isAi) {
             return this.deadMonsters.some(monster => monster.id === actor.id)
@@ -511,6 +528,28 @@ export class Combat {
     deathAnimation(actor) {
         let indexActor = this.actors.findIndex(entity => entity.id === actor.id);
         this.actors[indexActor].entity.position.x = 1000
+    }
+
+    resurrection(id, faction, idAttack) { //TODO fix double turn
+        id = Number(id);
+        let indexNumber = faction.findIndex(entity => entity.id === id);
+        let crystalAttack = this.turnActors[0].entity.crystalAttacks.filter(entity => entity.id === idAttack);
+        crystalAttack = crystalAttack[0];
+        console.log(faction[indexNumber]);
+        faction[indexNumber].entity.hp = Math.floor(crystalAttack.healMult * faction[indexNumber].entity.maxHp);
+
+        let indexActor = this.actors.findIndex(entity => entity.id === faction[indexNumber].id);
+        this.actors[indexActor].entity.position.x = this.actors[indexActor].originalPos.x
+
+        let resurrectedActor = faction.splice(indexNumber, 1);
+        resurrectedActor = resurrectedActor[0];
+        //Insert resurrected actor
+        let index = 0;
+        for(let i = 0; i < this.turnActors.length && resurrectedActor.entity.vit < this.turnActors[i].entity.vit; i++) {
+            index++;
+        }
+        this.turnActors.splice(index, 0, resurrectedActor);
+        this.turnOver();
     }
 
     //Death
@@ -632,6 +671,11 @@ export class Combat {
     //Status
 
     //Cleanup Combat
+    hideMenuCleanup() {
+        this.domCombat.classList.remove("menuCombatVisible");
+        this.crystalShow.innerHTML = "";
+    }
+
     removeActors() {
         for(let i = 0; i < this.actors.length; i++) {
             this.scene.remove(this.actors[i].entity);
