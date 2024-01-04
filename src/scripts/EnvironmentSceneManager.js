@@ -418,9 +418,7 @@ function animate() {
             combat.removeActors();
             inventory = combat.inventory; //TODO possibly delete          
             if(combat.hasLost) {
-                cookieSaveManager(isCombatLost);
-                combat.hideMenuCleanup();
-                combat.removeActors();              
+                cookieSaveManager(isCombatLost);           
                 SpriteList.playerSprite.position.x = 20;
                 SpriteList.playerSprite.position.y = 1;
                 SpriteList.playerSprite.position.z = 0.008;
