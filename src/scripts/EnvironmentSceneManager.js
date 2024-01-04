@@ -5,6 +5,7 @@ import { TileMap } from "./TileMap/TileMap";
 import { SpriteList } from "./Declarations/SpriteDeclaration";
 import { Combat } from "./Combat";
 import { AssetFactory } from "./TileMap/AssetFactory";
+import { setCookie, getCookie } from "./Cookies";
 
 export const scene = new THREE.Scene();
 const gameWindow = document.getElementById('game-renderer');
@@ -15,6 +16,7 @@ document.querySelector('[id=defend]').addEventListener('click',() => combat.defe
 document.querySelector('[id=skip]').addEventListener('click',() => combat.turnOver());
 
 //Variables importantes :
+
 let isInCombat = false;
 let combat = null;
 let switchCamera1 = false;
@@ -31,13 +33,36 @@ monsters.push(SpriteList.testMonster)
 // Variable cookies :
 
 export let coins = 0;
-let combatWon = 0;
-let combatLosed = 0;
-let combatDone = 0;
+export let combatWon = 0;
+export let combatLost = 0;
+export let combatDone = 0;
 export let charactersUnlocked = [];
 
-function cookieSaveManager() {
+console.log("Nb de combat" + combatDone);
 
+function cookieSaveManager(resultOfCombat) {
+    combatWon = parseInt(getCookie("combat_won")) || 0;
+    combatLost = parseInt(getCookie("combat_lost")) || 0;
+    combatDone = parseInt(getCookie("combat_done")) || 0;
+    coins = parseInt(getCookie("coins")) || 0;
+
+        if (resultOfCombat === true) {
+                combatLost++;
+                setCookie("combat_lost", combatLost, 1);
+                combatDone++;
+                setCookie("combat_done", combatDone, 1);
+                coins += 3;
+                setCookie("coins", coins, 1);
+                console.log("Combat.isFinished and Combat.hasLost works, variables changed");
+            } else {
+            combatWon++;
+            setCookie("combat_won", combatWon, 1);
+            combatDone++;
+            setCookie("combat_done", combatDone, 1);
+            coins += 8;
+            setCookie("coins", coins, 1);
+            console.log("Combat.isFinished works");
+        }
 }
 
 const renderer = new THREE.WebGLRenderer();
@@ -362,7 +387,9 @@ function animate() {
             combat.actors[i].entity.update(deltaTime);
         }
         if(combat.isFinished) {
+            let isCombatLost = true;
             if(combat.hasLost) {
+                cookieSaveManager(isCombatLost);
                 combat.removeActors();
                 isInCombat = false;
                 combat = null;
@@ -371,6 +398,8 @@ function animate() {
                 SpriteList.playerSprite.position.z = 0;
             }
             else {
+                isCombatLost = false;
+                cookieSaveManager(isCombatLost);
                 combat.removeActors();
                 scene.remove(lastEntityCombat);
                 monsters.splice(indexOfLasteEntity, 1);
