@@ -4,7 +4,6 @@ import * as Move from "./Mouvement";
 import { TileMap } from "./TileMap/TileMap";
 import { SpriteList } from "./Declarations/SpriteDeclaration";
 import { Combat } from "./Combat";
-import { setCookie, getCookie } from "./Cookies";
 import { AssetFactory } from "./TileMap/AssetFactory";
 import { setCookie, getCookie } from "./Cookies";
 
@@ -38,6 +37,34 @@ export let combatWon = 0;
 export let combatLost = 0;
 export let combatDone = 0;
 export let charactersUnlocked = [];
+
+
+function setCookieForUser() {
+  const existingCoins = parseInt(getCookie("coins"));
+  const existingCombatWon = parseInt(getCookie("combat_won"));
+  const existingCombatDone = parseInt(getCookie("combat_done"));
+  const existingCombatLost = parseInt(getCookie("combat_lost"));
+  const existingCharactersUnlocked = JSON.stringify(getCookie("characters_unlocked")) || [];
+
+  coins = isNaN(existingCoins) ? 0 : existingCoins;
+  combatWon = isNaN(existingCombatWon) ? 0 : existingCombatWon;
+  combatDone = isNaN(existingCombatDone) ? 0 : existingCombatDone;
+  combatLost = isNaN(existingCombatLost) ? 0 : existingCombatLost;
+  charactersUnlocked = Array.isArray(existingCharactersUnlocked) ? existingCharactersUnlocked : [];
+
+  if (!existingCoins || !existingCombatWon || !existingCombatDone || !existingCombatLost || !existingCharactersUnlocked.length) {
+    setCookie("coins", coins, 1);
+    setCookie("combat_won", combatWon, 1);
+    setCookie("combat_done", combatDone, 1);
+    setCookie("combat_lost", combatLost, 1);
+    setCookie("characters_unlocked", JSON.stringify(charactersUnlocked), 1);
+    console.log("Cookies set for the user.");
+  } else {
+    console.log("Cookies already present for the user.");
+  }
+}
+
+setCookieForUser();
 
 function cookieSaveManager(resultOfCombat) {
     combatWon = parseInt(getCookie("combat_won")) || 0;
@@ -394,22 +421,18 @@ function animate() {
             let isCombatLost = true;
             if(combat.hasLost) {
                 cookieSaveManager(isCombatLost);
-                combat.removeActors();
-                isInCombat = false;
-                combat = null;
-                SpriteList.playerSprite.position.x = 0;
-                SpriteList.playerSprite.position.y = 2;
-                SpriteList.playerSprite.position.z = 0;
+                SpriteList.playerSprite.position.x = 20;
+                SpriteList.playerSprite.position.y = 1;
+                SpriteList.playerSprite.position.z = 0.008;
             }
             else {
                 isCombatLost = false;
                 cookieSaveManager(isCombatLost);
-                combat.removeActors();
                 scene.remove(lastEntityCombat);
                 monsters.splice(indexOfLasteEntity, 1);
-                isInCombat = false;
-                combat = null
             }
+            isInCombat = false;
+            combat = null;
         }
     }
 	SpriteList.playerSprite.update(deltaTime);
@@ -422,6 +445,5 @@ function animate() {
 }
 animate();
 inventoryManagement();
-cookieSaveManager();
 initializeMap();
 onZoom();
