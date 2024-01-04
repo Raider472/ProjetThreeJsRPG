@@ -99,3 +99,18 @@ export function collisionMonsters(monsters, sprite) {
 
     return result;
 }
+
+export function collisionChest(chests, sprite) {
+    let result = { collision: false, chest: null};
+
+    chests.some((chest) => {
+        if (collision(chest, sprite, sprite.velocity) && !chest.open) {
+            result.collision = true;
+            result.chest = chest;
+            return true;
+        }
+        return false;
+    })
+
+    return result;
+}

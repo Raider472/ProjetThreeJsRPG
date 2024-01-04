@@ -1,5 +1,6 @@
 import { SpriteList } from '../Declarations/SpriteDeclaration';
 import { SpriteObject } from '../Sprite/SpriteObject';
+import { Chest } from '../Sprite/Chest';
 
 export class AssetFactory {
     /**
@@ -115,9 +116,9 @@ export class AssetFactory {
                 return doorDeclaration;
             },
             // 6 - Coffres
-            '6': (x, y, z = -0.005) => {
+            '6': (x, y, items, z = -0.005) => {
                 const scale = {x: 0.5, y: 0.5, z: 1}
-                const chestDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/frames/chests/chest1/1.png", 1, 1, {x, y, z}, scale);
+                const chestDeclaration = new Chest(items, "/assets/game_assets/timefantasy_characters/frames/chests/chest1/SpriteSheetChest1.png", 4, 1, {x, y, z}, scale, [0, 1, 2, 3]);
                 chestDeclaration.userData = '6';
                 return chestDeclaration;
             },
@@ -129,12 +130,16 @@ export class AssetFactory {
         }
     }
 
-    createAssetInstance(assetId, x, y) {
+    createAssetInstance(assetId, x, y, items = 0) {
         if (assetId in this.assets) {
             const xSize = y * this.tileSize;
             const ySize = x * this.tileSize;
-
-            return this.assets[assetId](xSize, ySize);
+            if(items != 0) {
+                return this.assets[assetId](xSize, ySize, items);
+            }
+            else {
+                return this.assets[assetId](xSize, ySize);
+            }
         } else {
             console.warn(`l'id de l'asset : ${assetId} est introuvable !`);
             return undefined;

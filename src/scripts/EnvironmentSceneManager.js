@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { collisionDetection, collisionMonsters } from "./Collision/Collision";
+import { collisionChest, collisionDetection, collisionMonsters } from "./Collision/Collision";
 import * as Move from "./Mouvement";
 import { TileMap } from "./TileMap/TileMap";
 import { SpriteList } from "./Declarations/SpriteDeclaration";
@@ -9,6 +9,7 @@ import { Inventory } from "./Item/Inventory";
 import { Consumable } from "./Item/Consumable";
 import { Armor } from "./Item/Armor";
 import { setCookie, getCookie } from "./Cookies";
+import { Chest } from "./Sprite/Chest";
 
 export const scene = new THREE.Scene();
 const gameWindow = document.getElementById('game-renderer');
@@ -29,25 +30,10 @@ let indexOfLasteEntity = null;
 let inventory = new Inventory();
 export const loopSpeed = 1;
 
-//Test d'ajout d'item
-let potion = new Consumable(1);
-let potion2 = new Consumable(2);
-let potion3 = new Consumable(3);
-let potion4 = new Consumable(4);
-let potion5 = new Consumable(5);
-let armor = new Armor(1);
-
-inventory.addItem(potion);
-inventory.addItem(potion);
-inventory.addItem(armor);
-inventory.addItem(potion2);
-inventory.addItem(potion3);
-inventory.addItem(potion4);
-inventory.addItem(potion5);
-
 // Variables globales pour la scène : 
 
 let obstacles = [];
+let chests = [];
 let monsters = [];
 monsters.push(SpriteList.testMonster, SpriteList.testMonster2)
 
@@ -174,15 +160,46 @@ function initializeMap() {
 
     for (let i = 0; i < tileMap.mapData.length; i++) {
         for (let j = 0; j < tileMap.mapData[i].length; j++) {
-            const tileType = tileMap.mapData[i][j];
             const createAsset = new AssetFactory();
-            const newSprite = createAsset.createAssetInstance(tileType, i, j);
+            const tileType = tileMap.mapData[i][j];
+            if(tileType[0] === "6") {
+                let separateString = tileType.split("/");
+                let items = [];
 
-            scene.add(newSprite);
-            map.push(newSprite);
+                for(let k = 1; k < separateString.length; k++) {
+                    let separatedCode = separateString[k].split("-");
+                    let id = Number(separatedCode[0]);
+                    let type;
+                    let quantity = Number(separatedCode[2]);
+                    if(Number(separatedCode[1]) === 1) {
+                        type = "consumables";
+                    }
+                    else if(Number(separatedCode[1]) === 2) {
+                        type = "armor";
+                    }
+                    else{
+                        type = "weapon";
+                    }
+                    items.push({id: id, type: type, quantity: quantity});
+                }
+
+                const newSprite = createAsset.createAssetInstance(separateString[0], i, j, items);
+                scene.add(newSprite);
+                map.push(newSprite);
+            }
+            else {
+                const newSprite = createAsset.createAssetInstance(tileType, i, j);
+                scene.add(newSprite);
+                map.push(newSprite);
+            }
         }
     }
     obstacles = [...map];
+    for(let i = 0; i < obstacles.length; i++) {
+        if(obstacles[i] instanceof Chest) {
+            chests.push(obstacles[i]);
+        }
+    }
 }
 
 // Gestion du zoom avec la molette de la souris avec listener de la molette de la souris pour le zoom de la caméra.
@@ -325,10 +342,7 @@ document.addEventListener("keyup", (event) => {
             }
             break;
         case "KeyL":
-            //debug Key to pass a turn
-            if(combat != null) {
-                combat.turnOver()
-            }
+            console.log(chests);
             break;
         case "KeyO":
             console.log(inventory);
@@ -398,8 +412,13 @@ function animate() {
             animationInProgress = true;
         }
     }
-	  collisionDetection(obstacles, SpriteList.playerSprite);
+	collisionDetection(obstacles, SpriteList.playerSprite);
     //Colision for player/monster
+    let resultColissionChest = collisionChest(chests, SpriteList.playerSprite)
+    if(resultColissionChest.collision) {
+        alert("A chest has been opened")
+        resultColissionChest.chest.openChest(inventory);
+    }
     let resultColissionMonster = collisionMonsters(monsters, SpriteList.playerSprite);
     if(resultColissionMonster.collision === true && isInCombat === false) {
         isInCombat = true;
