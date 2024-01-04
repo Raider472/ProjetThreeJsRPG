@@ -4,6 +4,7 @@ import * as Move from "./Mouvement";
 import { TileMap } from "./TileMap/TileMap";
 import { SpriteList } from "./Declarations/SpriteDeclaration";
 import { Combat } from "./Combat";
+import { setCookie, getCookie } from "./Cookies";
 import { AssetFactory } from "./TileMap/AssetFactory";
 import { setCookie, getCookie } from "./Cookies";
 
@@ -38,8 +39,6 @@ export let combatLost = 0;
 export let combatDone = 0;
 export let charactersUnlocked = [];
 
-console.log("Nb de combat" + combatDone);
-
 function cookieSaveManager(resultOfCombat) {
     combatWon = parseInt(getCookie("combat_won")) || 0;
     combatLost = parseInt(getCookie("combat_lost")) || 0;
@@ -64,6 +63,7 @@ function cookieSaveManager(resultOfCombat) {
             console.log("Combat.isFinished works");
         }
 }
+
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -233,15 +233,19 @@ document.addEventListener('keydown', (event) => {
 
     switch (event.code) {
         case "KeyA":
+            clearInterval(footstepIntervalId);
             footstepIntervalId = setInterval(playRandomFootstepSound, 350);
             break;
         case "KeyD":
+            clearInterval(footstepIntervalId);
             footstepIntervalId = setInterval(playRandomFootstepSound, 350);
             break;
         case "KeyW":
+            clearInterval(footstepIntervalId);
             footstepIntervalId = setInterval(playRandomFootstepSound, 350);
             break;
         case "KeyS":
+            clearInterval(footstepIntervalId);
             footstepIntervalId = setInterval(playRandomFootstepSound, 350);
             break;
     }
@@ -408,7 +412,7 @@ function animate() {
             }
         }
     }
-	  SpriteList.playerSprite.update(deltaTime);
+	SpriteList.playerSprite.update(deltaTime);
     SpriteList.testMonster.update(deltaTime);
     SpriteList.testMonster2.update(deltaTime);
 
@@ -418,5 +422,6 @@ function animate() {
 }
 animate();
 inventoryManagement();
+cookieSaveManager();
 initializeMap();
 onZoom();
