@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { collisionChest, collisionDetection, collisionMonsters } from "./Collision/Collision";
+import { collisionChest, collisionDetection, collisionFromRight, collisionMonsters } from "./Collision/Collision";
 import * as Move from "./Mouvement";
 import { TileMap } from "./TileMap/TileMap";
 import { SpriteList } from "./Declarations/SpriteDeclaration";
@@ -35,7 +35,6 @@ export const loopSpeed = 1;
 let obstacles = [];
 let chests = [];
 let monsters = [];
-monsters.push(SpriteList.testMonster, SpriteList.testMonster2)
 
 // Variable cookies :
 
@@ -130,7 +129,7 @@ cameraCombat.position.x = 500
 cameraCombat.position.z = 5
 
 scene.add(camera, cameraCombat);
-scene.add(SpriteList.playerSprite, SpriteList.testMonster, SpriteList.testMonster2);
+scene.add(SpriteList.playerSprite);
 
 // Music de fond du jeu :
 
@@ -162,29 +161,30 @@ function initializeMap() {
         for (let j = 0; j < tileMap.mapData[i].length; j++) {
             const createAsset = new AssetFactory();
             const tileType = tileMap.mapData[i][j];
-            if(tileType[0] === "6") {
+            if(tileType[0] === "4") {
                 let separateString = tileType.split("/");
-                let items = [];
-
-                for(let k = 1; k < separateString.length; k++) {
-                    let separatedCode = separateString[k].split("-");
-                    let id = Number(separatedCode[0]);
-                    let type;
-                    let quantity = Number(separatedCode[2]);
-                    if(Number(separatedCode[1]) === 1) {
-                        type = "consumables";
-                    }
-                    else if(Number(separatedCode[1]) === 2) {
-                        type = "armor";
-                    }
-                    else{
-                        type = "weapon";
-                    }
-                    items.push({id: id, type: type, quantity: quantity});
-                }
-
+                createAsset.createMonsters(separateString)
+                .then(teams => {
+                    // Handle teams here
+                    const newSprite = createAsset.createAssetInstance(separateString[0], i, j, teams);
+                    return newSprite;
+                })
+                .then(newSprite => {
+                    // Handle the array of fulfilled values (newSprites)
+                    scene.add(newSprite);
+                    monsters.push(newSprite);
+                })
+                .catch(error => {
+                    // Handle errors here
+                    console.error(error);
+                });
+            }
+            else if(tileType[0] === "6") {
+                let separateString = tileType.split("/");
+                let items = createAsset.createItemsInsideChest(separateString);
                 const newSprite = createAsset.createAssetInstance(separateString[0], i, j, items);
                 scene.add(newSprite);
+                chests.push(newSprite);
                 map.push(newSprite);
             }
             else {
@@ -195,11 +195,6 @@ function initializeMap() {
         }
     }
     obstacles = [...map];
-    for(let i = 0; i < obstacles.length; i++) {
-        if(obstacles[i] instanceof Chest) {
-            chests.push(obstacles[i]);
-        }
-    }
 }
 
 // Gestion du zoom avec la molette de la souris avec listener de la molette de la souris pour le zoom de la caméra.
@@ -342,7 +337,7 @@ document.addEventListener("keyup", (event) => {
             }
             break;
         case "KeyL":
-            console.log(chests);
+            console.log(chests, monsters);
             break;
         case "KeyO":
             console.log(inventory);
@@ -453,8 +448,9 @@ function animate() {
         }
     }
 	SpriteList.playerSprite.update(deltaTime);
-    SpriteList.testMonster.update(deltaTime);
-    SpriteList.testMonster2.update(deltaTime);
+    monsters.forEach((monster) =>{
+        monster.update(deltaTime);
+    });
 
     const asset = new AssetFactory();
 

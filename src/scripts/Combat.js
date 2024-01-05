@@ -242,6 +242,7 @@ export class Combat {
             if(this.inventory.items[i].type === "consumable") {
                 let inputButton = document.createElement("button");
                 inputButton.value = i;
+                inputButton.title = this.inventory.items[i].desc
                 inputButton.innerHTML = this.inventory.items[i].name
                 this.chooseEnemyDiv.appendChild(inputButton);
                 if(this.inventory.items[i].modifier.targetDead) {

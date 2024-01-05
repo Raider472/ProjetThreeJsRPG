@@ -87,6 +87,28 @@
 			"crystalAttacks": [
 
 			]
+        },
+		{
+            "id": 5,
+			"class": "Monster",
+			"name": "Marauder",
+			"rarity": 1,
+			"hp": 30,
+			"atk": 25,
+			"atkS": 0,
+			"heal": 0,
+			"crit": 0.15,
+			"def": 15,
+			"defS": 5,
+			"shield": 2,
+			"vit": 20,
+			"crystalGeneration": 0,
+			"passiveSkills": [
+
+			],
+			"crystalAttacks": [
+
+			]
         }
 	]
 }
