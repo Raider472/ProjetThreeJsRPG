@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <style>
     .btn-enemy {
-      
+@apply text-white bg-gradient-to-r from-red-400 via-red-500 to-red-700 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2
     }
      
     .btn-crystal{
@@ -41,19 +41,20 @@
       @apply bg-gradient-to-r from-violet-500 via-violet-600 to-violet-700 hover:bg-gradient-to-br focus:ring-violet-300;
     }
   </style>
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <link rel="icon" type="image/svg+xml" href="/bg/logop.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.tailwindcss.com"></script>
-<!--   <link rel="stylesheet" href="/style.css">
- -->  <title>Vite + React</title>
+  <link rel="stylesheet" href="/style.css">
+  <title>WAR RAIL</title>
 </head>
 
-<body class="m-0">
+<body class="m-0 ">
   <div class="min-h-screen flex flex-col">
     <div id="game-renderer" class=""></div>
 
     <!-- Inteface de jeu -->
-    <div id="menuCombat" class="menuCombaHidden flex-grow">
+    <div class="flex-grow background-combat">
+    <div id="menuCombat" class="menuCombaHidden transition duration-300 ">
       <!-- Tour actuel -->
 
       <div class="flex space-x-3 items-center">
@@ -120,9 +121,10 @@
             </svg>
           </button>
         </div>
-        <div id="menuChooseEnnemy" class="menuChoose grid grid-rows-2 grid-cols-2 gap-4 p-4"></div>
+        <div id="menuChooseEnnemy" class="menuChoose grid grid-rows-2 grid-cols-2 gap-4 p-4 transition duration-300"></div>
       </div>
     </div>
+  </div>
   </div>
 
   <div id="game-ui" class=""></div>

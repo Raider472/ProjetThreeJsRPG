@@ -150,7 +150,7 @@ export class Combat {
                     let inputButton = document.createElement("button");
                     inputButton.value = this.monsterTeam[i].id;
                     inputButton.innerHTML = this.monsterTeam[i].entity.name
-                    inputButton.classList.add("bg-blue-500")
+                    inputButton.classList.add("btn-enemy")
                     this.chooseEnemyDiv.appendChild(inputButton);
                     inputButton.addEventListener('click', () => this.attack(inputButton.value, decision), { signal: this.controller.signal });
                 }
