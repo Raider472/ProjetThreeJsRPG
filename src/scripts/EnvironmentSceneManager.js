@@ -10,6 +10,7 @@ import { Consumable } from "./Item/Consumable";
 import { Armor } from "./Item/Armor";
 import { setCookie, getCookie } from "./Cookies";
 import { Chest } from "./Sprite/Chest";
+import { loadInventory } from "./InventoryDom";
 
 export const scene = new THREE.Scene();
 const gameWindow = document.getElementById('game-renderer');
@@ -19,6 +20,7 @@ document.querySelector('[id=crystalAttack]').addEventListener('click',() => comb
 document.querySelector('[id=defend]').addEventListener('click',() => combat.defend());
 document.querySelector('[id=item]').addEventListener('click',() => combat.generateTargetItems());
 document.querySelector('[id=skip]').addEventListener('click',() => combat.turnOver());
+document.querySelector('[id=inventoryButton]').addEventListener('click',() => loadInventory(inventory, SpriteList.playerSprite.team.teamArray));
 
 //Variables importantes :
 

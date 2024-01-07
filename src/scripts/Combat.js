@@ -55,6 +55,9 @@ export class Combat {
         //Dom
         this.domCombat.classList.add("menuCombatVisible")
         this.chooseEnemyDiv = document.getElementById("menuChooseEnnemy")
+        if(this.turnActors[0].entity.isAi) {
+            setTimeout(() => this.turnOver(), 700);
+        }
     }
 
     giveIdToActors(heroTeam, monsterTeam) {
@@ -91,12 +94,45 @@ export class Combat {
     createInitialTurn() {
         let tempHero = structuredClone(this.heroTeam);
         let tempMonster = structuredClone(this.monsterTeam);
+        this.checkHasEquipment(tempHero);
         let tempActors = tempHero.concat(tempMonster);
         tempActors.sort(function (a, b){
             return b.entity.vit - a.entity.vit;
         })
         this.turnActors = tempActors;
-        console.log(this.turnActors, "final result")
+    }
+
+    checkHasEquipment(heroTeam) {
+        for(let i = 0; i <heroTeam.length; i++) {
+            let hero = heroTeam[i].entity;
+            if(heroTeam[i].entity.head != undefined) {
+                this.applyEquipment(hero.head, hero);
+            }
+            if(heroTeam[i].entity.torso != undefined) {
+                this.applyEquipment(hero.torso, hero);
+            }
+            if(heroTeam[i].entity.legs != undefined) {
+                this.applyEquipment(hero.legs, hero);
+            }
+            if(heroTeam[i].entity.boots != undefined) {
+                this.applyEquipment(hero.boots, hero);
+            }
+        }
+    }
+
+    applyEquipment(equipment, hero) {
+        if(equipment.defBuff != 0) {
+            hero.def += equipment.defBuff;
+        }
+        if(equipment.defSBuff != 0) {
+            hero.defS += equipment.defSBuff;
+        }
+        if(equipment.shieldBuff != 0) {
+            hero.shield += equipment.shieldBuff;
+        }
+        if(equipment.vitBuff != 0) {
+            hero.vit += equipment.vitBuff;
+        }
     }
 
     turnOver() {

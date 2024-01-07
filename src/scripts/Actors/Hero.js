@@ -3,7 +3,7 @@ import { Actors } from "./Actors";
 export class Hero extends Actors {
 
     head;
-    arms;
+    torso;
     legs;
     boots;
 
