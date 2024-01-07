@@ -10,6 +10,7 @@ export class Weapon extends Item {
     
     constructor(id) {
         super(id);
+        this.type = "weapon";
     }
 
     async fetchJson(filterId) {

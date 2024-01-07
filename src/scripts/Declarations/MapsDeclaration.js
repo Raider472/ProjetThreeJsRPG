@@ -26,10 +26,13 @@ export const mapsCrossReferenceHeroCombat = {
 export const mapsCrossReferenceMonsterCombat = {
     entities: [
         {
-            id: 4, name: "Zombies", path: spriteSheetZombie, idle: [0, 1, 2, 3], horiTile: 4, vertiTile: 4 
+            id: 4, name: "Zombies", path: spriteSheetZombie, idleWorld:[0, 1, 2, 3], idle: [0, 1, 2, 3], horiTile: 4, vertiTile: 4 
         },
         {
-            id: 3, name: "Bandit", path: spriteSheetCharacter5, idle: [21, 22, 23], horiTile: 12, vertiTile: 8 
+            id: 3, name: "Bandit", path: spriteSheetCharacter5, idleWorld:[9, 10, 11], idle: [21, 22, 23], horiTile: 12, vertiTile: 8 
         },
+        {
+            id: 5, name: "Marauder", path: spriteSheetCharacter5, idleWorld:[51, 52, 53], idle: [63, 64, 65], horiTile: 12, vertiTile: 8 
+        }
     ]
 }

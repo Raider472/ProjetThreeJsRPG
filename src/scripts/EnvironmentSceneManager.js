@@ -1,11 +1,15 @@
 import * as THREE from "three";
-import { collisionDetection, collisionMonsters } from "./Collision/Collision";
+import { collisionChest, collisionDetection, collisionFromRight, collisionMonsters } from "./Collision/Collision";
 import * as Move from "./Mouvement";
 import { TileMap } from "./TileMap/TileMap";
 import { SpriteList } from "./Declarations/SpriteDeclaration";
 import { Combat } from "./Combat";
 import { AssetFactory } from "./TileMap/AssetFactory";
+import { Inventory } from "./Item/Inventory";
+import { Consumable } from "./Item/Consumable";
+import { Armor } from "./Item/Armor";
 import { setCookie, getCookie } from "./Cookies";
+import { Chest } from "./Sprite/Chest";
 
 export const scene = new THREE.Scene();
 const gameWindow = document.getElementById('game-renderer');
@@ -13,6 +17,7 @@ const gameWindow = document.getElementById('game-renderer');
 document.querySelector('[id=attack]').addEventListener('click',() => combat.generateTarget(0));
 document.querySelector('[id=crystalAttack]').addEventListener('click',() => combat.generateTarget(1));
 document.querySelector('[id=defend]').addEventListener('click',() => combat.defend());
+document.querySelector('[id=item]').addEventListener('click',() => combat.generateTargetItems());
 document.querySelector('[id=skip]').addEventListener('click',() => combat.turnOver());
 
 //Variables importantes :
@@ -22,13 +27,14 @@ let combat = null;
 let switchCamera1 = false;
 let lastEntityCombat = null;
 let indexOfLasteEntity = null;
+let inventory = new Inventory();
 export const loopSpeed = 1;
 
 // Variables globales pour la scène : 
 
 let obstacles = [];
+let chests = [];
 let monsters = [];
-monsters.push(SpriteList.testMonster, SpriteList.testMonster2)
 
 // Variable cookies :
 
@@ -123,7 +129,7 @@ cameraCombat.position.x = 500
 cameraCombat.position.z = 5
 
 scene.add(camera, cameraCombat);
-scene.add(SpriteList.playerSprite, SpriteList.testMonster, SpriteList.testMonster2);
+scene.add(SpriteList.playerSprite);
 
 // Music de fond du jeu :
 
@@ -153,12 +159,39 @@ function initializeMap() {
 
     for (let i = 0; i < tileMap.mapData.length; i++) {
         for (let j = 0; j < tileMap.mapData[i].length; j++) {
-            const tileType = tileMap.mapData[i][j];
             const createAsset = new AssetFactory();
-            const newSprite = createAsset.createAssetInstance(tileType, i, j);
-
-            scene.add(newSprite);
-            map.push(newSprite);
+            const tileType = tileMap.mapData[i][j];
+            if(tileType[0] === "4") {
+                let separateString = tileType.split("/");
+                createAsset.createMonsters(separateString)
+                .then(teams => {
+                    // Handle teams here
+                    const newSprite = createAsset.createAssetInstance(separateString[0], i, j, teams);
+                    return newSprite;
+                })
+                .then(newSprite => {
+                    // Handle the array of fulfilled values (newSprites)
+                    scene.add(newSprite);
+                    monsters.push(newSprite);
+                })
+                .catch(error => {
+                    // Handle errors here
+                    console.error(error);
+                });
+            }
+            else if(tileType[0] === "6") {
+                let separateString = tileType.split("/");
+                let items = createAsset.createItemsInsideChest(separateString);
+                const newSprite = createAsset.createAssetInstance(separateString[0], i, j, items);
+                scene.add(newSprite);
+                chests.push(newSprite);
+                map.push(newSprite);
+            }
+            else {
+                const newSprite = createAsset.createAssetInstance(tileType, i, j);
+                scene.add(newSprite);
+                map.push(newSprite);
+            }
         }
     }
     obstacles = [...map];
@@ -304,13 +337,10 @@ document.addEventListener("keyup", (event) => {
             }
             break;
         case "KeyL":
-            //debug Key to pass a turn
-            if(combat != null) {
-                combat.turnOver()
-            }
+            console.log(chests, monsters);
             break;
         case "KeyO":
-            switchCamera1 = !switchCamera1
+            console.log(inventory);
             break;
         case "KeyT":
             console.log(SpriteList.playerSprite.team.teamArray)
@@ -377,14 +407,19 @@ function animate() {
             animationInProgress = true;
         }
     }
-	  collisionDetection(obstacles, SpriteList.playerSprite);
+	collisionDetection(obstacles, SpriteList.playerSprite);
     //Colision for player/monster
+    let resultColissionChest = collisionChest(chests, SpriteList.playerSprite)
+    if(resultColissionChest.collision) {
+        alert("A chest has been opened")
+        resultColissionChest.chest.openChest(inventory);
+    }
     let resultColissionMonster = collisionMonsters(monsters, SpriteList.playerSprite);
     if(resultColissionMonster.collision === true && isInCombat === false) {
         isInCombat = true;
         lastEntityCombat = resultColissionMonster.monster;
         indexOfLasteEntity = monsters.findIndex(monster => monster === lastEntityCombat);
-        combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray, scene);
+        combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray, scene, inventory);
     }
     //debug
     if(isInCombat === true) {
@@ -393,13 +428,15 @@ function animate() {
         }
         if(combat.isFinished) {
             let isCombatLost = true;
+            combat.hideMenuCleanup();
+            combat.removeActors();
+            inventory = combat.inventory; //TODO possibly delete          
             if(combat.hasLost) {
-                cookieSaveManager(isCombatLost);
-                combat.hideMenuCleanup();
-                combat.removeActors();              
+                cookieSaveManager(isCombatLost);           
                 SpriteList.playerSprite.position.x = 20;
                 SpriteList.playerSprite.position.y = 1;
                 SpriteList.playerSprite.position.z = 0.008;
+            }
             else {
                 isCombatLost = false;
                 cookieSaveManager(isCombatLost);
@@ -407,12 +444,13 @@ function animate() {
                 monsters.splice(indexOfLasteEntity, 1);
             }
             isInCombat = false;
-            combat = null;
+            combat = null
         }
     }
 	SpriteList.playerSprite.update(deltaTime);
-    SpriteList.testMonster.update(deltaTime);
-    SpriteList.testMonster2.update(deltaTime);
+    monsters.forEach((monster) =>{
+        monster.update(deltaTime);
+    });
 
     const asset = new AssetFactory();
 

@@ -19,6 +19,7 @@ export class Actors {
     crystalAttacks = [];
 
     maxHp;
+    maxShield;
 
     status = [];
     buffs = [];
@@ -46,6 +47,7 @@ export class Actors {
                 this.def = actor[0].def;
                 this.defS = actor[0].defS;
                 this.shield = actor[0].shield;
+                this.maxShield = actor[0].shield;
                 this.vit = actor[0].vit;
                 this.crystalGeneration = actor[0].crystalGeneration;
                 this.passiveSkills = actor[0].passiveSkills;
