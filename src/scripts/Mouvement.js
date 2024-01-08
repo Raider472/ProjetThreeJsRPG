@@ -10,6 +10,9 @@ export const keys = {
 	},
 	s: {
 		pressed: false
+	},
+	shift: {
+		pressed: false
 	}
 }
 
@@ -27,6 +30,9 @@ export function PlayerMovementControlsDown(keys) {
 				break;
 			case "KeyS":
 				keys.s.pressed = true
+				break;
+			case "ShiftLeft":
+				keys.shift.pressed = true
 				break;
 		}
 	})

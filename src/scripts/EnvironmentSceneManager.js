@@ -11,6 +11,7 @@ import { Armor } from "./Item/Armor";
 import { setCookie, getCookie } from "./Cookies";
 import { Chest } from "./Sprite/Chest";
 import { loadInventory } from "./InventoryDom";
+import { SpriteObject } from "./Sprite/SpriteObject";
 
 export const scene = new THREE.Scene();
 const gameWindow = document.getElementById('game-renderer');
@@ -23,6 +24,10 @@ document.querySelector('[id=skip]').addEventListener('click',() => combat.turnOv
 document.querySelector('[id=inventoryButton]').addEventListener('click',() => loadInventory(inventory, SpriteList.playerSprite.team.teamArray));
 
 //Variables importantes :
+let intervalW = undefined;
+let intervalA = undefined;
+let intervalS = undefined;
+let intervalD = undefined;
 
 let isInCombat = false;
 let combat = null;
@@ -35,6 +40,7 @@ export const loopSpeed = 1;
 // Variables globales pour la scène : 
 
 let obstacles = [];
+let obstaclesAnim = [];
 let chests = [];
 let monsters = [];
 
@@ -196,6 +202,11 @@ function initializeMap() {
             }
         }
     }
+    for(let i = 0; i < map.length; i++) {
+        if(map[i] instanceof SpriteObject && map[i].idle.length != 0) {
+            obstaclesAnim.push(map[i]);
+        }
+    }
     obstacles = [...map];
 }
 
@@ -285,23 +296,23 @@ function playRandomFootstepSound() {
 
 document.addEventListener('keydown', (event) => {
     if (animationInProgress) return;
-
+    
     switch (event.code) {
         case "KeyA":
-            clearInterval(footstepIntervalId);
-            footstepIntervalId = setInterval(playRandomFootstepSound, 350);
+            clearInterval(intervalA);
+            intervalA = setInterval(playRandomFootstepSound, 350);
             break;
         case "KeyD":
-            clearInterval(footstepIntervalId);
-            footstepIntervalId = setInterval(playRandomFootstepSound, 350);
+            clearInterval(intervalD);
+            intervalD = setInterval(playRandomFootstepSound, 350);
             break;
         case "KeyW":
-            clearInterval(footstepIntervalId);
-            footstepIntervalId = setInterval(playRandomFootstepSound, 350);
+            clearInterval(intervalW);
+            intervalW = setInterval(playRandomFootstepSound, 350);
             break;
         case "KeyS":
-            clearInterval(footstepIntervalId);
-            footstepIntervalId = setInterval(playRandomFootstepSound, 350);
+            clearInterval(intervalS);
+            intervalS = setInterval(playRandomFootstepSound, 350);
             break;
     }
 });
@@ -312,19 +323,22 @@ document.addEventListener("keyup", (event) => {
     switch (event.code) {
         case "KeyA":
             keys.a.pressed = false;
-            clearInterval(footstepIntervalId);
+            clearInterval(intervalA);
             break;
         case "KeyD":
             keys.d.pressed = false;
-            clearInterval(footstepIntervalId);
+            clearInterval(intervalD);
             break;
         case "KeyW":
             keys.w.pressed = false;
-            clearInterval(footstepIntervalId);
+            clearInterval(intervalW);
             break;
         case "KeyS":
             keys.s.pressed = false;
-            clearInterval(footstepIntervalId);
+            clearInterval(intervalS);
+            break;
+        case "ShiftLeft":
+            keys.shift.pressed = false;
             break;
         case "KeyK":
             //debug Key for console log
@@ -376,16 +390,24 @@ function animate() {
 	SpriteList.playerSprite.velocity.y = 0;
 
 	if(keys.w.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.y = 0.018;
-        camera.position.y += 0.018;
+        let velocity = 0.018
+        if(keys.shift.pressed) {
+            velocity *= 2;
+        }
+        SpriteList.playerSprite.velocity.y = velocity;
+        camera.position.y += velocity;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.upSprite, loopSpeed);
             animationInProgress = true;
         }
     }
     else if(keys.s.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.y = -0.018;
-        camera.position.y -= 0.018;
+        let velocity = -0.018
+        if(keys.shift.pressed) {
+            velocity *= 2;
+        }
+        SpriteList.playerSprite.velocity.y = velocity;
+        camera.position.y += velocity;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.downSprite, loopSpeed);
             animationInProgress = true;
@@ -394,16 +416,24 @@ function animate() {
 
     SpriteList.playerSprite.velocity.x = 0;
     if(keys.d.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.x = 0.018;
-        camera.position.x += 0.018;
+        let velocity = 0.018
+        if(keys.shift.pressed) {
+            velocity *= 2;
+        }
+        SpriteList.playerSprite.velocity.x = velocity;
+        camera.position.x += velocity;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.rightSprite, loopSpeed);
             animationInProgress = true;
         }
     }
     else if(keys.a.pressed && isInCombat === false) {
-        SpriteList.playerSprite.velocity.x = -0.018;
-        camera.position.x -= 0.018;
+        let velocity = -0.018
+        if(keys.shift.pressed) {
+            velocity *= 2;
+        }
+        SpriteList.playerSprite.velocity.x = velocity;
+        camera.position.x += velocity;
         if(!animationInProgress) {
             SpriteList.playerSprite.loop(SpriteList.playerSprite.leftSprite, loopSpeed);
             animationInProgress = true;
@@ -423,7 +453,6 @@ function animate() {
         indexOfLasteEntity = monsters.findIndex(monster => monster === lastEntityCombat);
         combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray, scene, inventory);
     }
-    //debug
     if(isInCombat === true) {
         for(let i = 0; i < combat.actors.length; i++) {
             combat.actors[i].entity.update(deltaTime);
