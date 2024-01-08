@@ -68,17 +68,17 @@ function setCookieForUser() {
 setCookieForUser();
 
 function cookieSaveManager(resultOfCombat) {
-    combatWon = parseInt(getCookie("combat_won")) || 0;
-    combatLost = parseInt(getCookie("combat_lost")) || 0;
-    combatDone = parseInt(getCookie("combat_done")) || 0;
-    coins = parseInt(getCookie("coins")) || 0;
+    combatWon = parseInt(getCookie("combat_won"));
+    combatLost = parseInt(getCookie("combat_lost"));
+    combatDone = parseInt(getCookie("combat_done"));
+    coins = parseInt(getCookie("coins"));
 
         if (resultOfCombat === true) {
                 combatLost++;
                 setCookie("combat_lost", combatLost, 1);
                 combatDone++;
                 setCookie("combat_done", combatDone, 1);
-                coins += 3;
+                coins -= 3;
                 setCookie("coins", coins, 1);
                 console.log("Combat.isFinished and Combat.hasLost works, variables changed");
             } else {
@@ -92,6 +92,31 @@ function cookieSaveManager(resultOfCombat) {
         }
 }
 
+function endgameManager() {
+    const keySound = "/assets/sounds/misc/key-sound.mp3";
+    
+    let isKeyObtained = false;
+    
+    combatDone = parseInt(getCookie("combat_done"));
+    combatWon = parseInt(getCookie("combat_won"));
+
+
+    if (combatDone >= 10 && combatWon == 10) {
+        const audio = new THREE.Audio(listener);
+        audioLoader.load(keySound, (buffer) => {
+            audio.setBuffer(buffer);
+            audio.setLoop(false);
+            audio.setVolume(1);
+        });
+        
+        console.log("KEY OBTAINED");
+        isKeyObtained = true;
+    }
+
+    if (isKeyObtained == true && isInCombat == false) {
+        const tileType = obstacles;
+    }
+}
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight*8/10 );
@@ -131,8 +156,6 @@ const listener = new THREE.AudioListener();
 camera.add(listener);
 
 //const audioLoader = new THREE.AudioLoader();
-
-const backgroundMusic = new THREE.Audio(listener);
 
 const tileMap = new TileMap(scene);
 
@@ -318,18 +341,6 @@ document.addEventListener("keyup", (event) => {
     }
 });
 
-// UI :
-
-// backgroundMusic.stop();
-
-// const backgroundCombatMusic = new THREE.Audio(listener);;  
-// audioLoader.load('/assets/sounds/combat_music.mp3', function( buffer ) {
-//     backgroundCombatMusic.setBuffer( buffer );
-//     backgroundCombatMusic.setLoop( true );
-//     backgroundCombatMusic.setVolume( 0.15 );
-//     backgroundCombatMusic.play()
-// });
-
 function animate() {
 	requestAnimationFrame( animate );
     if(isInCombat) {
@@ -377,7 +388,7 @@ function animate() {
             animationInProgress = true;
         }
     }
-	  collisionDetection(obstacles, SpriteList.playerSprite);
+	collisionDetection(obstacles, SpriteList.playerSprite);
     //Colision for player/monster
     let resultColissionMonster = collisionMonsters(monsters, SpriteList.playerSprite);
     if(resultColissionMonster.collision === true && isInCombat === false) {
@@ -400,6 +411,7 @@ function animate() {
                 SpriteList.playerSprite.position.x = 20;
                 SpriteList.playerSprite.position.y = 1;
                 SpriteList.playerSprite.position.z = 0.008;
+            }
             else {
                 isCombatLost = false;
                 cookieSaveManager(isCombatLost);
@@ -417,7 +429,9 @@ function animate() {
     const asset = new AssetFactory();
 
     asset.updateObstaclesSprites(deltaTime *= 0.6, obstacles);
-}
+    }
+
 animate();
+endgameManager();
 initializeMap();
 onZoom();
