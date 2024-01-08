@@ -135,6 +135,55 @@ export class AssetFactory {
                 chestDeclaration.userData = '6';
                 return chestDeclaration;
             },
+            // 7 - Lits
+            '7': (x, y, z = 0.006) => {
+                const scale = {x: 1, y: 1.5, z: 1}
+                const bedDeclaration = new SpriteObject("/assets/furnitures/bed.png", 1, 1, {x, y, z}, scale);
+                bedDeclaration.userData = '7';
+                return bedDeclaration;
+            },
+            // 7S - Lits Sud
+            '7S': (x, y, z = 0.006) => {
+                const scale = {x: 1, y: 1.5, z: 1}
+                const bedDeclaration = new SpriteObject("/assets/furnitures/bedSouth.png", 1, 1, {x, y, z}, scale);
+                bedDeclaration.userData = '7';
+                return bedDeclaration;
+            },
+            // 7L - Lits Gauche
+            '7L': (x, y, z = 0.006) => {
+                const scale = {x: 1.5, y: 1, z: 1}
+                const bedDeclaration = new SpriteObject("/assets/furnitures/bedLeft.png", 1, 1, {x, y, z}, scale);
+                bedDeclaration.userData = '7';
+                return bedDeclaration;
+            },
+            // 8 - tonneau
+            '8': (x, y, z = 0.006) => {
+                const scale = {x: 1, y: 1, z: 1}
+                const barrelDeclaration = new SpriteObject("/assets/furnitures/barrels.png", 1, 1, {x, y, z}, scale);
+                barrelDeclaration.userData = '8';
+                return barrelDeclaration;
+            },
+            // 8-6 - tonneau Farine
+            '8-6': (x, y, z = 0.006) => {
+                const scale = {x: 1, y: 1, z: 1}
+                const barrelDeclaration = new SpriteObject("/assets/furnitures/barrelsFloor.png", 1, 1, {x, y, z}, scale);
+                barrelDeclaration.userData = '8';
+                return barrelDeclaration;
+            },
+            // 8-7 - tonneau épice
+            '8-7': (x, y, z = 0.006) => {
+                const scale = {x: 1, y: 1, z: 1}
+                const barrelDeclaration = new SpriteObject("/assets/furnitures/barrelsSpice.png", 1, 1, {x, y, z}, scale);
+                barrelDeclaration.userData = '8';
+                return barrelDeclaration;
+            },
+            // 9 - torches
+            '9': (x, y, z = 0.006) => {
+                const scale = {x: 1, y: 1, z: 1}
+                const barrelDeclaration = new SpriteObject("/assets/furnitures/torch.png", 3, 4, {x, y, z}, scale, [1, 4, 7, 10]);
+                barrelDeclaration.userData = '9';
+                return barrelDeclaration;
+            },
             // Tuile vide : améliore les performances au chargement de la map
             '': (x, y, z = -0) => {
                 return '';
