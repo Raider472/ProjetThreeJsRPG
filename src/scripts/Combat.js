@@ -22,6 +22,8 @@ export class Combat {
 
     scene;
 
+    inventory;
+
     actions = {
         normalAttack: 0,
         crystalAttack: 1,
@@ -38,9 +40,10 @@ export class Combat {
     pActual;
     chooseEnemyDiv;
 
-    constructor(heroTeam, monsterTeam, scene) {
+    constructor(heroTeam, monsterTeam, scene, inventory) {
         this.giveIdToActors(heroTeam, monsterTeam);
         this.scene = scene;
+        this.inventory = inventory;
         this.domCombat = document.getElementById("menuCombat");
         this.crystalShow = document.getElementById("numberCrystal");
         this.crystalShow.innerHTML = this.crystal;
@@ -52,6 +55,9 @@ export class Combat {
         //Dom
         this.domCombat.classList.add("menuCombatVisible")
         this.chooseEnemyDiv = document.getElementById("menuChooseEnnemy")
+        if(this.turnActors[0].entity.isAi) {
+            setTimeout(() => this.turnOver(), 700);
+        }
     }
 
     giveIdToActors(heroTeam, monsterTeam) {
@@ -88,12 +94,45 @@ export class Combat {
     createInitialTurn() {
         let tempHero = structuredClone(this.heroTeam);
         let tempMonster = structuredClone(this.monsterTeam);
+        this.checkHasEquipment(tempHero);
         let tempActors = tempHero.concat(tempMonster);
         tempActors.sort(function (a, b){
             return b.entity.vit - a.entity.vit;
         })
         this.turnActors = tempActors;
-        console.log(this.turnActors, "final result")
+    }
+
+    checkHasEquipment(heroTeam) {
+        for(let i = 0; i <heroTeam.length; i++) {
+            let hero = heroTeam[i].entity;
+            if(heroTeam[i].entity.head != undefined) {
+                this.applyEquipment(hero.head, hero);
+            }
+            if(heroTeam[i].entity.torso != undefined) {
+                this.applyEquipment(hero.torso, hero);
+            }
+            if(heroTeam[i].entity.legs != undefined) {
+                this.applyEquipment(hero.legs, hero);
+            }
+            if(heroTeam[i].entity.boots != undefined) {
+                this.applyEquipment(hero.boots, hero);
+            }
+        }
+    }
+
+    applyEquipment(equipment, hero) {
+        if(equipment.defBuff != 0) {
+            hero.def += equipment.defBuff;
+        }
+        if(equipment.defSBuff != 0) {
+            hero.defS += equipment.defSBuff;
+        }
+        if(equipment.shieldBuff != 0) {
+            hero.shield += equipment.shieldBuff;
+        }
+        if(equipment.vitBuff != 0) {
+            hero.vit += equipment.vitBuff;
+        }
     }
 
     turnOver() {
@@ -209,7 +248,6 @@ export class Combat {
         }
         else {
             if(crystalAttack.targetDead) {
-                console.log("fdsdfnjsdxifghvuy")
                 for(let i = 0; i < this.deadHero.length; i++) {
                     let inputButton = document.createElement("button");
                     inputButton.value = this.deadHero[i].id;
@@ -233,6 +271,41 @@ export class Combat {
         if(!crystalAttack.isAOE) {
             this.generateBackButton();
         }
+    }
+
+    generateTargetItems() {
+        this.newAbort();
+        this.hideMenu();
+        for(let i = 0; i < this.inventory.items.length; i++) {
+            if(this.inventory.items[i].type === "consumable") {
+                let inputButton = document.createElement("button");
+                inputButton.value = i;
+                inputButton.title = this.inventory.items[i].desc
+                inputButton.innerHTML = this.inventory.items[i].name
+                this.chooseEnemyDiv.appendChild(inputButton);
+                if(this.inventory.items[i].modifier.targetDead) {
+                    inputButton.addEventListener('click', () => this.generateTargetFeather(inputButton.value), { signal: this.controller.signal });
+                }
+                else {
+                    inputButton.addEventListener('click', () => this.applyPotion(inputButton.value), { signal: this.controller.signal });
+                }
+            }
+        }
+        this.generateBackButton();
+    }
+
+    generateTargetFeather(indexItem) {
+        this.removeGeneratedTarget()
+        this.newAbort();
+        this.hideMenu();
+        for(let i = 0; i < this.deadHero.length; i++) {
+            let inputButton = document.createElement("button");
+            inputButton.value = this.deadHero[i].id;
+            inputButton.innerHTML = this.deadHero[i].entity.name
+            this.chooseEnemyDiv.appendChild(inputButton);
+            inputButton.addEventListener('click', () => this.applyPotion(indexItem, inputButton.value), { signal: this.controller.signal });
+        }
+        this.generateBackButton();
     }
 
     generateBackButton() {
@@ -441,7 +514,6 @@ export class Combat {
             }
         }
         if(crystalAttack.buff != 0) {
-            alert("buff ally")
             let buffExists = this.turnActors[indexNumber].entity.buffs.some(buff => buff.name === crystalAttack.buff.name);
             if(!buffExists) {
                 this.turnActors[indexNumber].entity.buffs.push({
@@ -480,6 +552,41 @@ export class Combat {
         });
         this.applyBuff(this.turnActors[0]);
         this.turnOver()
+    }
+
+    applyPotion(indexPotion, idHero) {
+        this.removeGeneratedTarget();
+        indexPotion = Number(indexPotion);
+        if(this.inventory.items[indexPotion].modifier.healMult != 0) {
+            if(this.inventory.items[indexPotion].modifier.targetDead) {
+                this.resurrection(idHero, this.deadHero, this.inventory.items[indexPotion].modifier, true);
+            }
+            else {
+                this.turnActors[0].entity.hp += Math.floor(this.inventory.items[indexPotion].modifier.healMult * this.turnActors[0].entity.maxHp);
+                if(this.turnActors[0].entity.hp > this.turnActors[0].entity.maxHp) {
+                    this.turnActors[0].entity.hp = this.turnActors[0].entity.maxHp;
+                }
+            }
+        }
+        if(this.inventory.items[indexPotion].modifier.buff != 0) {
+            let buffItem = this.inventory.items[indexPotion].modifier.buff;
+            let buffExists = this.turnActors[0].entity.buffs.some(buff => buff.name === buffItem.name);
+            if(!buffExists) {
+                this.turnActors[0].entity.buffs.push({
+                    name: buffItem.name,
+                    turn: buffItem.turn,
+                    modifier: buffItem.modifier,
+                    stats: buffItem.stats,
+                    applied: buffItem.applied
+                });
+            }
+            this.applyBuff(this.turnActors[0]);
+        }
+        if(this.inventory.items[indexPotion].modifier.restoreShield) {
+            this.turnActors[0].entity.shield = this.turnActors[0].entity.maxShield
+        }
+        this.inventory.removeItem(indexPotion);
+        this.turnOver();
     }
 
     //Menu Decisions
@@ -533,13 +640,19 @@ export class Combat {
         this.actors[indexActor].entity.position.x = 1000
     }
 
-    resurrection(id, faction, idAttack) { //TODO fix double turn
+    resurrection(id, faction, idAttack, item = false) { //TODO fix double turn
         id = Number(id);
         let indexNumber = faction.findIndex(entity => entity.id === id);
-        let crystalAttack = this.turnActors[0].entity.crystalAttacks.filter(entity => entity.id === idAttack);
-        crystalAttack = crystalAttack[0];
-        console.log(faction[indexNumber]);
-        faction[indexNumber].entity.hp = Math.floor(crystalAttack.healMult * faction[indexNumber].entity.maxHp);
+        if(!item) {
+            let crystalAttack = this.turnActors[0].entity.crystalAttacks.filter(entity => entity.id === idAttack);
+            crystalAttack = crystalAttack[0];
+            faction[indexNumber].entity.hp = Math.floor(crystalAttack.healMult * faction[indexNumber].entity.maxHp);
+        }
+        else {
+            console.log(idAttack)
+            console.log(idAttack.healMult)
+            faction[indexNumber].entity.hp = Math.floor(idAttack.healMult * faction[indexNumber].entity.maxHp);
+        }
 
         let indexActor = this.actors.findIndex(entity => entity.id === faction[indexNumber].id);
         this.actors[indexActor].entity.position.x = this.actors[indexActor].originalPos.x

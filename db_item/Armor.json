@@ -7,12 +7,13 @@
             "price": "2",
             "costDesc": "You need 2 Crystal to buy this item !",
             "usedBy": ["DPS", "Tank", "Healer", "Archer", "Mage"],
-            "maximumPerInventory": "5",
-            "defBuff": "5",
-            "defSBuff": "5",
-            "shieldBuff": "2",
-            "vitBuff": "-1",
-            "buffDesc": "Defense : + 5, Defence Special : + 5, Shield Protection + 100%, Speed : - 1"
+            "maximumPerInventory": 5,
+            "slot": "torso",
+            "defBuff": 5,
+            "defSBuff": 5,
+            "shieldBuff": 2,
+            "vitBuff": -1,
+            "buffDesc": "Defense : + 5, Special Defence : + 5, Shield : + 2, Speed : - 1"
         },
         {
             "id": 2,
@@ -22,11 +23,12 @@
             "costDesc": "You need 15 Crystal to buy this item !",
             "usedBy": ["DPS", "Tank", "Healer", "Archer", "Mage"],
             "maximumPerInventory": "5",
-            "defBuff": "12",
-            "defSBuff": "12",
-            "shieldBuff": "2.5",
-            "vitBuff": "-3",
-            "buffDesc": "Defense : + 12, Defence Special : + 12, Shield Protection + 150%, Speed : - 3"
+            "slot": "torso",
+            "defBuff": 12,
+            "defSBuff": 12,
+            "shieldBuff": 3,
+            "vitBuff": -3,
+            "buffDesc": "Defense : + 12, Special Defence : + 12, Shield : + 3, Speed : - 3"
         },
         {
             "id": 3,
@@ -36,11 +38,12 @@
             "costDesc": "You need 45 Crystal to buy this item !",
             "usedBy": ["DPS", "Tank", "Healer", "Archer", "Mage"],
             "maximumPerInventory": "5",
-            "defBuff": "25",
-            "defSBuff": "25",
-            "shieldBuff": "3",
-            "vitBuff": "-4",
-            "buffDesc": "Defense : + 25, Defence Special : + 25, Shield Protection + 200%, Speed : - 4"
+            "slot": "torso",
+            "defBuff": 25,
+            "defSBuff": 25,
+            "shieldBuff": 10,
+            "vitBuff": -8,
+            "buffDesc": "Defense : + 25, Special Defence : + 25, Shield : + 10, Speed : - 5"
         }
     ]
 }
