@@ -24,6 +24,11 @@ let lastEntityCombat = null;
 let indexOfLasteEntity = null;
 export const loopSpeed = 1;
 
+// Arrière plan de la scène : 
+
+const loader = new THREE.TextureLoader;
+scene.background = loader.load("/assets/game_assets/background_combat_scene/rocky-nowater-demo.jpg");
+
 // Variables globales pour la scène : 
 
 let obstacles = [];
@@ -38,6 +43,7 @@ export let combatLost = 0;
 export let combatDone = 0;
 export let charactersUnlocked = [];
 const audioLoader = new THREE.AudioLoader();
+const listener = new THREE.AudioListener();
 
 
 function setCookieForUser() {
@@ -59,15 +65,12 @@ function setCookieForUser() {
     setCookie("combat_done", combatDone, 1);
     setCookie("combat_lost", combatLost, 1);
     setCookie("characters_unlocked", JSON.stringify(charactersUnlocked), 1);
-    console.log("Cookies set for the user.");
-  } else {
-    console.log("Cookies already present for the user.");
   }
 }
 
 setCookieForUser();
 
-function cookieSaveManager(resultOfCombat) {
+function cookieUpdateManager(resultOfCombat) {
     combatWon = parseInt(getCookie("combat_won"));
     combatLost = parseInt(getCookie("combat_lost"));
     combatDone = parseInt(getCookie("combat_done"));
@@ -80,7 +83,6 @@ function cookieSaveManager(resultOfCombat) {
                 setCookie("combat_done", combatDone, 1);
                 coins -= 3;
                 setCookie("coins", coins, 1);
-                console.log("Combat.isFinished and Combat.hasLost works, variables changed");
             } else {
             combatWon++;
             setCookie("combat_won", combatWon, 1);
@@ -88,33 +90,28 @@ function cookieSaveManager(resultOfCombat) {
             setCookie("combat_done", combatDone, 1);
             coins += 8;
             setCookie("coins", coins, 1);
-            console.log("Combat.isFinished works");
         }
 }
 
-function endgameManager() {
+function keyEndGameManager(resultOfCombat) {
     const keySound = "/assets/sounds/misc/key-sound.mp3";
-    
+
     let isKeyObtained = false;
-    
+
     combatDone = parseInt(getCookie("combat_done"));
     combatWon = parseInt(getCookie("combat_won"));
 
-
-    if (combatDone >= 10 && combatWon == 10) {
-        const audio = new THREE.Audio(listener);
-        audioLoader.load(keySound, (buffer) => {
+    if (combatDone >= 9 && combatWon >= 9) {
+            const audio = new THREE.Audio(listener);
+            audioLoader.load(keySound, (buffer) => {
             audio.setBuffer(buffer);
             audio.setLoop(false);
             audio.setVolume(1);
-        });
-        
-        console.log("KEY OBTAINED");
-        isKeyObtained = true;
-    }
+            audio.play()
 
-    if (isKeyObtained == true && isInCombat == false) {
-        const tileType = obstacles;
+            isKeyObtained = true;
+        });
+        console.log("KEY OBTAINED");
     }
 }
 
@@ -152,7 +149,6 @@ scene.add(SpriteList.playerSprite, SpriteList.testMonster, SpriteList.testMonste
 
 // Music de fond du jeu :
 
-const listener = new THREE.AudioListener();
 camera.add(listener);
 
 //const audioLoader = new THREE.AudioLoader();
@@ -256,7 +252,6 @@ function playRandomFootstepSound() {
     const randomFootstepSound = footstepAudioObjects[randomIndex];
 
     if (randomFootstepSound) {
-        randomFootstepSound.setVolume(0.6);
         randomFootstepSound.play();
     }
 
@@ -343,6 +338,7 @@ document.addEventListener("keyup", (event) => {
 
 function animate() {
 	requestAnimationFrame( animate );
+
     if(isInCombat) {
         renderer.render( scene, cameraCombat );
     }
@@ -405,7 +401,8 @@ function animate() {
         if(combat.isFinished) {
             let isCombatLost = true;
             if(combat.hasLost) {
-                cookieSaveManager(isCombatLost);
+                keyEndGameManager();
+                cookieUpdateManager(isCombatLost);
                 combat.hideMenuCleanup();
                 combat.removeActors();              
                 SpriteList.playerSprite.position.x = 20;
@@ -413,8 +410,9 @@ function animate() {
                 SpriteList.playerSprite.position.z = 0.008;
             }
             else {
+                keyEndGameManager();
                 isCombatLost = false;
-                cookieSaveManager(isCombatLost);
+                cookieUpdateManager(isCombatLost);
                 scene.remove(lastEntityCombat);
                 monsters.splice(indexOfLasteEntity, 1);
             }
@@ -432,6 +430,5 @@ function animate() {
     }
 
 animate();
-endgameManager();
 initializeMap();
 onZoom();

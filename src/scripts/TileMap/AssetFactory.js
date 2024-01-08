@@ -93,13 +93,6 @@ export class AssetFactory {
                 oceanDeclaration.userData = '3';
                 return oceanDeclaration;
             },
-            // 3 - Personnages jouables
-            // '3': (x, y, z = 0.006) => {
-            //     const scale = {x: 1, y: 1, z: 1}
-            //     const charactersDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/sheets/$tf_template.png", 3, 4, {x, y, z}, scale, [0, 1, 2, 3]);
-            //     charactersDeclaration.userData = '3';
-            //     return charactersDeclaration;
-            // },
             // 4 - Monstres
             '4': (x, y, z = 0.006) => {
                 const scale = {x: 1, y: 1, z: 1}
