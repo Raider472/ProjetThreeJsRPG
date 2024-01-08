@@ -1,5 +1,11 @@
 import { SpriteList } from '../Declarations/SpriteDeclaration';
 import { SpriteObject } from '../Sprite/SpriteObject';
+import { Chest } from '../Sprite/Chest';
+import { Monsters } from '../Actors/Monsters';
+import { EntitySprite } from '../Sprite/EntitySprite';
+import { mapsCrossReferenceHeroCombat } from '../Declarations/MapsDeclaration';
+import { mapsCrossReferenceMonsterCombat } from '../Declarations/MapsDeclaration';
+import { Team } from '../Actors/Team';
 
 export class AssetFactory {
     /**
@@ -94,11 +100,19 @@ export class AssetFactory {
                 return oceanDeclaration;
             },
             // 4 - Monstres
-            '4': (x, y, z = 0.006) => {
-                const scale = {x: 1, y: 1, z: 1}
-                const monstersDeclaration = SpriteList.testMonster2;
-                monstersDeclaration.userData = '4';
-                return monstersDeclaration;
+            '4': (x, y, team, z = 0.009) => {
+                const scale = {x: 1, y: 1, z: 1};
+
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        try {
+                            const filteredEntities = this.generateMonsterSprite(team, scale, x, y, z);
+                            resolve(filteredEntities);
+                        } catch (error) {
+                            reject(error);
+                        }
+                    }, 500);
+                });
             },
             // 5 - Porte de sortie
             '5': (x, y, z = -0.005) => {
@@ -108,9 +122,9 @@ export class AssetFactory {
                 return doorDeclaration;
             },
             // 6 - Coffres
-            '6': (x, y, z = -0.005) => {
+            '6': (x, y, items, z = -0.005) => {
                 const scale = {x: 0.5, y: 0.5, z: 1}
-                const chestDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/frames/chests/chest1/1.png", 1, 1, {x, y, z}, scale);
+                const chestDeclaration = new Chest(items, "/assets/game_assets/timefantasy_characters/frames/chests/chest1/SpriteSheetChest1.png", 4, 1, {x, y, z}, scale, [0, 1, 2, 3]);
                 chestDeclaration.userData = '6';
                 return chestDeclaration;
             },
@@ -122,17 +136,72 @@ export class AssetFactory {
         }
     }
 
-    createAssetInstance(assetId, x, y) {
+    generateMonsterSprite(team, scale, x, y, z) {
+        let filteredEntities = mapsCrossReferenceMonsterCombat.entities.filter(entity => entity.id === team[0].id);
+        filteredEntities = filteredEntities[0];
+        let monsterTeam = new Team(team);
+        const monstersDeclaration = new EntitySprite(filteredEntities.path, filteredEntities.horiTile, filteredEntities.vertiTile, monsterTeam, { x, y, z }, scale, filteredEntities.idleWorld);
+        monstersDeclaration.userData = '4';
+        return monstersDeclaration;
+    }
+    
+
+    createAssetInstance(assetId, x, y, thirdParameter = 0) {
         if (assetId in this.assets) {
             const xSize = y * this.tileSize;
             const ySize = x * this.tileSize;
-
-            return this.assets[assetId](xSize, ySize);
+            if(thirdParameter != 0) {
+                return this.assets[assetId](xSize, ySize, thirdParameter);
+            }
+            else {
+                return this.assets[assetId](xSize, ySize);
+            }
         } else {
             console.warn(`l'id de l'asset : ${assetId} est introuvable !`);
             return undefined;
         }
     }
+
+    createItemsInsideChest(separateString) {
+        let items = [];
+        for(let k = 1; k < separateString.length; k++) {
+            let separatedCode = separateString[k].split("-");
+            let id = Number(separatedCode[0]);
+            let type;
+            let quantity = Number(separatedCode[2]);
+            if(Number(separatedCode[1]) === 1) {
+                type = "consumables";
+            }
+            else if(Number(separatedCode[1]) === 2) {
+                type = "armor";
+            }
+            else{
+                type = "weapon";
+            }
+            items.push({id: id, type: type, quantity: quantity});
+        }
+        return items
+    }
+
+    createMonsters(separateString) {
+        return new Promise((resolve, reject) => {
+            try {
+                let team = [];
+                let monsterInfo = separateString[1].split("-");
+                
+                for (let k = 0; k < monsterInfo.length; k++) {
+                    let id = Number(monsterInfo[k]);
+                    let monster = new Monsters(id);
+                    team.push(monster);
+                }
+    
+                resolve(team);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+    
 
     updateObstaclesSprites(deltaTime, animationHandlerArray) {
         for (let i = 0; i < animationHandlerArray.length; i++) {

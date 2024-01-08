@@ -154,21 +154,6 @@
 					"isFriendly": true,
 					"isAOE": true,
 					"targetDead": false
-				},
-				{
-					"id": "05C", 
-					"name": "Test Resurection", 
-					"desc": "Resurect an ally tp 75% of it's maxHp", 
-					"damageMult":0,
-					"damageSMult": 0,
-					"healMult": 0.75,
-					"buff":0, 
-					"debuff":0,
-					"status": 0,
-					"cost":1,
-					"isFriendly": true,
-					"isAOE": false,
-					"targetDead": true
 				}
 			]
 		},
