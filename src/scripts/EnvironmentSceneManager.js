@@ -6,8 +6,6 @@ import { SpriteList } from "./Declarations/SpriteDeclaration";
 import { Combat } from "./Combat";
 import { AssetFactory } from "./TileMap/AssetFactory";
 import { Inventory } from "./Item/Inventory";
-import { Consumable } from "./Item/Consumable";
-import { Armor } from "./Item/Armor";
 import { setCookie, getCookie } from "./Cookies";
 import { Chest } from "./Sprite/Chest";
 import { loadInventory } from "./InventoryDom";
@@ -85,7 +83,7 @@ function setCookieForUser() {
 
 setCookieForUser();
 
-function cookieUpdateManager(resultOfCombat) {
+function cookieUpdateCombatManager(resultOfCombat) {
     combatWon = parseInt(getCookie("combat_won"));
     combatLost = parseInt(getCookie("combat_lost"));
     combatDone = parseInt(getCookie("combat_done"));
@@ -123,9 +121,8 @@ function keyEndGameManager() {
             audio.setLoop(false);
             audio.setVolume(1);
             audio.play()
-
-            isKeyObtained = true;
         });
+        isKeyObtained = true;
         console.log("KEY OBTAINED");
     }
 }
@@ -147,9 +144,9 @@ const FAR = 100;
 
 export const camera = new THREE.PerspectiveCamera(FOV, SCREEN_ASPECT, NEAR, FAR);
 
-const MIN_CAMERA_POSITION = 2;
+const MIN_CAMERA_POSITION = 4;
 const DEFAULT_CAMERA_POSITION = camera.position.z = 4;
-const MAX_CAMERA_POSITION = 8;
+const MAX_CAMERA_POSITION = 6;
 
 camera.position.x = SpriteList.playerSprite.position.x;
 camera.position.y = SpriteList.playerSprite.position.y;
@@ -213,6 +210,9 @@ function initializeMap() {
                 scene.add(newSprite);
                 chests.push(newSprite);
                 map.push(newSprite);
+            } else if (tileType[0] === "5") {
+                let separateString = tileType.split("/");
+                const newSprite = createAsset.createAssetInstance(separateString[0], i, j );
             }
             else {
                 const newSprite = createAsset.createAssetInstance(tileType, i, j);
@@ -276,7 +276,6 @@ const footstepsGravel = [
 ];
 
 const footstepAudioObjects = [];
-let footstepIntervalId;
 
 footstepsGravel.forEach((footstepSound) => {
     const audio = new THREE.Audio(listener);
@@ -466,7 +465,7 @@ function animate() {
             inventory = combat.inventory; //TODO possibly delete          
             if(combat.hasLost) {
                 keyEndGameManager();
-                cookieUpdateManager(isCombatLost);
+                cookieUpdateCombatManager(isCombatLost);
                 combat.hideMenuCleanup();
                 combat.removeActors();              
                 SpriteList.playerSprite.position.x = 20;
@@ -476,7 +475,7 @@ function animate() {
             else {
                 keyEndGameManager();
                 isCombatLost = false;
-                cookieUpdateManager(isCombatLost);
+                cookieUpdateCombatManager(isCombatLost);
                 scene.remove(lastEntityCombat);
                 monsters.splice(indexOfLasteEntity, 1);
             }
