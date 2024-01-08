@@ -189,6 +189,7 @@ export class Combat {
                     let inputButton = document.createElement("button");
                     inputButton.value = this.monsterTeam[i].id;
                     inputButton.innerHTML = this.monsterTeam[i].entity.name
+                    inputButton.classList.add("btn-enemy")
                     this.chooseEnemyDiv.appendChild(inputButton);
                     inputButton.addEventListener('click', () => this.attack(inputButton.value, decision), { signal: this.controller.signal });
                 }
@@ -201,6 +202,7 @@ export class Combat {
                 inputButton.value = this.turnActors[0].entity.crystalAttacks[i].id;
                 inputButton.title = this.turnActors[0].entity.crystalAttacks[i].desc;
                 inputButton.innerHTML = this.turnActors[0].entity.crystalAttacks[i].name + " / crystal: " + cost;
+                inputButton.classList.add("btn-crystal")
                 this.chooseEnemyDiv.appendChild(inputButton);
                 inputButton.addEventListener('click', () => this.verifyCrystalNumber(inputButton.value, decision, cost), { signal: this.controller.signal });
             }
@@ -310,6 +312,7 @@ export class Combat {
         let inputButton = document.createElement("input");
         inputButton.value = "back";
         inputButton.type = "button"
+        inputButton.classList.add("btn-back")
         this.chooseEnemyDiv.appendChild(inputButton);
         inputButton.addEventListener('click', () => this.removeGeneratedTarget(), { signal: this.controller.signal });
     }
