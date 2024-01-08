@@ -18,6 +18,7 @@ document.querySelector('[id=skip]').addEventListener('click',() => combat.turnOv
 //Variables importantes :
 
 let isInCombat = false;
+let animationInProgress = false;
 let combat = null;
 let switchCamera1 = false;
 let lastEntityCombat = null;
@@ -93,7 +94,7 @@ function cookieUpdateManager(resultOfCombat) {
         }
 }
 
-function keyEndGameManager(resultOfCombat) {
+function keyEndGameManager() {
     const keySound = "/assets/sounds/misc/key-sound.mp3";
 
     let isKeyObtained = false;
@@ -119,7 +120,6 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight*8/10 );
 gameWindow.appendChild( renderer.domElement );
 
-let animationInProgress = false;
 const clock = new THREE.Clock
 
 // Caméra :
@@ -196,11 +196,6 @@ function onZoom(e) {
 }
 
 // Fin camera
-
-// Player mouvement controls :
-
-//const mouvementControlsWASD = ['w', 'a', 's', 'd'];
-//const mouvementControlsZQSD = ['z', 'q', 's', 'd']; // Pour les clavier FR AZERTY
 
 const keys = Move.keys;
 
