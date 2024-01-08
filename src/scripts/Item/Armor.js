@@ -3,6 +3,7 @@ import { Item } from './Item';
 
 export class Armor extends Item {
 
+    slot;
     defBuff;
     defSBuff;
     shieldBuff;
@@ -19,11 +20,12 @@ export class Armor extends Item {
             let response = await fetch("/db_item/Armor.json");
             let armorJson = await response.json();
             let armorJsonFiltered = await armorJson.armors.filter(f => f.id === filterId);
-            this.defBuff = armorJsonFiltered[0].id;
-            this.defSBuff = armorJsonFiltered[0].name;
-            this.shieldBuff = armorJsonFiltered[0].desc;
-            this.vitBuff = armorJsonFiltered[0].price;
-            this.buffDesc = armorJsonFiltered[0].costDesc;
+            this.slot = armorJsonFiltered[0].slot;
+            this.defBuff = armorJsonFiltered[0].defBuff;
+            this.defSBuff = armorJsonFiltered[0].defSBuff;
+            this.shieldBuff = armorJsonFiltered[0].shieldBuff;
+            this.vitBuff = armorJsonFiltered[0].vitBuff;
+            this.buffDesc = armorJsonFiltered[0].buffDesc;
             return armorJsonFiltered;
         } catch (error) {
             console.error("Error fetching JSON :", error);

@@ -111,7 +111,7 @@ export class AssetFactory {
                         } catch (error) {
                             reject(error);
                         }
-                    }, 500);
+                    }, 1000);
                 });
             },
             // 5 - Porte de sortie
