@@ -8,11 +8,12 @@
             "costDesc": "You need 1 Crystal to buy this item !",
             "usedBy": ["DPS"],
             "maximumPerInventory": "1",
-            "atkBuff": "2",
+            "atkBuff": 2,
+            "atkSBuff": 0,
             "shieldPenetration": "0",
             "critBuff": "0",
-            "vitBuff": "1",
-            "buffDesc": "Attack : + 2, Shield Penetration : + 0, Critical Chance Bonus : + 0, Speed : + 1"
+            "vitBuff": 1,
+            "buffDesc": "Attack : + 2, Speed : + 1"
 
         },
         {
@@ -23,11 +24,12 @@
             "costDesc": "You need 5 Crystal to buy this item !",
             "usedBy": ["DPS"],
             "maximumPerInventory": "1",
-            "atkBuff": "5",
+            "atkBuff": 5,
+            "atkSBuff": 0,
             "shieldPenetration": "0.005",
             "critBuff": "0.005",
-            "vitBuff": "2",
-            "buffDesc": "Attack : + 5, Shield Penetration : + 0.5%, Critical Chance Bonus : + 0.5%, Speed : + 2"
+            "vitBuff": 2,
+            "buffDesc": "Attack : + 5, Speed : + 2"
         },
         {
             "id": 3,
@@ -37,11 +39,12 @@
             "costDesc": "You need 20 Crystal to buy this item !",
             "usedBy": ["DPS"],
             "maximumPerInventory": "1",
-            "atkBuff": "8",
+            "atkBuff": 8,
+            "atkSBuff": 0,
             "shieldPenetration": "0.05",
             "critBuff": "0.05",
-            "vitBuff": "3",
-            "buffDesc": "Attack : + 8, Shield Penetration : + 5%, Critical Chance Bonus : + 5%, Speed : + 3"
+            "vitBuff": 3,
+            "buffDesc": "Attack : + 8, Speed : + 3"
         },
         {
             "id": 4,
@@ -51,11 +54,12 @@
             "costDesc": "You need 100 Crystal to buy this item !",
             "usedBy": ["DPS"],
             "maximumPerInventory": "1",
-            "atkBuff": "20",
+            "atkBuff": 20,
+            "atkSBuff": 15,
             "shieldPenetration": "0.15",
             "critBuff": "0.2",
-            "vitBuff": "8",
-            "buffDesc": "Attack : + 20, Shield Penetration : + 15%, Critical Chance Bonus : + 20%, Speed : + 3"
+            "vitBuff": 8,
+            "buffDesc": "Attack : + 20, Special Attack : + 15, Speed : + 8"
         },
         {
             "id": 5,
@@ -65,11 +69,12 @@
             "costDesc": "You need 3 Crystal to buy this item !",
             "usedBy": ["Archer"],
             "maximumPerInventory": "1",
-            "atkBuff": "3",
+            "atkBuff": 4,
+            "atkSBuff": 0,
             "shieldPenetration": "0",
             "critBuff": "0.01",
-            "vitBuff": "2",
-            "buffDesc": "Attack : + 3, Shield Penetration : + 0%, Critical Chance Bonus : + 1%, Speed : + 2"
+            "vitBuff": 2,
+            "buffDesc": "Attack : + 4, Speed : + 2"
         },
         {
             "id": 6,
@@ -79,11 +84,12 @@
             "costDesc": "You need 10 Crystal to buy this item !",
             "usedBy": ["Archer"],
             "maximumPerInventory": "1",
-            "atkBuff": "7",
+            "atkBuff": 7,
+            "atkSBuff": 10,
             "shieldPenetration": "0.02",
             "critBuff": "0.075",
-            "vitBuff": "4",
-            "buffDesc": "Attack : + 7, Shield Penetration : + 2%, Critical Chance Bonus : + 7,5%, Speed : + 4"
+            "vitBuff": 4,
+            "buffDesc": "Attack : + 7, Special Attack : + 10, Speed : + 4"
         },
         {
             "id": 7,
@@ -93,11 +99,12 @@
             "costDesc": "You need 2 Crystal to buy this item !",
             "usedBy": ["Mage"],
             "maximumPerInventory": "1",
-            "atkBuff": "4",
+            "atkBuff": 0,
+            "atkSBuff": 4,
             "shieldPenetration": "0.05",
             "critBuff": "0",
-            "vitBuff": "1",
-            "buffDesc": "Attack : + 4, Shield Penetration : + 5%, Critical Chance Bonus : + 0%, Speed : + 1"
+            "vitBuff": 0,
+            "buffDesc": "Special Attack : + 4"
         },
         {
             "id": 8,
@@ -107,11 +114,12 @@
             "costDesc": "You need 15 Crystal to buy this item !",
             "usedBy": ["Mage"],
             "maximumPerInventory": "1",
-            "atkBuff": "10",
+            "atkBuff": 0,
+            "atkSBuff": 10,
             "shieldPenetration": "0.30",
             "critBuff": "0",
-            "vitBuff": "4",
-            "buffDesc": "Attack : + 10, Shield Penetration : + 30%, Critical Chance Bonus : + 0%, Speed : + 4"
+            "vitBuff": 0,
+            "buffDesc": "Special Attack : + 10"
         },
         {
             "id": 9,
@@ -121,11 +129,12 @@
             "costDesc": "You need 15 Crystal to buy this item !",
             "usedBy": ["Mage"],
             "maximumPerInventory": "1",
-            "atkBuff": "25",
+            "atkBuff": 10,
+            "atkSBuff": 10,
             "shieldPenetration": "0.05",
             "critBuff": "0.05",
-            "vitBuff": "4",
-            "buffDesc": "Attack : + 25, Shield Penetration : + 5%, Critical Chance Bonus : + 5%, Speed : + 4"
+            "vitBuff": 0,
+            "buffDesc": "Attack : + 10, Special Attack : 10"
         },
         {
             "id": 10,
@@ -135,11 +144,12 @@
             "costDesc": "You need 15 Crystal to buy this item !",
             "usedBy": ["Mage"],
             "maximumPerInventory": "1",
-            "atkBuff": "10",
+            "atkBuff": 0,
+            "atkSBuff": 20,
             "shieldPenetration": "0",
             "critBuff": "0.30",
-            "vitBuff": "4",
-            "buffDesc": "Attack : + 10, Shield Penetration : + 0%, Critical Chance Bonus : + 30%, Speed : + 4"
+            "vitBuff": 5,
+            "buffDesc": "Special Attack : + 20, Speed : + 5"
         },
         {
             "id": 11,
@@ -149,11 +159,12 @@
             "costDesc": "You need 15 Crystal to buy this item !",
             "usedBy": ["Mage"],
             "maximumPerInventory": "1",
-            "atkBuff": "15",
+            "atkBuff": 15,
+            "atkSBuff": 20,
             "shieldPenetration": "0.05",
             "critBuff": "0.05",
-            "vitBuff": "4",
-            "buffDesc": "Attack : + 15, Shield Penetration : + 5%, Critical Chance Bonus : + 5%, Speed : + 4"
+            "vitBuff": -5,
+            "buffDesc": "Attack : + 15, Special Attack : + 20, Speed : - 5"
         },
         {
             "id": 12,
@@ -163,10 +174,11 @@
             "costDesc": "You need 3 Crystal to buy this item !",
             "usedBy": ["Tank"],
             "maximumPerInventory": "1",
-            "atkBuff": "4",
+            "atkBuff": 4,
+            "atkSBuff": 0,
             "shieldPenetration": "0.10",
             "critBuff": "0.01",
-            "vitBuff": "-2",
+            "vitBuff": -2,
             "buffDesc": "Attack : + 4, Shield Penetration : + 10%, Critical Chance Bonus : + 1%, Speed : - 2"
         },
         {
@@ -177,10 +189,11 @@
             "costDesc": "You need 15 Crystal to buy this item !",
             "usedBy": ["Tank"],
             "maximumPerInventory": "1",
-            "atkBuff": "8",
+            "atkBuff": 8,
+            "atkSBuff": 0,
             "shieldPenetration": "0.20",
             "critBuff": "0.03",
-            "vitBuff": "-3",
+            "vitBuff": -3,
             "buffDesc": "Attack : + 8, Shield Penetration : + 20%, Critical Chance Bonus : + 3%, Speed : - 3"
         },
         {
@@ -191,10 +204,11 @@
             "costDesc": "You need 25 Crystal to buy this item !",
             "usedBy": ["Tank"],
             "maximumPerInventory": "1",
-            "atkBuff": "12",
+            "atkBuff": 12,
+            "atkSBuff": 0,
             "shieldPenetration": "0.25",
             "critBuff": "0.08",
-            "vitBuff": "-8",
+            "vitBuff": -8,
             "buffDesc": "Attack : + 4, Shield Penetration : + 10%, Critical Chance Bonus : + 1%, Speed : - 2"
         }
     ]

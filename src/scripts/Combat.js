@@ -133,6 +133,12 @@ export class Combat {
         if(equipment.vitBuff != 0) {
             hero.vit += equipment.vitBuff;
         }
+        if(equipment.atkBuff != 0) {
+            hero.atk += equipment.atkBuff;
+        }
+        if(equipment.atkSBuff != 0) {
+            hero.atkS += equipment.atkSBuff;
+        }
     }
 
     turnOver() {

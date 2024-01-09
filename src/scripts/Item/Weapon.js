@@ -3,6 +3,7 @@ import { Item } from './Item';
 
 export class Weapon extends Item {
     atkBuff;
+    atkSBuff;
     shieldPenetration;
     critBuff;
     vitBuff;
@@ -19,6 +20,7 @@ export class Weapon extends Item {
             let weaponJson = await response.json();
             let weaponJsonFiltered = await weaponJson.weapons.filter(f => f.id === filterId);
             this.atkBuff = weaponJsonFiltered[0].atkBuff;
+            this.atkSBuff = weaponJsonFiltered[0].atkSBuff;
             this.shieldPenetration = weaponJsonFiltered[0].shieldPenetration;
             this.vitBuff = weaponJsonFiltered[0].vitBuff;
             this.buffDesc = weaponJsonFiltered[0].buffDesc;
