@@ -44,6 +44,36 @@
             "shieldBuff": 10,
             "vitBuff": -8,
             "buffDesc": "Defense : + 25, Special Defence : + 25, Shield : + 10, Speed : - 5"
+        },
+        {
+            "id": 4,
+            "name": "Mage Body Armor",
+            "desc": "An armor tailored specifically for mages !",
+            "price": "45",
+            "costDesc": "You need 45 Crystal to buy this item !",
+            "usedBy": ["DPS", "Tank", "Healer", "Archer", "Mage"],
+            "maximumPerInventory": "5",
+            "slot": "torso",
+            "defBuff": 5,
+            "defSBuff": 15,
+            "shieldBuff": 0,
+            "vitBuff": 5,
+            "buffDesc": "Defense : + 5, Special Defence : + 15, Speed : + 5"
+        },
+        {
+            "id": 5,
+            "name": "Light Armor",
+            "desc": "An armor that is not heavy but protects less than a regular one",
+            "price": "45",
+            "costDesc": "You need 45 Crystal to buy this item !",
+            "usedBy": ["DPS", "Tank", "Healer", "Archer", "Mage"],
+            "maximumPerInventory": "5",
+            "slot": "torso",
+            "defBuff": 7,
+            "defSBuff": 3,
+            "shieldBuff": 0,
+            "vitBuff": 3,
+            "buffDesc": "Defense : + 7, Special Defence : + 3, Speed : + 3"
         }
     ]
 }

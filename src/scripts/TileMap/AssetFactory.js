@@ -194,6 +194,7 @@ export class AssetFactory {
 
     generateMonsterSprite(team, scale, x, y, z) {
         let filteredEntities = mapsCrossReferenceMonsterCombat.entities.filter(entity => entity.id === team[0].id);
+        console.log(filteredEntities)
         filteredEntities = filteredEntities[0];
         let monsterTeam = new Team(team);
         const monstersDeclaration = new EntitySprite(filteredEntities.path, filteredEntities.horiTile, filteredEntities.vertiTile, monsterTeam, { x, y, z }, scale, filteredEntities.idleWorld);
