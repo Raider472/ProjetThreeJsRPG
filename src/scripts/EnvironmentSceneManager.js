@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { collisionChest, collisionDetection, collisionFromRight, collisionMonsters } from "./Collision/Collision";
+import { collisionChest, collisionDetection, collisionFinalDoor, collisionFromRight, collisionMonsters } from "./Collision/Collision";
 import * as Move from "./Mouvement";
 import { TileMap } from "./TileMap/TileMap";
 import { SpriteList } from "./Declarations/SpriteDeclaration";
@@ -33,6 +33,7 @@ let combat = null;
 let switchCamera1 = false;
 let lastEntityCombat = null;
 let indexOfLasteEntity = null;
+let isKeyObtained = false;
 let inventory = new Inventory();
 export const loopSpeed = 1;
 
@@ -46,6 +47,7 @@ scene.background = loader.load("/assets/game_assets/background_combat_scene/rock
 let obstacles = [];
 let obstaclesAnim = [];
 let chests = [];
+let finalGameDoor = [];
 let monsters = [];
 
 // Variable cookies :
@@ -108,8 +110,6 @@ function cookieUpdateCombatManager(resultOfCombat) {
 
 function keyEndGameManager() {
     const keySound = "/assets/sounds/misc/key-sound.mp3";
-
-    let isKeyObtained = false;
 
     combatDone = parseInt(getCookie("combat_done"));
     combatWon = parseInt(getCookie("combat_won"));
@@ -212,7 +212,10 @@ function initializeMap() {
                 map.push(newSprite);
             } else if (tileType[0] === "5") {
                 let separateString = tileType.split("/");
-                const newSprite = createAsset.createAssetInstance(separateString[0], i, j );
+                const newSprite = createAsset.createAssetInstance(separateString[0], i, j);
+                scene.add(newSprite);
+                finalGameDoor.push(newSprite);
+                map.push(newSprite);
             }
             else {
                 const newSprite = createAsset.createAssetInstance(tileType, i, j);
@@ -441,7 +444,14 @@ function animate() {
         }
     }
 	collisionDetection(obstacles, SpriteList.playerSprite);
-    //Colision for player/monster
+
+    //Colision for player/monster/chests/final door : 
+
+    let resultColissionFinalDoor = collisionFinalDoor(finalGameDoor, SpriteList.playerSprite, isKeyObtained);
+    if (resultColissionFinalDoor.collision) {
+        console.warn("KNOCK KNOCK");
+
+    }
     let resultColissionChest = collisionChest(chests, SpriteList.playerSprite)
     if(resultColissionChest.collision) {
         alert("A chest has been opened")
