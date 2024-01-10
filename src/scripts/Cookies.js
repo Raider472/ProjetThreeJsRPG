@@ -18,3 +18,15 @@ export function getCookie(name) {
     }
     return null;
   }
+
+  export function displayAllCookies() {
+    document.getElementById("getCoins").innerText += " " + getCookie("coins");
+    document.getElementById("getCombatDone").innerText += " " + getCookie("combats_done");
+    document.getElementById("getCombatWon").innerText += " " + getCookie("combats_won");
+    document.getElementById("getCombatLost").innerText += " " + getCookie("combats_lost");
+}
+
+export function relaunchGame() {
+  location.href = 'index.html';
+}
+
