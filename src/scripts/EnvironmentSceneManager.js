@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { collisionChest, collisionDetection, collisionFromRight, collisionMonsters } from "./Collision/Collision";
+import { collisionChest, collisionDetection, collisionFinalDoor, collisionFromRight, collisionMonsters } from "./Collision/Collision";
 import * as Move from "./Mouvement";
 import { TileMap } from "./TileMap/TileMap";
 import { SpriteList } from "./Declarations/SpriteDeclaration";
@@ -7,9 +7,9 @@ import { Combat } from "./Combat";
 import { AssetFactory } from "./TileMap/AssetFactory";
 import { Inventory } from "./Item/Inventory";
 import { setCookie, getCookie } from "./Cookies";
+import { Chest } from "./Sprite/Chest";
 import { loadInventory } from "./InventoryDom";
 import { SpriteObject } from "./Sprite/SpriteObject";
-import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
 
 export const scene = new THREE.Scene();
 const gameWindow = document.getElementById('game-renderer');
@@ -28,17 +28,25 @@ let intervalS = undefined;
 let intervalD = undefined;
 
 let isInCombat = false;
+let animationInProgress = false;
 let combat = null;
 let lastEntityCombat = null;
 let indexOfLasteEntity = null;
+let isKeyObtained = false;
 let inventory = new Inventory();
 export const loopSpeed = 1;
+
+// Arrière plan de la scène : 
+
+const loader = new THREE.TextureLoader;
+scene.background = loader.load("/assets/game_assets/background_combat_scene/rocky-nowater-demo.jpg");
 
 // Variables globales pour la scène : 
 
 let obstacles = [];
 let obstaclesAnim = [];
 let chests = [];
+let finalGameDoor = [];
 let monsters = [];
 
 // Variable cookies :
@@ -49,11 +57,13 @@ export let combatLost = 0;
 export let combatDone = 0;
 export let charactersUnlocked = [];
 const audioLoader = new THREE.AudioLoader();
+const listener = new THREE.AudioListener();
 
 
 function setCookieForUser() {
   const existingCoins = parseInt(getCookie("coins"));
   const existingCombatWon = parseInt(getCookie("combat_won"));
+  console.log(existingCombatWon)
   const existingCombatDone = parseInt(getCookie("combat_done"));
   const existingCombatLost = parseInt(getCookie("combat_lost"));
   const existingCharactersUnlocked = JSON.stringify(getCookie("characters_unlocked")) || [];
@@ -70,28 +80,24 @@ function setCookieForUser() {
     setCookie("combat_done", combatDone, 1);
     setCookie("combat_lost", combatLost, 1);
     setCookie("characters_unlocked", JSON.stringify(charactersUnlocked), 1);
-    console.log("Cookies set for the user.");
-  } else {
-    console.log("Cookies already present for the user.");
   }
 }
 
 setCookieForUser();
 
-function cookieSaveManager(resultOfCombat) {
-    combatWon = parseInt(getCookie("combat_won")) || 0;
-    combatLost = parseInt(getCookie("combat_lost")) || 0;
-    combatDone = parseInt(getCookie("combat_done")) || 0;
-    coins = parseInt(getCookie("coins")) || 0;
+function cookieUpdateCombatManager(resultOfCombat) {
+    combatWon = parseInt(getCookie("combat_won"));
+    combatLost = parseInt(getCookie("combat_lost"));
+    combatDone = parseInt(getCookie("combat_done"));
+    coins = parseInt(getCookie("coins"));
 
         if (resultOfCombat === true) {
                 combatLost++;
                 setCookie("combat_lost", combatLost, 1);
                 combatDone++;
                 setCookie("combat_done", combatDone, 1);
-                coins += 3;
+                coins -= 3;
                 setCookie("coins", coins, 1);
-                console.log("Combat.isFinished and Combat.hasLost works, variables changed");
             } else {
             combatWon++;
             setCookie("combat_won", combatWon, 1);
@@ -99,23 +105,32 @@ function cookieSaveManager(resultOfCombat) {
             setCookie("combat_done", combatDone, 1);
             coins += 8;
             setCookie("coins", coins, 1);
-            console.log("Combat.isFinished works");
         }
 }
 
+function keyEndGameManager() {
+    const keySound = "/assets/sounds/misc/key-sound.mp3";
+
+    combatDone = parseInt(getCookie("combat_done"));
+    combatWon = parseInt(getCookie("combat_won"));
+
+    if (combatDone >= 9 && combatWon >= 9) {
+            const audio = new THREE.Audio(listener);
+            audioLoader.load(keySound, (buffer) => {
+            audio.setBuffer(buffer);
+            audio.setLoop(false);
+            audio.setVolume(1);
+            audio.play()
+        });
+        isKeyObtained = true;
+        console.log("KEY OBTAINED");
+    }
+}
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight*8/10 );
 gameWindow.appendChild( renderer.domElement );
 
-const labelRenderer = new CSS2DRenderer();
-labelRenderer.setSize( gameWindow.clientWidth, gameWindow.clientHeight );
-labelRenderer.domElement.style.position = 'absolute';
-labelRenderer.domElement.style.top = '0px';
-labelRenderer.domElement.id = "divLabel";
-document.body.appendChild( labelRenderer.domElement );
-
-let animationInProgress = false;
 const clock = new THREE.Clock
 
 // Caméra :
@@ -129,9 +144,9 @@ const FAR = 100;
 
 export const camera = new THREE.PerspectiveCamera(FOV, SCREEN_ASPECT, NEAR, FAR);
 
-const MIN_CAMERA_POSITION = 2;
+const MIN_CAMERA_POSITION = 4;
 const DEFAULT_CAMERA_POSITION = camera.position.z = 4;
-const MAX_CAMERA_POSITION = 8;
+const MAX_CAMERA_POSITION = 6;
 
 camera.position.x = SpriteList.playerSprite.position.x;
 camera.position.y = SpriteList.playerSprite.position.y;
@@ -145,12 +160,9 @@ scene.add(SpriteList.playerSprite);
 
 // Music de fond du jeu :
 
-const listener = new THREE.AudioListener();
 camera.add(listener);
 
 //const audioLoader = new THREE.AudioLoader();
-
-const backgroundMusic = new THREE.Audio(listener);
 
 const tileMap = new TileMap(scene);
 
@@ -198,6 +210,12 @@ function initializeMap() {
                 scene.add(newSprite);
                 chests.push(newSprite);
                 map.push(newSprite);
+            } else if (tileType[0] === "5") {
+                let separateString = tileType.split("/");
+                const newSprite = createAsset.createAssetInstance(separateString[0], i, j);
+                scene.add(newSprite);
+                finalGameDoor.push(newSprite);
+                map.push(newSprite);
             }
             else {
                 const newSprite = createAsset.createAssetInstance(tileType, i, j);
@@ -227,11 +245,6 @@ function onZoom(e) {
 }
 
 // Fin camera
-
-// Player mouvement controls :
-
-//const mouvementControlsWASD = ['w', 'a', 's', 'd'];
-//const mouvementControlsZQSD = ['z', 'q', 's', 'd']; // Pour les clavier FR AZERTY
 
 const keys = Move.keys;
 
@@ -266,7 +279,6 @@ const footstepsGravel = [
 ];
 
 const footstepAudioObjects = [];
-let footstepIntervalId;
 
 footstepsGravel.forEach((footstepSound) => {
     const audio = new THREE.Audio(listener);
@@ -283,7 +295,6 @@ function playRandomFootstepSound() {
     const randomFootstepSound = footstepAudioObjects[randomIndex];
 
     if (randomFootstepSound) {
-        randomFootstepSound.setVolume(0.6);
         randomFootstepSound.play();
     }
 
@@ -368,23 +379,11 @@ document.addEventListener("keyup", (event) => {
     }
 });
 
-// UI :
-
-// backgroundMusic.stop();
-
-// const backgroundCombatMusic = new THREE.Audio(listener);;  
-// audioLoader.load('/assets/sounds/combat_music.mp3', function( buffer ) {
-//     backgroundCombatMusic.setBuffer( buffer );
-//     backgroundCombatMusic.setLoop( true );
-//     backgroundCombatMusic.setVolume( 0.15 );
-//     backgroundCombatMusic.play()
-// });
-
 function animate() {
 	requestAnimationFrame( animate );
+
     if(isInCombat) {
         renderer.render( scene, cameraCombat );
-        labelRenderer.render( scene, cameraCombat );
     }
     else {
         renderer.render( scene, camera );
@@ -445,7 +444,17 @@ function animate() {
         }
     }
 	collisionDetection(obstacles, SpriteList.playerSprite);
-    //Colision for player/monster
+
+    //Colision for player/monster/chests/final door : 
+
+    let resultColissionFinalDoor = collisionFinalDoor(finalGameDoor, SpriteList.playerSprite, isKeyObtained);
+    if (resultColissionFinalDoor.collision) {
+        if (isKeyObtained === true && isInCombat === false) {
+            console.log("Game ended !!");
+            return location.href = 'gameEnded.html';
+            // TODO : Faire charger une page HTML avec du texte disant que la démo est finie !
+        }
+    }
     let resultColissionChest = collisionChest(chests, SpriteList.playerSprite)
     if(resultColissionChest.collision) {
         alert("A chest has been opened")
@@ -456,7 +465,7 @@ function animate() {
         isInCombat = true;
         lastEntityCombat = resultColissionMonster.monster;
         indexOfLasteEntity = monsters.findIndex(monster => monster === lastEntityCombat);
-        combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray, scene, cameraCombat, inventory);
+        combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray, scene, inventory);
     }
     if(isInCombat === true) {
         for(let i = 0; i < combat.actors.length; i++) {
@@ -468,14 +477,16 @@ function animate() {
             combat.removeActors();
             inventory = combat.inventory; //TODO possibly delete          
             if(combat.hasLost) {
-                cookieSaveManager(isCombatLost);           
-                SpriteList.playerSprite.position.x = 20;
-                SpriteList.playerSprite.position.y = 1;
+                keyEndGameManager();
+                cookieUpdateCombatManager(isCombatLost);              
+                SpriteList.playerSprite.position.x = 35;
+                SpriteList.playerSprite.position.y = 7;
                 SpriteList.playerSprite.position.z = 0.008;
             }
             else {
+                keyEndGameManager();
                 isCombatLost = false;
-                cookieSaveManager(isCombatLost);
+                cookieUpdateCombatManager(isCombatLost);
                 scene.remove(lastEntityCombat);
                 monsters.splice(indexOfLasteEntity, 1);
             }
@@ -491,7 +502,8 @@ function animate() {
     const asset = new AssetFactory();
 
     asset.updateObstaclesSprites(deltaTime *= 0.6, obstacles);
-}
+    }
+
 animate();
 initializeMap();
 onZoom();
