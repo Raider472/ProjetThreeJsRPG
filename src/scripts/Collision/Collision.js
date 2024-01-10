@@ -114,3 +114,18 @@ export function collisionChest(chests, sprite) {
 
     return result;
 }
+
+export function collisionFinalDoor(doors, sprite) {
+    let result = { collision: false, door: null};
+
+    doors.some((door) => {
+        if (collision(door, sprite, sprite.velocity)) {
+            result.collision = true;
+            result.door = door;
+            return true;
+        }
+        return false;
+    })
+
+    return result;
+}

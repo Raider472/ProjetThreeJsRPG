@@ -92,6 +92,13 @@ export class AssetFactory {
                 treesDeclaration.userData = '2-3';
                 return treesDeclaration;
             },
+            // 2-6 Palmier animé
+            '2-6': (x, y, z = 0.009) => {
+                const scale = {x: 2, y: 2, z: 1}
+                const treesDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/palmier-animation.png", 4, 4, {x, y, z}, scale, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
+                treesDeclaration.userData = '2-3';
+                return treesDeclaration;
+            },
            // 3 - Eau
             '3': (x, y, z = -0.004) => {
                 const scale = {x: 1, y: 1, z: 1}
@@ -116,8 +123,8 @@ export class AssetFactory {
             },
             // 5 - Porte de sortie
             '5': (x, y, z = -0.005) => {
-                const scale = {x: 1, y: 1, z: 1}
-                const doorDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/door.jpg", 1, 1, {x, y, z}, scale);
+                const scale = {x: 0.7, y: 1, z: 1}
+                const doorDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/door.png", 5, 1, {x, y, z}, scale, [0]);
                 doorDeclaration.userData = '5';
                 return doorDeclaration;
             },
@@ -251,7 +258,6 @@ export class AssetFactory {
             }
         });
     }
-    
 
     updateObstaclesSprites(deltaTime, animationHandlerArray) {
         for (let i = 0; i < animationHandlerArray.length; i++) {

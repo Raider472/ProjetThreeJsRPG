@@ -1,13 +1,11 @@
 import * as THREE from "three";
-import { collisionChest, collisionDetection, collisionFromRight, collisionMonsters } from "./Collision/Collision";
+import { collisionChest, collisionDetection, collisionFinalDoor, collisionFromRight, collisionMonsters } from "./Collision/Collision";
 import * as Move from "./Mouvement";
 import { TileMap } from "./TileMap/TileMap";
 import { SpriteList } from "./Declarations/SpriteDeclaration";
 import { Combat } from "./Combat";
 import { AssetFactory } from "./TileMap/AssetFactory";
 import { Inventory } from "./Item/Inventory";
-import { Consumable } from "./Item/Consumable";
-import { Armor } from "./Item/Armor";
 import { setCookie, getCookie } from "./Cookies";
 import { Chest } from "./Sprite/Chest";
 import { loadInventory } from "./InventoryDom";
@@ -35,6 +33,7 @@ let combat = null;
 let switchCamera1 = false;
 let lastEntityCombat = null;
 let indexOfLasteEntity = null;
+let isKeyObtained = false;
 let inventory = new Inventory();
 export const loopSpeed = 1;
 
@@ -48,6 +47,7 @@ scene.background = loader.load("/assets/game_assets/background_combat_scene/rock
 let obstacles = [];
 let obstaclesAnim = [];
 let chests = [];
+let finalGameDoor = [];
 let monsters = [];
 
 // Variable cookies :
@@ -64,6 +64,7 @@ const listener = new THREE.AudioListener();
 function setCookieForUser() {
   const existingCoins = parseInt(getCookie("coins"));
   const existingCombatWon = parseInt(getCookie("combat_won"));
+  console.log(existingCombatWon)
   const existingCombatDone = parseInt(getCookie("combat_done"));
   const existingCombatLost = parseInt(getCookie("combat_lost"));
   const existingCharactersUnlocked = JSON.stringify(getCookie("characters_unlocked")) || [];
@@ -85,7 +86,7 @@ function setCookieForUser() {
 
 setCookieForUser();
 
-function cookieUpdateManager(resultOfCombat) {
+function cookieUpdateCombatManager(resultOfCombat) {
     combatWon = parseInt(getCookie("combat_won"));
     combatLost = parseInt(getCookie("combat_lost"));
     combatDone = parseInt(getCookie("combat_done"));
@@ -111,8 +112,6 @@ function cookieUpdateManager(resultOfCombat) {
 function keyEndGameManager() {
     const keySound = "/assets/sounds/misc/key-sound.mp3";
 
-    let isKeyObtained = false;
-
     combatDone = parseInt(getCookie("combat_done"));
     combatWon = parseInt(getCookie("combat_won"));
 
@@ -123,9 +122,8 @@ function keyEndGameManager() {
             audio.setLoop(false);
             audio.setVolume(1);
             audio.play()
-
-            isKeyObtained = true;
         });
+        isKeyObtained = true;
         console.log("KEY OBTAINED");
     }
 }
@@ -147,9 +145,9 @@ const FAR = 100;
 
 export const camera = new THREE.PerspectiveCamera(FOV, SCREEN_ASPECT, NEAR, FAR);
 
-const MIN_CAMERA_POSITION = 2;
+const MIN_CAMERA_POSITION = 4;
 const DEFAULT_CAMERA_POSITION = camera.position.z = 4;
-const MAX_CAMERA_POSITION = 8;
+const MAX_CAMERA_POSITION = 6;
 
 camera.position.x = SpriteList.playerSprite.position.x;
 camera.position.y = SpriteList.playerSprite.position.y;
@@ -212,6 +210,12 @@ function initializeMap() {
                 const newSprite = createAsset.createAssetInstance(separateString[0], i, j, items);
                 scene.add(newSprite);
                 chests.push(newSprite);
+                map.push(newSprite);
+            } else if (tileType[0] === "5") {
+                let separateString = tileType.split("/");
+                const newSprite = createAsset.createAssetInstance(separateString[0], i, j);
+                scene.add(newSprite);
+                finalGameDoor.push(newSprite);
                 map.push(newSprite);
             }
             else {
@@ -276,7 +280,6 @@ const footstepsGravel = [
 ];
 
 const footstepAudioObjects = [];
-let footstepIntervalId;
 
 footstepsGravel.forEach((footstepSound) => {
     const audio = new THREE.Audio(listener);
@@ -442,7 +445,17 @@ function animate() {
         }
     }
 	collisionDetection(obstacles, SpriteList.playerSprite);
-    //Colision for player/monster
+
+    //Colision for player/monster/chests/final door : 
+
+    let resultColissionFinalDoor = collisionFinalDoor(finalGameDoor, SpriteList.playerSprite, isKeyObtained);
+    if (resultColissionFinalDoor.collision) {
+        if (isKeyObtained === true && isInCombat === false) {
+            console.log("Game ended !!");
+            return location.href = 'gameEnded.html';
+            // TODO : Faire charger une page HTML avec du texte disant que la démo est finie !
+        }
+    }
     let resultColissionChest = collisionChest(chests, SpriteList.playerSprite)
     if(resultColissionChest.collision) {
         alert("A chest has been opened")
@@ -466,17 +479,15 @@ function animate() {
             inventory = combat.inventory; //TODO possibly delete          
             if(combat.hasLost) {
                 keyEndGameManager();
-                cookieUpdateManager(isCombatLost);
-                combat.hideMenuCleanup();
-                combat.removeActors();              
-                SpriteList.playerSprite.position.x = 20;
-                SpriteList.playerSprite.position.y = 1;
+                cookieUpdateCombatManager(isCombatLost);              
+                SpriteList.playerSprite.position.x = 35;
+                SpriteList.playerSprite.position.y = 7;
                 SpriteList.playerSprite.position.z = 0.008;
             }
             else {
                 keyEndGameManager();
                 isCombatLost = false;
-                cookieUpdateManager(isCombatLost);
+                cookieUpdateCombatManager(isCombatLost);
                 scene.remove(lastEntityCombat);
                 monsters.splice(indexOfLasteEntity, 1);
             }
