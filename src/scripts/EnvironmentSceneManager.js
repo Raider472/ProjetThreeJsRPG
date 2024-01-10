@@ -6,12 +6,10 @@ import { SpriteList } from "./Declarations/SpriteDeclaration";
 import { Combat } from "./Combat";
 import { AssetFactory } from "./TileMap/AssetFactory";
 import { Inventory } from "./Item/Inventory";
-import { Consumable } from "./Item/Consumable";
-import { Armor } from "./Item/Armor";
 import { setCookie, getCookie } from "./Cookies";
-import { Chest } from "./Sprite/Chest";
 import { loadInventory } from "./InventoryDom";
 import { SpriteObject } from "./Sprite/SpriteObject";
+import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
 
 export const scene = new THREE.Scene();
 const gameWindow = document.getElementById('game-renderer');
@@ -110,6 +108,13 @@ function cookieSaveManager(resultOfCombat) {
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight*8/10 );
 gameWindow.appendChild( renderer.domElement );
+
+const labelRenderer = new CSS2DRenderer();
+labelRenderer.setSize( gameWindow.clientWidth, gameWindow.clientHeight );
+labelRenderer.domElement.style.position = 'absolute';
+labelRenderer.domElement.style.top = '0px';
+labelRenderer.domElement.id = "divLabel";
+document.body.appendChild( labelRenderer.domElement );
 
 let animationInProgress = false;
 const clock = new THREE.Clock
@@ -380,6 +385,7 @@ function animate() {
 	requestAnimationFrame( animate );
     if(isInCombat) {
         renderer.render( scene, cameraCombat );
+        labelRenderer.render( scene, cameraCombat );
     }
     else {
         renderer.render( scene, camera );
@@ -451,7 +457,7 @@ function animate() {
         isInCombat = true;
         lastEntityCombat = resultColissionMonster.monster;
         indexOfLasteEntity = monsters.findIndex(monster => monster === lastEntityCombat);
-        combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray, scene, inventory);
+        combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray, scene, cameraCombat, inventory);
     }
     if(isInCombat === true) {
         for(let i = 0; i < combat.actors.length; i++) {
