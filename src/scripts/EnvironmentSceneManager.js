@@ -311,7 +311,7 @@ function playRandomFootstepSound() {
 
 
 document.addEventListener('keydown', (event) => {
-    if (animationInProgress) return;
+    if (animationInProgress || isInCombat) return;
     
     switch (event.code) {
         case "KeyA":
