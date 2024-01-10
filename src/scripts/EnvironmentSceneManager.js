@@ -29,7 +29,6 @@ let intervalD = undefined;
 
 let isInCombat = false;
 let combat = null;
-let switchCamera1 = false;
 let lastEntityCombat = null;
 let indexOfLasteEntity = null;
 let inventory = new Inventory();
