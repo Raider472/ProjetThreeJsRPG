@@ -449,8 +449,10 @@ function animate() {
 
     let resultColissionFinalDoor = collisionFinalDoor(finalGameDoor, SpriteList.playerSprite, isKeyObtained);
     if (resultColissionFinalDoor.collision) {
-        console.warn("KNOCK KNOCK");
-
+        if (isKeyObtained === true && isInCombat === false) {
+            console.log("Game ended !!");
+            // TODO : Faire charger une page HTML avec du texte disant que la démo est finie !
+        }
     }
     let resultColissionChest = collisionChest(chests, SpriteList.playerSprite)
     if(resultColissionChest.collision) {
@@ -475,11 +477,9 @@ function animate() {
             inventory = combat.inventory; //TODO possibly delete          
             if(combat.hasLost) {
                 keyEndGameManager();
-                cookieUpdateCombatManager(isCombatLost);
-                combat.hideMenuCleanup();
-                combat.removeActors();              
-                SpriteList.playerSprite.position.x = 20;
-                SpriteList.playerSprite.position.y = 1;
+                cookieUpdateCombatManager(isCombatLost);              
+                SpriteList.playerSprite.position.x = 35;
+                SpriteList.playerSprite.position.y = 7;
                 SpriteList.playerSprite.position.z = 0.008;
             }
             else {

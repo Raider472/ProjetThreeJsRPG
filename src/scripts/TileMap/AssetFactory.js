@@ -123,7 +123,7 @@ export class AssetFactory {
             },
             // 5 - Porte de sortie
             '5': (x, y, z = -0.005) => {
-                const scale = {x: 1, y: 1, z: 1}
+                const scale = {x: 0.7, y: 1, z: 1}
                 const doorDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/RPGMAKERMV/terrain/door.png", 5, 1, {x, y, z}, scale, [0]);
                 doorDeclaration.userData = '5';
                 return doorDeclaration;
