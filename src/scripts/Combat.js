@@ -2,6 +2,7 @@ import { SpriteObject } from "./Sprite/SpriteObject";
 import * as THREE from "three";
 import { mapsCrossReferenceHeroCombat } from "./Declarations/MapsDeclaration";
 import { mapsCrossReferenceMonsterCombat } from "./Declarations/MapsDeclaration";
+import { CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
 export class Combat {
 
@@ -21,6 +22,8 @@ export class Combat {
     hasLost = false;
 
     scene;
+    camera
+    labels = [];
 
     inventory;
 
@@ -40,9 +43,10 @@ export class Combat {
     pActual;
     chooseEnemyDiv;
 
-    constructor(heroTeam, monsterTeam, scene, inventory) {
+    constructor(heroTeam, monsterTeam, scene, camera, inventory) {
         this.giveIdToActors(heroTeam, monsterTeam);
         this.scene = scene;
+        this.camera = camera;
         this.inventory = inventory;
         this.domCombat = document.getElementById("menuCombat");
         this.crystalShow = document.getElementById("numberCrystal");
@@ -75,10 +79,21 @@ export class Combat {
         for(let i = 0; i < this.heroTeam.length; i++) {
             let filteredEntities = mapsCrossReferenceHeroCombat.entities.filter(entity => entity.id === this.heroTeam[i].entity.id);
 
-            let position = {x: 495, y: 2.25 - i*2, z: 0};
+            let position = {x: 495, y: 2 - i*2, z: 0};
             let hero = new SpriteObject(filteredEntities[0].path, filteredEntities[0].horiTile, filteredEntities[0].vertiTile, position, scale, filteredEntities[0].idle);
             this.actors.push({id: this.heroTeam[i].id, entity: hero, originalPos: position});
             this.scene.add(hero);
+
+            let heroDiv = document.createElement( 'div' );
+            heroDiv.className = 'label';
+            heroDiv.textContent = 'Hp: ' + this.heroTeam[i].entity.hp + "/" + this.heroTeam[i].entity.maxHp;
+            heroDiv.style.backgroundColor = 'transparent';
+            heroDiv.style.color = 'white';
+
+            let heroLabel = new CSS2DObject( heroDiv );
+            heroLabel.position.set( 0, -0.75, 0);
+            hero.add( heroLabel );
+            this.labels.push({id : this.heroTeam[i].id, label: heroLabel});
         }
         //Add Monsters to the scene
         for(let i = 0; i < this.monsterTeam.length; i++) {
@@ -88,6 +103,17 @@ export class Combat {
             let monster = new SpriteObject(filteredEntities[0].path, filteredEntities[0].horiTile, filteredEntities[0].vertiTile, position, scale, filteredEntities[0].idle);
             this.actors.push({id: this.monsterTeam[i].id, entity: monster, originalPos: position});
             this.scene.add(monster);
+
+            let monsterDiv = document.createElement( 'div' );
+            monsterDiv.className = 'label';
+            monsterDiv.textContent = 'Hp: ' + this.monsterTeam[i].entity.hp + "/" + this.monsterTeam[i].entity.maxHp;
+            monsterDiv.style.backgroundColor = 'transparent';
+            monsterDiv.style.color = 'white';
+
+            let monsterLabel = new CSS2DObject( monsterDiv );
+            monsterLabel.position.set( 0, -0.75, 0);
+            monster.add( monsterLabel );
+            this.labels.push({id: this.monsterTeam[i].id, label: monsterLabel});
         }
     }
 
@@ -443,6 +469,7 @@ export class Combat {
             }
             this.turnActors[indexNumber].entity.hp += damageAttack;
         }
+        this.changeHp(this.turnActors[indexNumber]);
         this.gainCrystal();
         this.checkDead(this.turnActors[indexNumber]);
         this.turnOver();
@@ -532,6 +559,7 @@ export class Combat {
             }
             this.applyBuff(this.turnActors[indexNumber]);
         }
+        this.changeHp(this.turnActors[indexNumber]);
         this.checkDead(this.turnActors[indexNumber]);
         if(!AOE) {
             this.turnOver();
@@ -571,6 +599,7 @@ export class Combat {
                 this.turnActors[0].entity.hp += Math.floor(this.inventory.items[indexPotion].modifier.healMult * this.turnActors[0].entity.maxHp);
                 if(this.turnActors[0].entity.hp > this.turnActors[0].entity.maxHp) {
                     this.turnActors[0].entity.hp = this.turnActors[0].entity.maxHp;
+                    this.changeHp(this.turnActors[0]);
                 }
             }
         }
@@ -593,6 +622,12 @@ export class Combat {
         }
         this.inventory.removeItem(indexPotion);
         this.turnOver();
+    }
+
+    changeHp(actor) {
+        let indexNumber = this.labels.findIndex(label => label.id === actor.id);
+        let label = this.labels[indexNumber];
+        label.label.element.textContent = 'Hp: ' + actor.entity.hp + '/' + actor.entity.maxHp;;
     }
 
     //Menu Decisions
@@ -671,6 +706,7 @@ export class Combat {
             index++;
         }
         this.turnActors.splice(index, 0, resurrectedActor);
+        this.changeHp(resurrectedActor);
         this.turnOver();
     }
 
@@ -788,6 +824,7 @@ export class Combat {
         else {
             this.turnActors[0].entity.hp -= status.modifier;
         }
+        this.changeHp(this.turnActors[0]);
         this.checkDead(this.turnActors[0]);
     }
     //Status
@@ -802,5 +839,6 @@ export class Combat {
         for(let i = 0; i < this.actors.length; i++) {
             this.scene.remove(this.actors[i].entity);
         }
+        document.querySelector("#divLabel").innerHTML = "";
     }
 }
