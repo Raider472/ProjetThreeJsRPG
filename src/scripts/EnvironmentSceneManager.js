@@ -7,9 +7,9 @@ import { Combat } from "./Combat";
 import { AssetFactory } from "./TileMap/AssetFactory";
 import { Inventory } from "./Item/Inventory";
 import { setCookie, getCookie } from "./Cookies";
-import { Chest } from "./Sprite/Chest";
 import { loadInventory } from "./InventoryDom";
 import { SpriteObject } from "./Sprite/SpriteObject";
+import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
 
 export const scene = new THREE.Scene();
 const gameWindow = document.getElementById('game-renderer');
@@ -30,7 +30,6 @@ let intervalD = undefined;
 let isInCombat = false;
 let animationInProgress = false;
 let combat = null;
-let switchCamera1 = false;
 let lastEntityCombat = null;
 let indexOfLasteEntity = null;
 let isKeyObtained = false;
@@ -131,6 +130,13 @@ function keyEndGameManager() {
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight*8/10 );
 gameWindow.appendChild( renderer.domElement );
+
+const labelRenderer = new CSS2DRenderer();
+labelRenderer.setSize( gameWindow.clientWidth, gameWindow.clientHeight );
+labelRenderer.domElement.style.position = 'absolute';
+labelRenderer.domElement.style.top = '0px';
+labelRenderer.domElement.id = "divLabel";
+document.body.appendChild( labelRenderer.domElement );
 
 const clock = new THREE.Clock
 
@@ -385,6 +391,7 @@ function animate() {
 
     if(isInCombat) {
         renderer.render( scene, cameraCombat );
+        labelRenderer.render( scene, cameraCombat );
     }
     else {
         renderer.render( scene, camera );
