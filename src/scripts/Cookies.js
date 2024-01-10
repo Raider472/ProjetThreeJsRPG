@@ -20,13 +20,9 @@ export function getCookie(name) {
   }
 
   export function displayAllCookies() {
-    document.getElementById("getCoins").innerText += " " + getCookie("coins");
-    document.getElementById("getCombatDone").innerText += " " + getCookie("combats_done");
-    document.getElementById("getCombatWon").innerText += " " + getCookie("combats_won");
-    document.getElementById("getCombatLost").innerText += " " + getCookie("combats_lost");
-}
-
-export function relaunchGame() {
-  location.href = 'index.html';
+    document.getElementById("getCoins").innerText += " " + parseInt(getCookie("coins"));
+    document.getElementById("getCombatDone").innerText += " " + parseInt(getCookie("combats_done"));
+    document.getElementById("getCombatWon").innerText += " " + parseInt(getCookie("combats_won"));
+    document.getElementById("getCombatLost").innerText += " " + parseInt(getCookie("combats_lost"));
 }
 

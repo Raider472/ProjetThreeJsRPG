@@ -64,15 +64,17 @@ const listener = new THREE.AudioListener();
 function setCookieForUser() {
   const existingCoins = parseInt(getCookie("coins"));
   const existingCombatWon = parseInt(getCookie("combat_won"));
-  console.log(existingCombatWon)
   const existingCombatDone = parseInt(getCookie("combat_done"));
   const existingCombatLost = parseInt(getCookie("combat_lost"));
   const existingCharactersUnlocked = JSON.stringify(getCookie("characters_unlocked")) || [];
 
   coins = isNaN(existingCoins) ? 0 : existingCoins;
-  combatWon = isNaN(existingCombatWon) ? 0 : existingCombatWon;
-  combatDone = isNaN(existingCombatDone) ? 0 : existingCombatDone;
-  combatLost = isNaN(existingCombatLost) ? 0 : existingCombatLost;
+  combatWon = 0;
+  combatDone = 0;
+  combatLost = 0;
+  setCookie("combat_won", combatWon, 1);
+  setCookie("combat_done", combatDone, 1);
+  setCookie("combat_lost", combatLost, 1);
   charactersUnlocked = Array.isArray(existingCharactersUnlocked) ? existingCharactersUnlocked : [];
 
   if (!existingCoins || !existingCombatWon || !existingCombatDone || !existingCombatLost || !existingCharactersUnlocked.length) {

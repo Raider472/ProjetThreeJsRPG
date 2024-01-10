@@ -183,9 +183,6 @@ a:hover {
 }
 
 .background-combat {
-background-image: url(public/bg/random-shapes.svg);
+background-image: url(bg/parchament-ui.svg);
 background-repeat: repeat;
-
-
-
 }
