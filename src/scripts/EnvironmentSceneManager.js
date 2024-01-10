@@ -64,6 +64,7 @@ const listener = new THREE.AudioListener();
 function setCookieForUser() {
   const existingCoins = parseInt(getCookie("coins"));
   const existingCombatWon = parseInt(getCookie("combat_won"));
+  console.log(existingCombatWon)
   const existingCombatDone = parseInt(getCookie("combat_done"));
   const existingCombatLost = parseInt(getCookie("combat_lost"));
   const existingCharactersUnlocked = JSON.stringify(getCookie("characters_unlocked")) || [];
@@ -451,6 +452,7 @@ function animate() {
     if (resultColissionFinalDoor.collision) {
         if (isKeyObtained === true && isInCombat === false) {
             console.log("Game ended !!");
+            return location.href = 'gameEnded.html';
             // TODO : Faire charger une page HTML avec du texte disant que la démo est finie !
         }
     }
