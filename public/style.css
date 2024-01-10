@@ -157,7 +157,8 @@ a:hover {
 }
 
 .menuCombaHidden {
-
+    display: flex;
+    justify-content: center;
     visibility: hidden;
 }
 
@@ -169,6 +170,10 @@ a:hover {
     visibility: visible;
 }
 
+.menuChoose {
+    display: flex;
+    justify-content: center;
+}
 
 .lifepoints {
     font-size: 24px;
@@ -180,12 +185,4 @@ a:hover {
     font-size: 24px;
     color: red;
     font-weight: bolder;
-}
-
-.background-combat {
-background-image: url(public/bg/random-shapes.svg);
-background-repeat: repeat;
-
-
-
 }
