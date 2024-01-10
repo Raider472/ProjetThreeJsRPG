@@ -7,9 +7,9 @@ import { Combat } from "./Combat";
 import { AssetFactory } from "./TileMap/AssetFactory";
 import { Inventory } from "./Item/Inventory";
 import { setCookie, getCookie } from "./Cookies";
+import { Chest } from "./Sprite/Chest";
 import { loadInventory } from "./InventoryDom";
 import { SpriteObject } from "./Sprite/SpriteObject";
-import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
 
 export const scene = new THREE.Scene();
 const gameWindow = document.getElementById('game-renderer');
@@ -28,8 +28,8 @@ let intervalS = undefined;
 let intervalD = undefined;
 
 let isInCombat = false;
+let animationInProgress = false;
 let combat = null;
-let switchCamera1 = false;
 let lastEntityCombat = null;
 let indexOfLasteEntity = null;
 let inventory = new Inventory();
@@ -116,7 +116,6 @@ labelRenderer.domElement.style.top = '0px';
 labelRenderer.domElement.id = "divLabel";
 document.body.appendChild( labelRenderer.domElement );
 
-let animationInProgress = false;
 const clock = new THREE.Clock
 
 // Caméra :
@@ -385,7 +384,6 @@ function animate() {
 	requestAnimationFrame( animate );
     if(isInCombat) {
         renderer.render( scene, cameraCombat );
-        labelRenderer.render( scene, cameraCombat );
     }
     else {
         renderer.render( scene, camera );
@@ -457,7 +455,7 @@ function animate() {
         isInCombat = true;
         lastEntityCombat = resultColissionMonster.monster;
         indexOfLasteEntity = monsters.findIndex(monster => monster === lastEntityCombat);
-        combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray, scene, cameraCombat, inventory);
+        combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray, scene, inventory);
     }
     if(isInCombat === true) {
         for(let i = 0; i < combat.actors.length; i++) {
