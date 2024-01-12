@@ -1,5 +1,5 @@
 import { SpriteObject } from "./Sprite/SpriteObject";
-import * as THREE from "three";
+
 import { mapsCrossReferenceHeroCombat } from "./Declarations/MapsDeclaration";
 import { mapsCrossReferenceMonsterCombat } from "./Declarations/MapsDeclaration";
 
@@ -247,6 +247,7 @@ export class Combat {
                     let inputButton = document.createElement("button");
                     inputButton.value = this.monsterTeam[i].id;
                     inputButton.innerHTML = this.monsterTeam[i].entity.name
+                    inputButton.classList.add("btn-enemy")
                     this.chooseEnemyDiv.appendChild(inputButton);
                     inputButton.addEventListener('click', () => this.attack(inputButton.value, decision, idAttack, cost), { signal: this.controller.signal });
                 }
@@ -258,6 +259,7 @@ export class Combat {
                     let inputButton = document.createElement("button");
                     inputButton.value = this.deadHero[i].id;
                     inputButton.innerHTML = this.deadHero[i].entity.name
+                    inputButton.classList.add("btn-ally")
                     this.chooseEnemyDiv.appendChild(inputButton);
                     inputButton.addEventListener('click', () => this.attack(inputButton.value, 3, idAttack, cost), { signal: this.controller.signal });
                 }
@@ -267,6 +269,7 @@ export class Combat {
                     if(!this.isActorOnDeathList(this.heroTeam[i])) {
                         let inputButton = document.createElement("button");
                         inputButton.value = this.heroTeam[i].id;
+                        inputButton.classList.add("btn-ally")
                         inputButton.innerHTML = this.heroTeam[i].entity.name
                         this.chooseEnemyDiv.appendChild(inputButton);
                         inputButton.addEventListener('click', () => this.attack(inputButton.value, decision, idAttack, cost), { signal: this.controller.signal });
@@ -288,6 +291,7 @@ export class Combat {
                 inputButton.value = i;
                 inputButton.title = this.inventory.items[i].desc
                 inputButton.innerHTML = this.inventory.items[i].name
+                inputButton.classList.add("btn-item")
                 this.chooseEnemyDiv.appendChild(inputButton);
                 if(this.inventory.items[i].modifier.targetDead) {
                     inputButton.addEventListener('click', () => this.generateTargetFeather(inputButton.value), { signal: this.controller.signal });
@@ -308,6 +312,7 @@ export class Combat {
             let inputButton = document.createElement("button");
             inputButton.value = this.deadHero[i].id;
             inputButton.innerHTML = this.deadHero[i].entity.name
+            inputButton.classList.add("btn-ally")
             this.chooseEnemyDiv.appendChild(inputButton);
             inputButton.addEventListener('click', () => this.applyPotion(indexItem, inputButton.value), { signal: this.controller.signal });
         }

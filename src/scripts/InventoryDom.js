@@ -2,6 +2,7 @@ let controller = new AbortController();
 
 export function loadInventory(inventory, team) {
     let inventoryDom = document.querySelector("#menuInventory");
+    document.querySelector("#inventoryButton").classList.add("hidden")
     if(inventory.items.length === 0) {
         inventoryDom.innerHTML = "empty";
     }
@@ -9,6 +10,7 @@ export function loadInventory(inventory, team) {
         for(let i = 0; i < inventory.items.length; i++) {
             let inputButton = document.createElement("button");
             inputButton.value = [i];
+            inputButton.classList.add("btn-item");
             inputButton.innerHTML = inventory.items[i].name;
             inventoryDom.appendChild(inputButton);
             inputButton.addEventListener('click', () => inspectItem(inventoryDom, inventory.items[inputButton.value], inputButton.value, team, inventory), { signal: controller.signal });
@@ -78,8 +80,13 @@ function generateBackButton(dom) {
     let inputButton = document.createElement("input");
     inputButton.value = "back";
     inputButton.type = "button"
+    inputButton.classList.add("btn-back");
     dom.appendChild(inputButton);
-    inputButton.addEventListener('click', () => DeleteInventory(dom), { signal: controller.signal });
+    inputButton.addEventListener('click', 
+    () => {DeleteInventory(dom);
+        document.querySelector("#inventoryButton").classList.remove("hidden")},
+         { signal: controller.signal });
+    
 }
 
 function isAnySlotOccupied(hero) {
