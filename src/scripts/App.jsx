@@ -7,9 +7,10 @@ export function App() {
   return (
     <>
   
-     <Inventaire />
+     {/* <Inventaire /> */}
     </>
   );
 }
+
 
 ReactDOM.createRoot(document.getElementById('game-ui')).render(<App />)
