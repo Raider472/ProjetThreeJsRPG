@@ -11,7 +11,7 @@ export class Consumable extends Item {
 
     async fetchJson(filterId) {
         try {
-            let response = await fetch("/src/db_item/Consumables.json");
+            let response = await fetch("../../src/db_item/Consumables.json");
             let consumableJson = await response.json();
             let consumableJsonFiltered = await consumableJson.consumables.filter(f => f.id === filterId);
             this.modifier = consumableJsonFiltered[0].modifier;

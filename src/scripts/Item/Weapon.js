@@ -16,7 +16,7 @@ export class Weapon extends Item {
 
     async fetchJson(filterId) {
         try {
-            let response = await fetch("/src/db_item/Weapon.json");
+            let response = await fetch("../../src/db_item/Weapon.json");
             let weaponJson = await response.json();
             let weaponJsonFiltered = await weaponJson.weapons.filter(f => f.id === filterId);
             this.atkBuff = weaponJsonFiltered[0].atkBuff;

@@ -14,7 +14,7 @@ export class Hero extends Actors {
 
     async fetchJson(filterId) {
         try {
-            let response = await fetch("/src/db_character/Hero.json");
+            let response = await fetch("../../src/db_character/Hero.json");
             let heroJson = await response.json();
             let heroJsonFiltered = await heroJson.entities.filter(f => f.id === filterId);
             return heroJsonFiltered;
