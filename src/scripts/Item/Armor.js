@@ -17,7 +17,7 @@ export class Armor extends Item {
 
     async fetchJson(filterId) {
         try {
-            let response = await fetch("../../src/db_item/Armor.json");
+            let response = await fetch("/db_item/Armor.json");
             let armorJson = await response.json();
             let armorJsonFiltered = await armorJson.armors.filter(f => f.id === filterId);
             this.slot = armorJsonFiltered[0].slot;
