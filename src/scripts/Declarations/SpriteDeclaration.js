@@ -77,6 +77,7 @@ const SpriteList = {
     skeleton: skeletonSprite,
     goblin: goblinSprite
 }
+
 /*
 testSprite.upSprite = arrayZ
 testSprite.downSprite = arrayS

@@ -2,17 +2,21 @@ import { SpriteObject } from "./Sprite/SpriteObject";
 import * as THREE from "three";
 import { mapsCrossReferenceHeroCombat } from "./Declarations/MapsDeclaration";
 import { mapsCrossReferenceMonsterCombat } from "./Declarations/MapsDeclaration";
+import { mapsCrossReferenceCombatEffects } from "./Declarations/MapsDeclaration";
 
 export class Combat {
 
     heroTeam = [];
     monsterTeam = [];
 
+    effects = [];
+    // effectsAnim = [];
+
     crystal = 2;
     crystalMax = 10;
 
     turnActors = [];
-    actors = []
+    actors = [];
 
     deadHero = [];
     deadMonsters = [];
@@ -40,7 +44,7 @@ export class Combat {
     pActual;
     chooseEnemyDiv;
 
-    constructor(heroTeam, monsterTeam, scene, inventory) {
+    constructor(heroTeam, monsterTeam, /*effects*/ scene, inventory) {
         this.giveIdToActors(heroTeam, monsterTeam);
         this.scene = scene;
         this.inventory = inventory;
@@ -48,6 +52,7 @@ export class Combat {
         this.crystalShow = document.getElementById("numberCrystal");
         this.crystalShow.innerHTML = this.crystal;
         this.deployCharacter();
+        this.deployEffects();
         this.createInitialTurn();
         //Info Tour Actuel
         this.pActual = this.domCombat.querySelector("#entityActuel");
@@ -63,9 +68,13 @@ export class Combat {
     giveIdToActors(heroTeam, monsterTeam) {
         for(let i = 0; i < heroTeam.length; i++) {
             this.heroTeam.push({id: i+1, entity: heroTeam[i]});
+            console.log(this.heroTeam);
+            console.log(this.heroTeam[i].entity.name, "hero name ", i , ": ")
         }
         for(let i = 0; i < monsterTeam.length; i++) {
             this.monsterTeam.push({id: i+5, entity: monsterTeam[i]});
+            console.log(this.monsterTeam);
+            console.log(this.monsterTeam[i].entity.name, "monster name ", i , ": ")
         }
     }
 
@@ -80,7 +89,7 @@ export class Combat {
             this.actors.push({id: this.heroTeam[i].id, entity: hero, originalPos: position});
             this.scene.add(hero);
         }
-        //Add Monsters to the scene
+        //Add monsters to the scene
         for(let i = 0; i < this.monsterTeam.length; i++) {
             let filteredEntities = mapsCrossReferenceMonsterCombat.entities.filter(entity => entity.id === this.monsterTeam[i].entity.id);
 
@@ -89,6 +98,26 @@ export class Combat {
             this.actors.push({id: this.monsterTeam[i].id, entity: monster, originalPos: position});
             this.scene.add(monster);
         }
+    }
+
+    deployEffects() {
+        let scale = {x: 1, y: 1, z: 1};
+        let num_effect = 0;
+        let references = mapsCrossReferenceCombatEffects.entities;
+
+        //Add effects to the scene
+        for (var i = 0; i < this.monsterTeam.length ; i++) {
+            num_effect += 1;
+            for (var j = 0; j < references.length ; j++) {
+
+                let position = {x: 505, y: 2.25 - i*2, z: 0};
+                let effect = new SpriteObject(references[j].path, references[j].horiTile, references[j].vertiTile, position, scale, references[j].idle);
+                this.effects.push({id: j+1 + "_" + num_effect, entity: effect, originalPos: position});
+                this.scene.add(effect);
+                console.log(effect); 
+            }
+        }
+        console.log(this.effects);
     }
 
     createInitialTurn() {
@@ -445,6 +474,8 @@ export class Combat {
         }
         this.gainCrystal();
         this.checkDead(this.turnActors[indexNumber]);
+        // Jouer l'animation d'attaque
+
         this.turnOver();
     }
 

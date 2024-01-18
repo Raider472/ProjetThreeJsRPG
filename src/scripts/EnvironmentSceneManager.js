@@ -10,6 +10,7 @@ import { setCookie, getCookie } from "./Cookies";
 import { Chest } from "./Sprite/Chest";
 import { loadInventory } from "./InventoryDom";
 import { SpriteObject } from "./Sprite/SpriteObject";
+import { EntitySprite } from "./Sprite/EntitySprite";
 
 export const scene = new THREE.Scene();
 const gameWindow = document.getElementById('game-renderer');
@@ -469,9 +470,16 @@ function animate() {
         combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray, scene, inventory);
     }
     if(isInCombat === true) {
+        // console.log(combat.actors)
+
         for(let i = 0; i < combat.actors.length; i++) {
             combat.actors[i].entity.update(deltaTime);
         }
+
+        for (let i = 0; i < combat.effects.length; i++) {
+            combat.effects[i].entity.update(deltaTime);
+        }
+
         if(combat.isFinished) {
             let isCombatLost = true;
             combat.hideMenuCleanup();
