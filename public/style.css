@@ -183,7 +183,7 @@ a:hover {
 }
 
 .background-combat {
-background-image: url(public/bg/random-shapes.svg);
+background-image: url(/bg/random-shapes.svg);
 background-repeat: repeat;
 
 
