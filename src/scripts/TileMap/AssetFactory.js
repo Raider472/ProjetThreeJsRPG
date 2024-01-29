@@ -184,6 +184,21 @@ export class AssetFactory {
                 barrelDeclaration.userData = '9';
                 return barrelDeclaration;
             },
+            // 10 - shops
+            '10': (x, y, z = 0.006) => {
+                const scale = {x: 2, y: 2, z: 1}
+                const boatDeclaration = new SpriteObject("/assets/furnitures/Boat_shop.png", 1, 1, {x, y, z}, scale);
+                boatDeclaration.userData = '10';
+                return boatDeclaration;
+            },
+            // 11 - marchand
+            '11': (x, y, z = 0.005) => {
+                const scale = {x: 1, y: 1, z: 1}
+                let pos = {x: x, y: y * 0.97, z: z}
+                const merchandDeclaration = new SpriteObject("/assets/game_assets/timefantasy_characters/sheets/chara2.png", 12, 8, pos, scale, [54, 55, 56]);
+                merchandDeclaration.userData = '11';
+                return merchandDeclaration;
+            },
             // Tuile vide : améliore les performances au chargement de la map
             '': (x, y, z = -0) => {
                 return '';
