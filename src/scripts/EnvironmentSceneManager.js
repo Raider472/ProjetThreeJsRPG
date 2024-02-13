@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { collisionChest, collisionDetection, collisionFinalDoor, collisionFromRight, collisionMonsters } from "./Collision/Collision";
+import { collisionChest, collisionDetection, collisionFinalDoor, collisionFromRight, collisionMonsters, collisionShop } from "./Collision/Collision";
 import * as Move from "./Mouvement";
 import { TileMap } from "./TileMap/TileMap";
 import { SpriteList } from "./Declarations/SpriteDeclaration";
@@ -10,6 +10,7 @@ import { setCookie, getCookie } from "./Cookies";
 import { loadInventory } from "./InventoryDom";
 import { SpriteObject } from "./Sprite/SpriteObject";
 import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
+import { Shop } from "./Sprite/Shop";
 
 export const scene = new THREE.Scene();
 const gameWindow = document.getElementById('game-renderer');
@@ -48,6 +49,7 @@ let obstaclesAnim = [];
 let chests = [];
 let finalGameDoor = [];
 let monsters = [];
+let shop;
 
 // Variable cookies :
 
@@ -235,6 +237,9 @@ function initializeMap() {
         if(map[i] instanceof SpriteObject && map[i].idle.length != 0) {
             obstaclesAnim.push(map[i]);
         }
+        if(map[i] instanceof Shop) {
+            shop = map[i];
+        }
     }
     obstacles = [...map];
 }
@@ -381,7 +386,7 @@ document.addEventListener("keyup", (event) => {
             console.log(inventory);
             break;
         case "KeyT":
-            console.log(SpriteList.playerSprite.team.teamArray)
+            console.log(shop)
             break;
     }
 });
@@ -452,6 +457,12 @@ function animate() {
         }
     }
 	collisionDetection(obstacles, SpriteList.playerSprite);
+
+    //Colision for the shop
+
+    if(collisionShop(shop, SpriteList.playerSprite)) {
+        console.log("le joueur est dans la zone commerciale")
+    }
 
     //Colision for player/monster/chests/final door : 
 

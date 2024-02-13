@@ -129,3 +129,43 @@ export function collisionFinalDoor(doors, sprite) {
 
     return result;
 }
+
+export function collisionShop(shop, sprite) {
+
+    if(shop === undefined) {
+        return false;
+    }
+
+    if(isBetweenShop(shop, sprite) && isInRangeShop(shop, sprite)) {
+        return true;
+    }
+
+    return false;
+}
+
+function isBetweenShop(shop, sprite) {
+    let posX = sprite.position.x;
+    let shopLeft = shop.left;
+    let shopRight = shop.right;
+    
+    if(posX >= shopLeft && posX <= shopRight) {
+        return true;
+    }
+
+    return false;
+}
+
+function isInRangeShop(shop, sprite) {
+    let posY = sprite.position.y;
+    let shopTop = shop.top;
+    let shopBottom = shop.bottom;
+    let result = (shopTop - shopBottom) / 2;
+    result -= shopBottom
+    result *= -1 
+
+    if(posY <= shopBottom && posY >= result) {
+        return true;
+    }
+
+    return false;
+}

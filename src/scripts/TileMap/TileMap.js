@@ -137,6 +137,8 @@ export class TileMap {
      * 7 - lits
      * 8 - tonneaux
      * 9 - torches
+     * 10 - shop
+     * 11 - merchant
      */
 
     storeTileReference(type, sprite) {

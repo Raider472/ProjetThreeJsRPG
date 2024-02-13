@@ -6,6 +6,7 @@ import { EntitySprite } from '../Sprite/EntitySprite';
 import { mapsCrossReferenceHeroCombat } from '../Declarations/MapsDeclaration';
 import { mapsCrossReferenceMonsterCombat } from '../Declarations/MapsDeclaration';
 import { Team } from '../Actors/Team';
+import { Shop } from '../Sprite/Shop';
 
 export class AssetFactory {
     /**
@@ -187,7 +188,7 @@ export class AssetFactory {
             // 10 - shops
             '10': (x, y, z = 0.006) => {
                 const scale = {x: 2, y: 2, z: 1}
-                const boatDeclaration = new SpriteObject("/assets/furnitures/Boat_shop.png", 1, 1, {x, y, z}, scale);
+                const boatDeclaration = new Shop("/assets/furnitures/Boat_shop.png", 1, 1, {x, y, z}, scale);
                 boatDeclaration.userData = '10';
                 return boatDeclaration;
             },
@@ -212,6 +213,7 @@ export class AssetFactory {
         console.log(filteredEntities)
         filteredEntities = filteredEntities[0];
         let monsterTeam = new Team(team);
+        console.log(filteredEntities)
         const monstersDeclaration = new EntitySprite(filteredEntities.path, filteredEntities.horiTile, filteredEntities.vertiTile, monsterTeam, { x, y, z }, scale, filteredEntities.idleWorld);
         monstersDeclaration.userData = '4';
         return monstersDeclaration;
