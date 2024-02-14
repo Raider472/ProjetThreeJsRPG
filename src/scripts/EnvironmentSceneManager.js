@@ -10,6 +10,7 @@ import { setCookie, getCookie } from "./Cookies";
 import { loadInventory } from "./InventoryDom";
 import { SpriteObject } from "./Sprite/SpriteObject";
 import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
+import { CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 import { Shop } from "./Sprite/Shop";
 
 export const scene = new THREE.Scene();
@@ -34,6 +35,8 @@ let combat = null;
 let lastEntityCombat = null;
 let indexOfLasteEntity = null;
 let isKeyObtained = false;
+let isInShop = false;
+let imageMark;
 let inventory = new Inventory();
 export const loopSpeed = 1;
 
@@ -344,6 +347,17 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
+//Event listener to enter the shop
+document.addEventListener("keyup", (event) => {
+    if(event.code === "KeyE" && collisionShop(shop, SpriteList.playerSprite)) {
+        let answer = confirm("Do you wan to enter the shop ?");
+        if(answer) {
+            console.log("Player has entered the shop");
+            isInShop = true;
+        }
+    }
+})
+
 document.addEventListener("keyup", (event) => {
     animationInProgress = false;
 
@@ -400,6 +414,7 @@ function animate() {
     }
     else {
         renderer.render( scene, camera );
+        labelRenderer.render( scene, camera );
     }
 
 	let deltaTime = clock.getDelta();
@@ -461,7 +476,23 @@ function animate() {
     //Colision for the shop
 
     if(collisionShop(shop, SpriteList.playerSprite)) {
-        console.log("le joueur est dans la zone commerciale")
+        if(imageMark === undefined) {
+            let div = document.createElement( 'div' ); 
+            let image = document.createElement( 'img' );
+            image.src = '/assets/thinking.png';
+            image.alt = 'thinking bubble';
+            image.className = 'label';
+            div.appendChild(image)
+    
+            imageMark = new CSS2DObject( div );
+            imageMark.position.set( 0, 0.75, 0);
+            SpriteList.playerSprite.add( imageMark );
+            console.log("yepa")
+            console.log(imageMark);
+        }
+    }
+    else if (!collisionShop(shop, SpriteList.playerSprite) && !isInCombat){
+        document.querySelector("#divLabel").innerHTML = "";
     }
 
     //Colision for player/monster/chests/final door : 
