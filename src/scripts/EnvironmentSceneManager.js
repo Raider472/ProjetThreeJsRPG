@@ -16,6 +16,9 @@ import { Shop } from "./Sprite/Shop";
 export const scene = new THREE.Scene();
 const gameWindow = document.getElementById('game-renderer');
 
+const SHOP_INTERFACE = document.getElementById("shop-menu");
+SHOP_INTERFACE.hidden = true;
+
 document.querySelector('[id=attack]').addEventListener('click',() => combat.generateTarget(0));
 document.querySelector('[id=crystalAttack]').addEventListener('click',() => combat.generateTarget(1));
 document.querySelector('[id=defend]').addEventListener('click',() => combat.defend());
@@ -261,6 +264,10 @@ function onZoom(e) {
 
 // Fin camera
 
+function initializeShopItems() {
+
+}
+
 const keys = Move.keys;
 
 Move.PlayerMovementControlsDown(keys)
@@ -352,15 +359,16 @@ document.addEventListener("keyup", (event) => {
     if(event.code === "KeyE" && collisionShop(shop, SpriteList.playerSprite)) {
         let answer = confirm("Do you wan to enter the shop ?");
         if(answer) {
-            console.log("Player has entered the shop");
             isInShop = true;
+            console.log("Player has entered the shop");
+            shopTemplate();
+
         }
     }
 })
 
 document.addEventListener("keyup", (event) => {
     animationInProgress = false;
-
     switch (event.code) {
         case "KeyA":
             keys.a.pressed = false;
@@ -401,9 +409,26 @@ document.addEventListener("keyup", (event) => {
             break;
         case "KeyT":
             console.log(shop)
+            shopTemplate();
             break;
     }
 });
+
+function shopTemplate() {
+    const INVENTORY_BUTTON = document.getElementById("inventoryButton");
+
+    if (isInShop == true) {
+        SHOP_INTERFACE.hidden = false;
+        INVENTORY_BUTTON.hidden = true;
+    }
+
+    document.addEventListener("keyup", (event) => {
+        if (event.code === "Escape" && isInShop == true) {
+            SHOP_INTERFACE.hidden = true;
+            INVENTORY_BUTTON.hidden = false;
+        }
+    })
+}
 
 function animate() {
 	requestAnimationFrame( animate );
