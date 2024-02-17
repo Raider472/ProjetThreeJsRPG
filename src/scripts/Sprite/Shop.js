@@ -30,7 +30,7 @@ export class Shop extends SpriteObject {
                 }
             }
         }
-        this.displayItems()
+        this.displayItems();
         console.log(this.content);
     }
 

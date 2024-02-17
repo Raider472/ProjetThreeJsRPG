@@ -188,7 +188,7 @@ export class AssetFactory {
             // 10 - shops
             'S': (x, y, items, z = 0.006) => {
                 const scale = {x: 2, y: 2, z: 1}
-                const shopDeclaration = new Shop(items, "/assets/furnitures/shop_shop.png", 1, 1, {x, y, z}, scale);
+                const shopDeclaration = new Shop(items, "/assets/furnitures/Boat_shop.png", 1, 1, {x, y, z}, scale);
                 shopDeclaration.userData = 'S';
                 return shopDeclaration;
             },

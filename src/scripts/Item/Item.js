@@ -27,6 +27,12 @@ export class Item {
         }
     }
 
+    static async create(id) {
+        const item = new this(id);
+        await item.fetchJson(id);
+        return item;
+    }
+
     async fetchJson(filterId) {
         throw new Error('This function must be implemented');
     }
