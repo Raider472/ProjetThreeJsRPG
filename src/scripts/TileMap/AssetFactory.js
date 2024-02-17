@@ -186,11 +186,11 @@ export class AssetFactory {
                 return barrelDeclaration;
             },
             // 10 - shops
-            '10': (x, y, z = 0.006) => {
+            'S': (x, y, items, z = 0.006) => {
                 const scale = {x: 2, y: 2, z: 1}
-                const boatDeclaration = new Shop("/assets/furnitures/Boat_shop.png", 1, 1, {x, y, z}, scale);
-                boatDeclaration.userData = '10';
-                return boatDeclaration;
+                const shopDeclaration = new Shop(items, "/assets/furnitures/shop_shop.png", 1, 1, {x, y, z}, scale);
+                shopDeclaration.userData = 'S';
+                return shopDeclaration;
             },
             // 11 - marchand
             '11': (x, y, z = 0.005) => {
@@ -236,7 +236,7 @@ export class AssetFactory {
         }
     }
 
-    createItemsInsideChest(separateString) {
+    createItemsInsideChestAndShop(separateString) {
         let items = [];
         for(let k = 1; k < separateString.length; k++) {
             let separatedCode = separateString[k].split("-");
@@ -254,7 +254,7 @@ export class AssetFactory {
             }
             items.push({id: id, type: type, quantity: quantity});
         }
-        return items
+        return items;
     }
 
     createMonsters(separateString) {

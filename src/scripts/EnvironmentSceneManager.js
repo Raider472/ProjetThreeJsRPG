@@ -12,6 +12,7 @@ import { SpriteObject } from "./Sprite/SpriteObject";
 import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
 import { CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 import { Shop } from "./Sprite/Shop";
+import { Consumable } from "./Item/Consumable";
 
 export const scene = new THREE.Scene();
 const gameWindow = document.getElementById('game-renderer');
@@ -55,7 +56,7 @@ let obstaclesAnim = [];
 let chests = [];
 let finalGameDoor = [];
 let monsters = [];
-let shop;
+let shop = [];
 
 // Variable cookies :
 
@@ -217,10 +218,16 @@ function initializeMap() {
                     // Handle errors here
                     console.error(error);
                 });
-            }
-            else if(tileType[0] === "6") {
+            } else if (tileType[0] === "S") {
                 let separateString = tileType.split("/");
-                let items = createAsset.createItemsInsideChest(separateString);
+                let items = createAsset.createItemsInsideChestAndShop(separateString);
+                const newSprite = createAsset.createAssetInstance(separateString[0], i, j, items);
+                scene.add(newSprite);
+                shop.push(newSprite);
+                map.push(newSprite);
+            } else if(tileType[0] === "6") {
+                let separateString = tileType.split("/");
+                let items = createAsset.createItemsInsideChestAndShop(separateString);
                 const newSprite = createAsset.createAssetInstance(separateString[0], i, j, items);
                 scene.add(newSprite);
                 chests.push(newSprite);
@@ -231,7 +238,7 @@ function initializeMap() {
                 scene.add(newSprite);
                 finalGameDoor.push(newSprite);
                 map.push(newSprite);
-            }
+            } 
             else {
                 const newSprite = createAsset.createAssetInstance(tileType, i, j);
                 scene.add(newSprite);
@@ -265,7 +272,6 @@ function onZoom(e) {
 // Fin camera
 
 function initializeShopItems() {
-
 }
 
 const keys = Move.keys;
@@ -357,12 +363,11 @@ document.addEventListener('keydown', (event) => {
 //Event listener to enter the shop
 document.addEventListener("keyup", (event) => {
     if(event.code === "KeyE" && collisionShop(shop, SpriteList.playerSprite)) {
-        let answer = confirm("Do you wan to enter the shop ?");
+        let answer = confirm("Do you want to enter the shop ?");
         if(answer) {
             isInShop = true;
             console.log("Player has entered the shop");
             shopTemplate();
-
         }
     }
 })
@@ -409,9 +414,15 @@ document.addEventListener("keyup", (event) => {
             break;
         case "KeyT":
             console.log(shop)
-            shopTemplate();
             break;
     }
+});
+
+document.querySelectorAll('.buy-item').forEach(button => {
+    button.addEventListener('click', function() {
+        const itemId = this.getAttribute('data-item-id');
+        Shop.buyItem(inventory, 'playerCoins', itemId);
+    });
 });
 
 function shopTemplate() {
