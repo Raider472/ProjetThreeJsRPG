@@ -12,7 +12,6 @@ import { SpriteObject } from "./Sprite/SpriteObject";
 import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
 import { CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 import { Shop } from "./Sprite/Shop";
-import { Consumable } from "./Item/Consumable";
 
 export const scene = new THREE.Scene();
 const gameWindow = document.getElementById('game-renderer');
@@ -56,7 +55,7 @@ let obstaclesAnim = [];
 let chests = [];
 let finalGameDoor = [];
 let monsters = [];
-let shop = [];
+let shop = undefined;
 
 // Variable cookies :
 
@@ -223,7 +222,6 @@ function initializeMap() {
                 let items = createAsset.createItemsInsideChestAndShop(separateString);
                 const newSprite = createAsset.createAssetInstance(separateString[0], i, j, items);
                 scene.add(newSprite);
-                shop.push(newSprite);
                 map.push(newSprite);
             } else if(tileType[0] === "6") {
                 let separateString = tileType.split("/");
@@ -270,9 +268,6 @@ function onZoom(e) {
 }
 
 // Fin camera
-
-function initializeShopItems() {
-}
 
 const keys = Move.keys;
 
@@ -368,6 +363,7 @@ document.addEventListener("keyup", (event) => {
             isInShop = true;
             console.log("Player has entered the shop");
             shopTemplate();
+            shop.displayItems();
         }
     }
 })
