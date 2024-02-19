@@ -178,10 +178,10 @@ export class Combat {
             //debug
         }
     }
-
     newAbort() {
         this.controller = new AbortController()
     }
+
 
     gainCrystal() {
         this.crystal += this.turnActors[0].entity.crystalGeneration;

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { collisionChest, collisionDetection, collisionFinalDoor, collisionFromRight, collisionMonsters } from "./Collision/Collision";
+import { collisionChest, collisionDetection, collisionFinalDoor, collisionFromRight, collisionMonsters, collisionShop } from "./Collision/Collision";
 import * as Move from "./Mouvement";
 import { TileMap } from "./TileMap/TileMap";
 import { SpriteList } from "./Declarations/SpriteDeclaration";
@@ -10,9 +10,14 @@ import { setCookie, getCookie } from "./Cookies";
 import { loadInventory } from "./InventoryDom";
 import { SpriteObject } from "./Sprite/SpriteObject";
 import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
+import { CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+import { Shop } from "./Sprite/Shop";
 
 export const scene = new THREE.Scene();
 const gameWindow = document.getElementById('game-renderer');
+
+const SHOP_INTERFACE = document.getElementById("shop-menu");
+SHOP_INTERFACE.hidden = true;
 
 document.querySelector('[id=attack]').addEventListener('click',() => combat.generateTarget(0));
 document.querySelector('[id=crystalAttack]').addEventListener('click',() => combat.generateTarget(1));
@@ -33,6 +38,8 @@ let combat = null;
 let lastEntityCombat = null;
 let indexOfLasteEntity = null;
 let isKeyObtained = false;
+let isInShop = false;
+let imageMark;
 let inventory = new Inventory();
 export const loopSpeed = 1;
 
@@ -48,6 +55,7 @@ let obstaclesAnim = [];
 let chests = [];
 let finalGameDoor = [];
 let monsters = [];
+let shop = undefined;
 
 // Variable cookies :
 
@@ -209,10 +217,15 @@ function initializeMap() {
                     // Handle errors here
                     console.error(error);
                 });
-            }
-            else if(tileType[0] === "6") {
+            } else if (tileType[0] === "S") {
                 let separateString = tileType.split("/");
-                let items = createAsset.createItemsInsideChest(separateString);
+                let items = createAsset.createItemsInsideChestAndShop(separateString);
+                const newSprite = createAsset.createAssetInstance(separateString[0], i, j, items);
+                scene.add(newSprite);
+                map.push(newSprite);
+            } else if(tileType[0] === "6") {
+                let separateString = tileType.split("/");
+                let items = createAsset.createItemsInsideChestAndShop(separateString);
                 const newSprite = createAsset.createAssetInstance(separateString[0], i, j, items);
                 scene.add(newSprite);
                 chests.push(newSprite);
@@ -223,7 +236,7 @@ function initializeMap() {
                 scene.add(newSprite);
                 finalGameDoor.push(newSprite);
                 map.push(newSprite);
-            }
+            } 
             else {
                 const newSprite = createAsset.createAssetInstance(tileType, i, j);
                 scene.add(newSprite);
@@ -234,6 +247,9 @@ function initializeMap() {
     for(let i = 0; i < map.length; i++) {
         if(map[i] instanceof SpriteObject && map[i].idle.length != 0) {
             obstaclesAnim.push(map[i]);
+        }
+        if(map[i] instanceof Shop) {
+            shop = map[i];
         }
     }
     obstacles = [...map];
@@ -339,9 +355,21 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
+//Event listener to enter the shop
+document.addEventListener("keyup", (event) => {
+    if(event.code === "KeyE" && collisionShop(shop, SpriteList.playerSprite)) {
+        let answer = confirm("Do you want to enter the shop ?");
+        if(answer) {
+            isInShop = true;
+            console.log("Player has entered the shop");
+            shopTemplate();
+            shop.displayItems(inventory);
+        }
+    }
+})
+
 document.addEventListener("keyup", (event) => {
     animationInProgress = false;
-
     switch (event.code) {
         case "KeyA":
             keys.a.pressed = false;
@@ -381,10 +409,27 @@ document.addEventListener("keyup", (event) => {
             console.log(inventory);
             break;
         case "KeyT":
-            console.log(SpriteList.playerSprite.team.teamArray)
+            console.log(coins)
             break;
     }
 });
+
+function shopTemplate() {
+    const INVENTORY_BUTTON = document.getElementById("inventoryButton");
+
+    if (isInShop == true) {
+        SHOP_INTERFACE.hidden = false;
+        INVENTORY_BUTTON.hidden = true;
+    }
+
+    document.addEventListener("keyup", (event) => {
+        if (event.code === "Escape" && isInShop == true) {
+            SHOP_INTERFACE.hidden = true;
+            INVENTORY_BUTTON.hidden = false;
+            shop.removeDisplayedItems();
+        }
+    })
+}
 
 function animate() {
 	requestAnimationFrame( animate );
@@ -395,6 +440,7 @@ function animate() {
     }
     else {
         renderer.render( scene, camera );
+        labelRenderer.render( scene, camera );
     }
 
 	let deltaTime = clock.getDelta();
@@ -452,6 +498,28 @@ function animate() {
         }
     }
 	collisionDetection(obstacles, SpriteList.playerSprite);
+
+    //Colision for the shop
+
+    if(collisionShop(shop, SpriteList.playerSprite)) {
+        if(imageMark === undefined) {
+            let div = document.createElement( 'div' ); 
+            let image = document.createElement( 'img' );
+            image.src = '/assets/thinking.png';
+            image.alt = 'thinking bubble';
+            image.className = 'label';
+            div.appendChild(image)
+    
+            imageMark = new CSS2DObject( div );
+            imageMark.position.set( 0, 0.75, 0);
+            SpriteList.playerSprite.add( imageMark );
+            console.log("yepa")
+            console.log(imageMark);
+        }
+    }
+    else if (!collisionShop(shop, SpriteList.playerSprite) && !isInCombat){
+        document.querySelector("#divLabel").innerHTML = "";
+    }
 
     //Colision for player/monster/chests/final door : 
 
