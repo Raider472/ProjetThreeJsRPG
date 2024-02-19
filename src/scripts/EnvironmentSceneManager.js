@@ -363,7 +363,7 @@ document.addEventListener("keyup", (event) => {
             isInShop = true;
             console.log("Player has entered the shop");
             shopTemplate();
-            shop.displayItems();
+            shop.displayItems(inventory);
         }
     }
 })
@@ -409,16 +409,9 @@ document.addEventListener("keyup", (event) => {
             console.log(inventory);
             break;
         case "KeyT":
-            console.log(shop)
+            console.log(coins)
             break;
     }
-});
-
-document.querySelectorAll('.buy-item').forEach(button => {
-    button.addEventListener('click', function() {
-        const itemId = this.getAttribute('data-item-id');
-        Shop.buyItem(inventory, 'playerCoins', itemId);
-    });
 });
 
 function shopTemplate() {
@@ -433,6 +426,7 @@ function shopTemplate() {
         if (event.code === "Escape" && isInShop == true) {
             SHOP_INTERFACE.hidden = true;
             INVENTORY_BUTTON.hidden = false;
+            shop.removeDisplayedItems();
         }
     })
 }
