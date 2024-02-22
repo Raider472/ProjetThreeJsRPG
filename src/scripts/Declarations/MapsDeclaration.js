@@ -11,7 +11,7 @@ const spriteSheetShieldAppear = "/assets/game_assets/combat_effects/shield_appea
 const spriteSheetShieldBroken = "/assets/game_assets/combat_effects/shield_broken/btleffect_fantasy_1_75.png";
 const spriteSheetHealState = "/assets/game_assets/combat_effects/heal_state/rpg_maker_mv_recovery_1.png";
 const spriteSheetPoisonState = "/assets/game_assets/combat_effects/poison_state/rpg_maker_vx_state_1.png";
-const spriteSheetArrowHurt = "/assets/game_assets/combat_effects/poison_state/rpg_maker_mv_holy_1.png";
+const spriteSheetArrowHurt = "/assets/game_assets/combat_effects/arrow_hurt/rpg_maker_mv_holy_1.png";
 
 
 export const mapsCrossReferenceHeroCombat = {
@@ -64,27 +64,27 @@ export const mapsCrossReferenceCombatEffects = {
     entities : [
         { 
             id: 1, name: "Base Attack", path: spriteSheetBaseAttack, idle: [0, 1, 2, 3, 4, 5, 6], horiTile: 5, vertiTile: 2
-        }
-        // {
-        //     id: 2, name: "Shield Appear", path: spriteSheetShieldAppear, //idle:, horiTile:, vertiTile:
-        // },
-        // {
-        //     id: 3, name: "Shield Broken", path: spriteSheetShieldBroken, //idle:, horiTile:, vertiTile:
-        // },
-        // {
-        //     id: 4, name: "Charge Attack", path: spriteSheetChargeAttack, //idle:, horiTile:, vertiTile:
-        // },
-        // {
-        //     id: 5, name: "Arrow Hurt", path: spriteSheetArrowHurt , //idle:, horiTile:, vertiTile:
-        // },
-        // {
-        //     id: 6, name: "One Heal", path: spriteSheetHealState, //idle:, horiTile:, vertiTile:
-        // },
-        // {
-        //     id: 7, name: "All Heal", path: spriteSheetHealState, //idle:, horiTile:, vertiTile:
-        // },
-        // {
-        //     id: 8, name: "Poison State", path: spriteSheetPoisonState, //idle:, horiTile:, vertiTile:
-        // }
+        }, 
+        {
+            id: 2, name: "Shield Appear", path: spriteSheetShieldAppear, idle: [0, 0, 1, 1, 2, 2, 2, 2], horiTile: 4, vertiTile: 1.9
+        }, 
+        {
+            id: 3, name: "Shield Broken", path: spriteSheetShieldBroken, idle: [0, 1, 3, 8, 9, 10, 11], horiTile: 4, vertiTile: 3.2
+        }, 
+        {
+            id: 4, name: "Charge Attack", path: spriteSheetChargeAttack, idle: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], horiTile: 5, vertiTile: 2
+        }, 
+        {
+            id: 5, name: "Arrow Hurt", path: spriteSheetArrowHurt , idle: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], horiTile: 5, vertiTile: 6
+        }, 
+        {
+            id: 6, name: "One Heal", path: spriteSheetHealState, idle: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30], horiTile: 5, vertiTile: 6
+        }, 
+        {
+            id: 7, name: "All Heal", path: spriteSheetHealState, idle: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30], horiTile: 5, vertiTile: 6
+        }, 
+        {
+            id: 8, name: "Poison State", path: spriteSheetPoisonState, idle: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], horiTile: 5, vertiTile: 3
+        } 
     ]
 }
