@@ -78,6 +78,7 @@ export class Shop extends SpriteObject {
 
             this.removeDisplayedItems();
             this.displayItems(inventory);
+            document.querySelector("#coinNumber").textContent = getCookie("coins")
         }
         else {
             alert("not enough coins");

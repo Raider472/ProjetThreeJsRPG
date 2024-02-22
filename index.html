@@ -161,7 +161,7 @@
         </div>
       </div>
 
-      <div id="shop-menu" class="bg-blue-950/25 min-h-screen inset-12 absolute z-20 rounded-2xl">
+      <div id="shop-menu" class="bg-blue-950/25 min-h-screen inset-12 absolute z-20 rounded-2xl overflow-y-auto">
         <h2 class="text-4xl text-center">Welcome to my Shop !</h2>
         <br>
         <p class="text-center">Press the Escape key to quit the shop</p>
@@ -177,6 +177,10 @@
       <button id="inventoryButton" class="absolute top-0 left-0 z-50">
         <img src="/public/assets/backpack-ui.png" class="w-24 bg-blue-950/10 rounded-2xl">
       </button>
+
+      <div class="absolute top-0 right-0 z-50 m-5 flex text-2xl items-center gap-x-3 p">
+       <img src="public/sprite/coin.png" class="w-10"> : <span id="coinNumber">0</span> 
+      </div>
 
       <div id="menuInventory"
         class="menuInventory grid grid-cols-4 gap-5 absolute top-10 left-0 z-20 rounded-2xl bg-blue-400/30 h-1/3">
