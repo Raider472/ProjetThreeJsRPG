@@ -93,6 +93,9 @@ function setCookieForUser() {
 
 setCookieForUser();
 
+
+document.querySelector("#coinNumber").textContent = getCookie("coins")
+
 function cookieUpdateCombatManager(resultOfCombat) {
     combatWon = parseInt(getCookie("combat_won"));
     combatLost = parseInt(getCookie("combat_lost"));
@@ -114,7 +117,12 @@ function cookieUpdateCombatManager(resultOfCombat) {
             coins += 8;
             setCookie("coins", coins, 1);
         }
+   
+    document.querySelector("#coinNumber").textContent = getCookie("coins")
+
 }
+
+
 
 function keyEndGameManager() {
     const keySound = "/assets/sounds/misc/key-sound.mp3";
