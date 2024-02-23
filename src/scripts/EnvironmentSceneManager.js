@@ -570,9 +570,12 @@ function animate() {
             if(combat.hasLost) {
                 keyEndGameManager();
                 cookieUpdateCombatManager(isCombatLost);              
-                SpriteList.playerSprite.position.x = 35;
-                SpriteList.playerSprite.position.y = 7;
+                SpriteList.playerSprite.position.x = 53;
+                SpriteList.playerSprite.position.y = 10;
                 SpriteList.playerSprite.position.z = 0.008;
+
+                camera.position.x = SpriteList.playerSprite.position.x;
+                camera.position.y = SpriteList.playerSprite.position.y;
             }
             else {
                 keyEndGameManager();
