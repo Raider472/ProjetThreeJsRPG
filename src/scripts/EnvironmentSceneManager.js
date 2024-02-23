@@ -552,9 +552,16 @@ function animate() {
         combat = new Combat(SpriteList.playerSprite.team.teamArray, resultColissionMonster.monster.team.teamArray, scene, inventory);
     }
     if(isInCombat === true) {
+
         for(let i = 0; i < combat.actors.length; i++) {
             combat.actors[i].entity.update(deltaTime);
         }
+
+        for (let i = 0; i < combat.effects.length; i++) {
+            combat.effects[i].entity.update(deltaTime);
+            setTimeout(() => combat.effects[i].entity.visible = false, 2000);
+        }
+
         if(combat.isFinished) {
             let isCombatLost = true;
             combat.hideMenuCleanup();
@@ -578,7 +585,11 @@ function animate() {
                 monsters.splice(indexOfLasteEntity, 1);
             }
             isInCombat = false;
-            combat = null
+            // Supprimer tous les effets de combat 
+            for (let i = 0; i < combat.effects.length; i++) {
+                combat.effects.splice(i, 1);
+            }
+            combat = null;
         }
     }
 	SpriteList.playerSprite.update(deltaTime);
