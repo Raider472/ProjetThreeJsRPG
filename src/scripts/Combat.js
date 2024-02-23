@@ -2,6 +2,7 @@ import { SpriteObject } from "./Sprite/SpriteObject";
 
 import { mapsCrossReferenceHeroCombat } from "./Declarations/MapsDeclaration";
 import { mapsCrossReferenceMonsterCombat } from "./Declarations/MapsDeclaration";
+import { mapsCrossReferenceCombatEffects } from "./Declarations/MapsDeclaration";
 import { CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
 export class Combat {
@@ -14,6 +15,9 @@ export class Combat {
 
     turnActors = [];
     actors = []
+
+    effects = [];
+    characterID;
 
     deadHero = [];
     deadMonsters = [];
@@ -112,6 +116,44 @@ export class Combat {
             monsterLabel.position.set( 0, -0.75, 0);
             monster.add( monsterLabel );
             this.labels.push({id: this.monsterTeam[i].id, label: monsterLabel});
+        }
+    }
+
+    addEffect(attackID, characterID) {
+        let scale = {x: 1, y: 1, z: 1};
+        let references = mapsCrossReferenceCombatEffects.entities;
+        console.log(this.actors, "actors")
+    
+        for (var i = 0; i < this.actors.length ; i++) {
+            if (characterID == this.actors[i].id && characterID < 4) {
+                let position = {x: 495, y: 2.25 - i*2, z: 0};
+                for (var j = 0; j < references.length ; j++) {
+                    if (attackID == references[j].attack_id){
+                        let effect = new SpriteObject(references[j].path, references[j].horiTile, references[j].vertiTile, position, scale, references[j].idle);
+                        this.effects.push({id: i, entity: effect, originalPos: position});
+                        this.scene.add(effect);
+                    }
+                }
+            }
+            else if (characterID == this.actors[i].id && characterID > 4) {
+                let position = {x: 505, y: 2.25 - i*2, z: 0};
+                for (var h = 0; h < references.length ; h++) {
+                    if (attackID == references[h].attack_id){
+                        let effect = new SpriteObject(references[h].path, references[h].horiTile, references[h].vertiTile, position, scale, references[h].idle);
+                        this.effects.push({id: i, entity: effect, originalPos: position});
+                        this.scene.add(effect);
+                    }
+                }
+            }
+        }
+        console.log(this.effects);
+    }
+
+    hideEffects() {
+        let effectID;
+        for (var i = 0; i < this.effects.length ; i++) {
+            effectID = this.effects[i];
+            effectID.entity.visible = false;
         }
     }
 
@@ -371,7 +413,6 @@ export class Combat {
         else {
             let arrayProb = this.generateHeroAttackPropability();
             let id = this.aiSelectionWeightedDecisions(this.heroTeam, arrayProb);
-            alert(this.turnActors[0].entity.name + " has attacked " + this.heroTeam[id-1].entity.name);
             this.normalAttack(id);
         }
     }
@@ -450,6 +491,7 @@ export class Combat {
     normalAttack(id) {
         id = Number(id);
         let indexNumber = this.turnActors.findIndex(actor => actor.id === id);
+        let actualActor = this.turnActors[indexNumber];
         let critNumber = Math.random();
         let atk = this.turnActors[0].entity.atk;
         if(this.turnActors[0].entity.crit >= critNumber) {
@@ -475,7 +517,9 @@ export class Combat {
         this.changeHp(this.turnActors[indexNumber]);
         this.gainCrystal();
         this.checkDead(this.turnActors[indexNumber]);
+        this.characterID = actualActor.id;
         this.turnOver();
+        this.addEffect("0", this.characterID);
     }
 
     crystalAttack(id, idAttack, AOE = false) {
@@ -630,7 +674,7 @@ export class Combat {
     changeHp(actor) {
         let indexNumber = this.labels.findIndex(label => label.id === actor.id);
         let label = this.labels[indexNumber];
-        label.label.element.textContent = 'Hp: ' + actor.entity.hp + '/' + actor.entity.maxHp;;
+        label.label.element.textContent = 'Hp: ' + actor.entity.hp + '/' + actor.entity.maxHp;
     }
 
     //Menu Decisions
